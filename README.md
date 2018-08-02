@@ -1,21 +1,27 @@
-# tally
 
-> A Vue.js project
+#### 功能TODO
 
-## Build Setup
-
-``` bash
-# install dependencies
-npm install
-
-# serve with hot reload at localhost:8080
-npm run dev
-
-# build for production with minification
-npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
-```
-
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+- [x] 注册
+- [x] 登录
+- [ ] 邀请另一个用户一起记账
+- [x] 消费录入
+    - [x] 消费金额
+    - [x] 消费类型
+    - [x] 支付渠道
+    - [x] 消费时间
+    - [x] 一句话描述
+    - [ ] 转账、还款类型(支付宝转入银行卡,等等..)
+- [ ] 快速录入
+    - [ ] 自定义消费模板
+    - [ ] 模板直接录入
+- [ ] 消费信息修改
+- [ ] job录入（车贷房贷、工资等）
+- [ ] 快速修改job录入的记录
+- [ ] 预支付（信用卡花呗支出会计算到还款日）
+- [ ] 账单查询
+    - [ ] 日期范围查询
+    - [ ] 单独用户查询
+    - [ ] 消费类型查询
+    - [ ] 账单分析
+- [ ] 消费类型权重查询
+- [ ] 余额录入、修改
