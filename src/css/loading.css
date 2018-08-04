@@ -1,0 +1,37 @@
+@charset "UTF-8";
+
+/**
+ * 
+ * @authors 谢志强 (594613537)
+ * @date    2016-05-18 01:14:13
+ * @version v1.0.0
+ */
+html,body{width:100%;height:100%}
+.loader{float:left;display:-webkit-flex;/*safari弹性布局*/justify-content:center;display:flex;align-items:center;}
+@-webkit-keyframes loader1{
+	0%{-webkit-transform:scale(1);opacity:1;}
+	45%{-webkit-transform:scale(0.1);opacity:0.7;}
+	80%{-webkit-transform:scale(1);opacity:1;}
+}
+@-webkit-keyframes loader13-1{
+	0%{-webkit-transform:rotate(270deg);}
+	50%{-webkit-transform:rotate(360deg);}
+	100%{-webkit-transform:rotate(270deg);}
+}
+@-webkit-keyframes loader13-2{
+	0%{-webkit-transform:rotate(90deg);}
+	50%{-webkit-transform:rotate(0deg);}
+	100%{-webkit-transform:rotate(90deg);}
+}
+@-webkit-keyframes loader13-3{
+	0%{left:100px;}
+	100%{left:20px;}
+}
+.loader-13{position:relative;width:100px;height:100px;}
+.loader-13 div:nth-child(1),.loader-13 div:nth-child(2){width:0px;height:0px;border:25px solid #fff;border-right:25px solid transparent;border-radius:50%;position:absolute;}
+.loader-13 div:nth-child(1){-webkit-animation:loader13-1 0.5s 0s infinite linear;}
+.loader-13 div:nth-child(2){-webkit-animation:loader13-2 0.5s 0s infinite linear;}
+.loader-13 div:nth-child(3),.loader-13 div:nth-child(4),.loader-13 div:nth-child(5){width:10px;height:10px;border-radius:50%;background:#fff;position:absolute;left:100px;top:20px;opacity:0.7;}
+.loader-13 div:nth-child(3){-webkit-animation:loader13-3 1s -0.66s linear infinite;}
+.loader-13 div:nth-child(4){-webkit-animation:loader13-3 1s -0.33s linear infinite;}
+.loader-13 div:nth-child(5){-webkit-animation:loader13-3 1s 0s linear infinite;}

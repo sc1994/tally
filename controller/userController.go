@@ -2,10 +2,10 @@ package controller
 
 import (
 	"encoding/json"
-	"go-tally/common"
-	"go-tally/data"
-	"go-tally/model"
 	"sort"
+	"tally/common"
+	"tally/data"
+	"tally/model"
 	"time"
 
 	"github.com/gin-gonic/gin"

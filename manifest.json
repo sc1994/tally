@@ -1,0 +1,7 @@
+{
+    "short_name": "日常账单",
+    "name": "自律给予自由",
+    "start_url": "/",
+    "display": "fullscreen",
+    "orientation": "portrait"
+}

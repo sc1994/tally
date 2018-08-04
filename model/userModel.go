@@ -1,7 +1,7 @@
 package model
 
 import (
-	"go-tally/data"
+	"tally/data"
 	"time"
 
 	"encoding/json"

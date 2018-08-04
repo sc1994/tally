@@ -1,8 +1,8 @@
 package controller
 
 import (
-	"go-tally/common"
-	"go-tally/model"
+	"tally/common"
+	"tally/model"
 
 	"gopkg.in/mgo.v2/bson"
 

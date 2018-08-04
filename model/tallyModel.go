@@ -1,7 +1,7 @@
 package model
 
 import (
-	"go-tally/data"
+	"tally/data"
 	"time"
 
 	"gopkg.in/mgo.v2/bson"

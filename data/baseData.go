@@ -1,7 +1,7 @@
 package data
 
 import (
-	"go-tally/common"
+	"tally/common"
 	"time"
 
 	"github.com/go-redis/redis"
