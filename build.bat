@@ -1,6 +1,6 @@
 
 @echo build web
-@node build/build.js
+@cross-env NODE_ENV=production webpack --progress --hide-modules
 
 @echo commit to github
 
@@ -20,7 +20,7 @@
 @echo build go
 @set GOARCH=amd64
 @set GOOS=linux
-@go build -v
+@go build -v -a -o tally
 
 @copy "tally" "../go-tally/"
 

@@ -28,7 +28,7 @@
         <mu-list-item :key="index" v-for="item,index in tallyList" avatar :ripple="false">
           <mu-list-item-action>
             <mu-avatar>
-              <img src="/src/static/head-default.png">
+              <img src="/static/head-default.png">
             </mu-avatar>
           </mu-list-item-action>
           <mu-list-item-content>

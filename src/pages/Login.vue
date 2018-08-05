@@ -1,7 +1,7 @@
 <template>
   <mu-container>
     <mu-paper class="head-paper" circle :z-depth="3">
-      <img src="/src/static/head-default.png" class="head-img" />
+      <img src="/static/head-default.png" class="head-img" />
     </mu-paper>
     <mu-tabs :value.sync="active" inverse color="#ff4081" text-color="rgba(0, 0, 0, .54)" full-width>
       <mu-tab>登 陆</mu-tab>

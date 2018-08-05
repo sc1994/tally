@@ -6,7 +6,7 @@
           <mu-list-item avatar button :ripple="false">
             <mu-list-item-action>
               <mu-avatar style="width:60px;height:60px">
-                <img src="/src/static/head-default.png">
+                <img src="/static/head-default.png">
               </mu-avatar>
             </mu-list-item-action>
             <mu-list-item-content style="margin-left: 22px;">

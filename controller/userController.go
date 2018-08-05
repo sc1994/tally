@@ -251,14 +251,14 @@ func getOneUser(name string, password string, hour int32) (model.User, string, i
 		return user, "密码不正确", 2
 	}
 	user.Password = "*"
-	user.Id = "*"
-	var k string
+	var k bson.ObjectId
 	if hour > 0 {
-		k = bson.NewObjectId().Hex()
+		k = bson.NewObjectId()
+		user.Id = k
 		j, _ := json.Marshal(user)
-		data.RedisSet(k, j, hour*60)
+		data.RedisSet(k.Hex(), j, hour*60)
 	}
-	return user, k, 3
+	return user, k.Hex(), 3
 }
 
 // existConsume 是否存在的消费类型

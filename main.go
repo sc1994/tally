@@ -12,7 +12,7 @@ func main() {
 	config := cors.DefaultConfig()
 	config.AllowAllOrigins = true
 	r.Use(cors.New(config))
-	r.Static("headImages", "headImages")
+	r.Static("static", "static")
 	// 用户相关的操作接口======================================================
 	controller.InsertUser("/signup", r)              // POST 注册
 	controller.GetExist("/signupcheck/:name", r)     // GET 验证用户名是否存在

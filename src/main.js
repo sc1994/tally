@@ -1,21 +1,8 @@
-import 'muse-ui-loading/dist/muse-ui-loading.css'
 import Vue from 'vue'
 import routes from './routes'
 import MuseUI from 'muse-ui'
-import Loading from 'muse-ui-loading'
-Vue.use(Loading)
 
 Vue.use(MuseUI)
-Vue.use(Loading)
-Vue.use(Loading)
-
-
-
-
-
-
-
-
 
 const app = new Vue({
   el: '#app',
@@ -23,14 +10,14 @@ const app = new Vue({
     currentRoute: window.location.pathname
   },
   computed: {
-    ViewComponent () {
+    ViewComponent() {
       const matchingView = routes[this.currentRoute]
       return matchingView
         ? require('./pages/' + matchingView + '.vue')
         : require('./pages/404.vue')
     }
   },
-  render (h) {
+  render(h) {
     return h(this.ViewComponent)
   }
 })

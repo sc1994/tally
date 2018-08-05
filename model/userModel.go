@@ -12,7 +12,7 @@ import (
 // User 用户信息实体
 type User struct {
 	Id         bson.ObjectId `json:"id" bson:"_id,omitempty"`    // Id
-	Password   string        `json:"_" bson:"pwd"`               // Password
+	Password   string        `json:"pwd" bson:"pwd"`             // Password
 	Name       string        `json:"name" bson:"name"`           // Name
 	NickName   string        `json:"nick" bson:"nick"`           // NickName 昵称
 	CreateTime time.Time     `json:"ctime" bson:"ctime"`         // CreateTime 创建时间
