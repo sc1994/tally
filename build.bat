@@ -4,7 +4,7 @@
 
 @echo commit to github
 
-@xcopy /E/I/Y "dist" "../vue-tally/dist"
+@xcopy /E/I/Y "dist" "../vue-tally/"
 @copy "index.html" "../vue-tally"
 @copy "manifest.json" "../vue-tally"
 
