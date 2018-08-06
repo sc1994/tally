@@ -1,27 +1,31 @@
-import Vue from 'vue'
-import routes from './routes'
-import MuseUI from 'muse-ui'
+// The Vue build version to load with the `import` command
+// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
+import Vue from 'vue';
+import App from './App';
+import router from './router';
+import MuseUI from 'muse-ui';
+import 'muse-ui/dist/muse-ui.css';
+import Store from './store';
+import 'typeface-roboto';
+import Axios from 'axios'
+import Toast from "muse-ui-toast";
+import 'muse-ui-loading/dist/muse-ui-loading.css'; // load css
+import Loading from 'muse-ui-loading';
 
 Vue.use(MuseUI)
+Vue.use(Toast)
+Vue.use(Loading)
+console.log(navigator.userAgent)
+Axios.defaults.baseURL = 'http://localhost';
+Vue.prototype.$axios = Axios;
 
-const app = new Vue({
+Vue.config.productionTip = false
+
+/* eslint-disable no-new */
+new Vue({
   el: '#app',
-  data: {
-    currentRoute: window.location.pathname
-  },
-  computed: {
-    ViewComponent() {
-      const matchingView = routes[this.currentRoute]
-      return matchingView
-        ? require('./pages/' + matchingView + '.vue')
-        : require('./pages/404.vue')
-    }
-  },
-  render(h) {
-    return h(this.ViewComponent)
-  }
-})
-
-window.addEventListener('popstate', () => {
-  app.currentRoute = window.location.pathname
+  router,
+  store: Store,
+  components: { App },
+  template: '<App/>'
 })

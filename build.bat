@@ -1,6 +1,6 @@
 
 @echo build web
-@cross-env NODE_ENV=production webpack --progress --hide-modules
+@node build/build.js
 
 @echo commit to github
 
@@ -9,14 +9,15 @@
 @copy "manifest.json" "../vue-tally"
 
 @cd ../vue-tally
-@start UpdateVersion.exe
 
+@git pull
 @git add .
 @git commit -m "code build dispense to service"
 @git push origin master 
 
 @cd ../tally
 
+@git pull
 @echo build go
 @set GOARCH=amd64
 @set GOOS=linux

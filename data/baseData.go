@@ -93,7 +93,8 @@ func RedisGet(key string) (string, bool) {
 func RedisSet(key string, value interface{}, minute int32) bool {
 	client := redis.NewClient(options)
 	defer client.Close()
-	e := client.Set(key, value, time.Duration(minute*60*1000*1000*1000)).Err()
+	time := time.Duration(minute * 60 * 1000 * 1000 * 1000)
+	e := client.Set(key, value, time).Err()
 	if e != nil {
 		return false
 	}

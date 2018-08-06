@@ -1,46 +1,19 @@
+<!DOCTYPE html>
 <html>
 
 <head>
   <meta charset="utf-8">
-  <link rel="shortcut icon" type="image/x-icon" href="src/static/favicon.ico">
-  <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no,minimal-ui" />
-  <meta name="msapplication-tap-highlight" content="no">
-  <link rel="apple-touch-icon" href="src/static/iphone.png"/>
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="#f1f1f1">
-  <meta content="telephone=no" name="format-detection" />
-  <link rel="manifest" href="/manifest.json">
-  <title>日常记账</title>
+  <meta name="viewport"
+    content="width=device-width,initial-scale=1.0">
+  <link rel="stylesheet"
+    href="https://cdn.bootcss.com/material-design-icons/3.0.1/iconfont/material-icons.css">
+  <link href="/src/css/loading.css">
+  <title>tally2</title>
 </head>
 
 <body>
   <div id="app"></div>
-  <link rel="stylesheet" href="https://cdn.bootcss.com/material-design-icons/3.0.1/iconfont/material-icons.css">
-  <link rel="stylesheet" href="src/css/muse-ui.css">
-  <link rel="stylesheet" href="src/css/loading.css">
-
-  <script src="src/js/axios.min.js"></script>
-  <script>
-    axios.defaults.baseURL = 'http://suncheng.xyz:8888/'
-    function format(date, fmt) {
-      var that = new Date(date)
-      var o = {
-        "M+": that.getMonth() + 1, //月份
-        "d+": that.getDate(), //日
-        "h+": that.getHours(), //小时
-        "m+": that.getMinutes(), //分
-        "s+": that.getSeconds(), //秒
-        "q+": Math.floor((that.getMonth() + 3) / 3), //季度
-        "S": that.getMilliseconds() //毫秒
-      };
-      if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (that.getFullYear() + "").substr(4 - RegExp.$1.length));
-      for (var k in o)
-        if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
-      return fmt;
-    }
-  </script>
-
-  <script src="/dist/build.js?v=20180804105424"></script>
+  <!-- built files will be auto injected -->
 </body>
 
 </html>
