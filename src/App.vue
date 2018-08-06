@@ -1,6 +1,7 @@
 <template>
   <div>
-    <mu-container>
+    <mu-appbar class="top-van" title="记录"></mu-appbar>
+    <mu-container style="position: absolute;top: 55px;">
       <router-view/>
     </mu-container>
     <mu-bottom-nav :value.sync="value" v-on:change="goto" class="bot-van" v-if="showBot">
@@ -59,5 +60,19 @@ export default {
   position: fixed;
   bottom: 0px;
   width: 100%;
+}
+
+.top-van {
+  position: fixed;
+  top: 0px;
+  width: 100%;
+  background-color: #424242;
+  color: #fafafa;
+  height: 47px;
+}
+
+.top-van > .mu-appbar-title {
+  font-size: 15px;
+  font-weight: 500;
 }
 </style>

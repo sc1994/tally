@@ -137,7 +137,7 @@ func GetOneUser(service string, r *gin.Engine) {
 		if request.Remember {
 			hour = 7 * 24
 		} else {
-			hour = 2
+			hour = 2 * 24
 		}
 		u, m, t := getOneUser(request.Name, request.Password, hour)
 		if t == 1 || t == 2 {
