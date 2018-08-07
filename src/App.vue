@@ -1,7 +1,7 @@
 <template>
   <div>
     <mu-appbar class="top-van" title="记录"></mu-appbar>
-    <mu-container style="position: absolute;top: 55px;">
+    <mu-container style="position: absolute;top: 55px;width: 95.5%;">
       <router-view/>
     </mu-container>
     <mu-bottom-nav :value.sync="value" v-on:change="goto" class="bot-van" v-if="showBot">
@@ -57,22 +57,22 @@ export default {
 
 <style>
 .bot-van {
-  position: fixed;
-  bottom: 0px;
-  width: 100%;
+  position: fixed !important;
+  bottom: 0px !important;
+  width: 100% !important;
 }
 
 .top-van {
-  position: fixed;
-  top: 0px;
-  width: 100%;
-  background-color: #424242;
-  color: #fafafa;
-  height: 47px;
+  position: fixed !important;
+  top: 0px !important;
+  width: 100% !important;
+  background-color: #424242 !important;
+  color: #fafafa !important;
+  height: 47px !important;
 }
 
 .top-van > .mu-appbar-title {
-  font-size: 15px;
-  font-weight: 500;
+  font-size: 15px !important;
+  font-weight: 500 !important;
 }
 </style>

@@ -4,11 +4,11 @@
 
 @echo commit to github
 
-@xcopy /E/I/Y "dist" "../vue-tally"
-@copy "index.html" "../vue-tally"
-@copy "manifest.json" "../vue-tally"
-
 @cd ../vue-tally
+@rmdir /s/q static
+
+@xcopy /E/I/Y "../tally/dist" "."
+@copy "../tally/manifest.json" "vue-tally"
 
 @git pull
 @git add .
