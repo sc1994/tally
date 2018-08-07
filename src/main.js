@@ -16,7 +16,7 @@ Vue.use(MuseUI)
 Vue.use(Toast)
 Vue.use(Loading)
 console.log(navigator.userAgent)
-Axios.defaults.baseURL = 'http://suncheng.xyz:8888/';
+Axios.defaults.baseURL = 'http://localhost';
 Vue.prototype.$axios = Axios;
 
 Vue.config.productionTip = false
