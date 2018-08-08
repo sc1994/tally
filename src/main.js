@@ -15,10 +15,8 @@ import Loading from 'muse-ui-loading';
 Vue.use(MuseUI)
 Vue.use(Toast)
 Vue.use(Loading)
-console.log(navigator.userAgent)
 Axios.defaults.baseURL = 'http://suncheng.xyz:8888';
 Vue.prototype.$axios = Axios;
-
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

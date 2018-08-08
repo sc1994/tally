@@ -8,7 +8,6 @@
 @rmdir /s/q static
 
 @xcopy /E/I/Y "../tally/dist" "."
-@copy "../tally/manifest.json" "vue-tally"
 
 @git pull
 @git add .
