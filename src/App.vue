@@ -1,7 +1,7 @@
 <template>
   <div>
     <mu-appbar class="top-van" title="记录"></mu-appbar>
-    <mu-container style="position: absolute;top: 55px;width: 95.5%;">
+    <mu-container style="position: absolute;top: 55px;">
       <router-view/>
     </mu-container>
     <mu-bottom-nav :value.sync="value" v-on:change="goto" class="bot-van" v-if="showBot">
