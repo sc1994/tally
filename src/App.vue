@@ -66,8 +66,8 @@ export default {
   position: fixed !important;
   top: 0px !important;
   width: 100% !important;
-  background-color: #424242 !important;
-  color: #fafafa !important;
+  background-color: #000000 !important;
+  color: #ffffff !important;
   height: 47px !important;
 }
 
