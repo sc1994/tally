@@ -35,6 +35,9 @@
           <mu-list-item-sub-title>{{formatDate(item.ctime)}}</mu-list-item-sub-title>
         </mu-list-item-content>
       </mu-list-item>
+      <div style="text-align: center;color: rgba(0,0,0,.54);" v-if="tallyList.length==0">
+        <h4>==暂 无==</h4>
+      </div>
     </mu-list>
     <mu-list>
       <mu-sub-header>
@@ -202,7 +205,20 @@ export default {
       }
     },
     initLate() {
-      // 最近消费
+      var that = this;
+      that.$axios
+        .post("/gettallybyuser", {
+          token: localStorage.getItem("token"),
+          pageIndex: 1,
+          pageSize: 3
+        })
+        .then(result => {
+          if (result.data.result) {
+            if (result.data.body != null) that.tallyList = result.data.body;
+          } else {
+            that.$toast.error("网络异常, 请重试");
+          }
+        });
     },
     formatDate() {
       // 日期格式化
@@ -225,6 +241,9 @@ export default {
         this.tallyForm.channel = "";
       }
     }
+  },
+  mounted() {
+    this.initLate();
   }
 };
 </script>

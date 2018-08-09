@@ -1,6 +1,6 @@
 <template>
   <mu-dialog fullscreen :open.sync="openTally">
-    <mu-appbar color="primary" :title="consume+'：'+money+' 元'">
+    <mu-appbar color="primary" :title="consume+'：'+money+' 元'" :style="iphoneStyle">
       <mu-button slot="left" icon @click="$emit('update:openTally', false)">
         <mu-icon value="close"></mu-icon>
       </mu-button>
@@ -104,10 +104,37 @@ export default {
     };
   },
   computed: {
-    ...mapState(["currentUser"])
+    ...mapState(["currentUser", "iphoneStyle"])
   },
   methods: {
-    submit() {}
+    submit() {
+      var that = this;
+      var loading = that.$loading({});
+      that.$axios
+        .post("/inserttally", {
+          token: localStorage.getItem("token"),
+          money: that.money,
+          type: that.consume,
+          mode: that.tallyForm.mode,
+          channel: that.tallyForm.channel,
+          remark: that.tallyForm.remark,
+          ctime: that.tallyForm.date
+        })
+        .then(result => {
+          if (result.data.result) {
+            that.$toast.success("网络异常,请重试");
+            setTimeout(() => {
+              that.thatOpenTally = false;
+            }, 1200);
+          } else {
+            that.$toast.error("网络异常,请重试");
+          }
+          loading.close();
+        })
+        .catch(err => {
+          that.$toast.error("系统错误");
+        });
+    }
   },
   watch: {
     currentUser(val) {
@@ -131,14 +158,50 @@ export default {
       });
     },
     thatStep(val) {
-      if (val == 2) {
-        this.tallyForm.date = new Date();
-        var flag = this.tallyForm.mode == "收入" ? "收取" : "支付";
-        this.tallyForm.remark = `${this.consume}${this.tallyForm.mode}了${
-          this.money
-        }元，通过${this.tallyForm.channel}${flag}。`;
+      var that = this;
+      if (val == 0) {
+        that.currentUser.consumes.forEach(c => {
+          if (c.content == that.consume) {
+            that.manyType.modes.forEach(m => {
+              if (c.default.indexOf(m.content) > -1) {
+                m.hide = false;
+              } else {
+                m.hide = true;
+              }
+            });
+          }
+        });
+      } else if (val == 1) {
+        that.manyType.channels.forEach(c => {
+          if (c.default.indexOf(that.tallyForm.mode) > -1) {
+            c.hide = false;
+          } else {
+            c.hide = true;
+          }
+        });
+      } else if (val == 2) {
+        that.tallyForm.date = new Date();
+        var flag = that.tallyForm.mode == "收入" ? "收取" : "支付";
+        that.tallyForm.remark = `${that.consume}${that.tallyForm.mode}了${
+          that.money
+        }元，通过${that.tallyForm.channel}${flag}。`;
       }
       this.$emit("update:step", val);
+    },
+    openTally(val) {
+      debugger;
+      if (!val) {
+        // 初始化记录步骤里面的数据,但是保留金额和类型
+        this.thatStep = -1;
+        this.tallyForm = {
+          mode: "",
+          channel: "",
+          date: "",
+          remark: ""
+        };
+      } else {
+        this.thatStep = 0;
+      }
     }
   }
 };

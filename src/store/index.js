@@ -6,10 +6,14 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
         currentUser: {},
+        iphoneStyle: ""
     },
     mutations: {
         changeUser(state, data) {
             state.currentUser = data
+        },
+        changeIphoneStyle(state, data) {
+            state.iphoneStyle = data
         }
     },
     actions: {
