@@ -27,7 +27,7 @@
       <mu-list-item :key="index" v-for="item,index in tallyList" avatar :ripple="false">
         <mu-list-item-action>
           <mu-avatar>
-            <img src="/static/head-default.png">
+            <img src="/static/images/head-default.png">
           </mu-avatar>
         </mu-list-item-action>
         <mu-list-item-content>
@@ -52,7 +52,7 @@
         <mu-list-item-title>午餐</mu-list-item-title>
         <mu-list-item-action>
           <mu-button icon color="#4caf50">
-            <mu-icon right value="flight_takeoff"></mu-icon>
+            <i class="fa fa-bolt" style="font-size: 22px;"></i>
           </mu-button>
         </mu-list-item-action>
       </mu-list-item>
@@ -63,7 +63,7 @@
         <mu-list-item-title>午餐</mu-list-item-title>
         <mu-list-item-action>
           <mu-button icon color="#4caf50">
-            <mu-icon right value="flight_takeoff"></mu-icon>
+            <i class="fa fa-bolt" style="font-size: 22px;"></i>
           </mu-button>
         </mu-list-item-action>
       </mu-list-item>
@@ -74,7 +74,7 @@
         <mu-list-item-title>午餐</mu-list-item-title>
         <mu-list-item-action>
           <mu-button icon color="#4caf50">
-            <mu-icon right value="flight_takeoff"></mu-icon>
+            <i class="fa fa-bolt" style="font-size: 22px;"></i>
           </mu-button>
         </mu-list-item-action>
       </mu-list-item>
@@ -85,7 +85,7 @@
         <mu-list-item-title>午餐</mu-list-item-title>
         <mu-list-item-action>
           <mu-button icon color="#4caf50">
-            <mu-icon right value="flight_takeoff"></mu-icon>
+            <i class="fa fa-bolt" style="font-size: 22px;"></i>
           </mu-button>
         </mu-list-item-action>
       </mu-list-item>
@@ -96,7 +96,7 @@
         <mu-list-item-title>午餐</mu-list-item-title>
         <mu-list-item-action>
           <mu-button icon color="#4caf50">
-            <mu-icon right value="flight_takeoff"></mu-icon>
+            <i class="fa fa-bolt" style="font-size: 22px;"></i>
           </mu-button>
         </mu-list-item-action>
       </mu-list-item>
@@ -107,7 +107,7 @@
         <mu-list-item-title>午餐</mu-list-item-title>
         <mu-list-item-action>
           <mu-button icon color="#4caf50">
-            <mu-icon right value="flight_takeoff"></mu-icon>
+            <i class="fa fa-bolt" style="font-size: 22px;"></i>
           </mu-button>
         </mu-list-item-action>
       </mu-list-item>
@@ -118,7 +118,7 @@
         <mu-list-item-title>公交</mu-list-item-title>
         <mu-list-item-action>
           <mu-button icon color="#4caf50">
-            <mu-icon right value="flight_takeoff"></mu-icon>
+            <i class="fa fa-bolt" style="font-size: 22px;"></i>
           </mu-button>
         </mu-list-item-action>
       </mu-list-item>
@@ -129,7 +129,7 @@
         <mu-list-item-title>公交</mu-list-item-title>
         <mu-list-item-action>
           <mu-button icon color="#4caf50">
-            <mu-icon right value="flight_takeoff"></mu-icon>
+            <i class="fa fa-bolt" style="font-size: 22px;"></i>
           </mu-button>
         </mu-list-item-action>
       </mu-list-item>
@@ -140,7 +140,7 @@
         <mu-list-item-title>公交</mu-list-item-title>
         <mu-list-item-action>
           <mu-button icon color="#4caf50">
-            <mu-icon right value="flight_takeoff"></mu-icon>
+            <i class="fa fa-bolt" style="font-size: 22px;"></i>
           </mu-button>
         </mu-list-item-action>
       </mu-list-item>
@@ -153,7 +153,7 @@
         </mu-list-item-action>
       </mu-list-item>
     </mu-list>
-    <addtally :openTally.sync="openTally" :step.sync="step" :money="tallyForm.money" :consume="tallyForm.consume"></addtally>
+    <addtally :openTally.sync="openTally" :money="tallyForm.money" :consume="tallyForm.consume"></addtally>
   </div>
 </template>
 
@@ -173,7 +173,6 @@ export default {
         money: "",
         consume: ""
       },
-      step: 0,
       consumes: [],
       openTally: false,
       tallyList: []

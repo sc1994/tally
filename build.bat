@@ -8,6 +8,7 @@
 @rmdir /s/q static
 
 @xcopy /E/I/Y "../tally/dist" "."
+@xcopy /E/I/Y "../tally/static" "."
 
 @git pull
 @git add .

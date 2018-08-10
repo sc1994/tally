@@ -73,10 +73,6 @@ export default {
       type: Boolean,
       required: true
     },
-    step: {
-      type: Number,
-      required: true
-    },
     consume: {
       type: String,
       required: true
@@ -88,7 +84,7 @@ export default {
   },
   data() {
     return {
-      thatStep: this.step,
+      thatStep: -1,
       thatOpenTally: this.openTally,
       tallyForm: {
         mode: "",
@@ -160,17 +156,25 @@ export default {
     thatStep(val) {
       var that = this;
       if (val == 0) {
+        var count = 0;
+        var currentMode = "";
         that.currentUser.consumes.forEach(c => {
           if (c.content == that.consume) {
             that.manyType.modes.forEach(m => {
               if (c.default.indexOf(m.content) > -1) {
                 m.hide = false;
+                count++;
+                currentMode = m.content;
               } else {
                 m.hide = true;
               }
             });
           }
         });
+        if (count == 1) {
+          that.thatStep += 1;
+          that.tallyForm.mode = currentMode;
+        }
       } else if (val == 1) {
         that.manyType.channels.forEach(c => {
           if (c.default.indexOf(that.tallyForm.mode) > -1) {
@@ -186,10 +190,8 @@ export default {
           that.money
         }元，通过${that.tallyForm.channel}${flag}。`;
       }
-      this.$emit("update:step", val);
     },
     openTally(val) {
-      debugger;
       if (!val) {
         // 初始化记录步骤里面的数据,但是保留金额和类型
         this.thatStep = -1;
