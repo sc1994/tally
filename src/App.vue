@@ -1,6 +1,6 @@
 <template>
   <div>
-    <mu-appbar class="top-van" :title="title" v-if="showBot" :style="iphoneStyle"></mu-appbar>
+    <mu-appbar :class="'top-van ' + appbarStyle" :title="title" v-if="showBot"></mu-appbar>
     <mu-container style="position: absolute;top: 65px;">
       <router-view/>
     </mu-container>
@@ -24,8 +24,7 @@ export default {
     return {
       value: "/",
       showBot: false,
-      title: "",
-      iphoneStyle: ""
+      title: ""
     };
   },
   methods: {
@@ -50,7 +49,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(["currentUser"])
+    ...mapState(["currentUser", "appbarStyle"])
   },
   watch: {
     $route(val) {
@@ -65,9 +64,9 @@ export default {
     this.showBot = this.$router.currentRoute.path != "/sign";
     this.init();
     if (navigator.userAgent.indexOf("iPhone") > 0) {
-      this.iphoneStyle =
-        "background-color:#ffffff !important;color:#000000 !important;";
-        
+      this.$store.commit("changeAppbarStyle", "top-van-backage-iphone");
+    } else {
+      this.$store.commit("changeAppbarStyle", "top-van-backage-oneplus");
     }
   }
 };
@@ -75,31 +74,31 @@ export default {
 
 <style>
 .bot-van {
-  position: fixed !important;
-  bottom: 0px !important;
-  width: 100% !important;
+  position: fixed;
+  bottom: 0px;
+  width: 100%;
 }
 
 .top-van {
-  position: fixed !important;
-  top: 0px !important;
-  width: 100% !important;
-  background-image: linear-gradient(
-    to top,
-    #666666 0%,
-    #000000 100%
-  );
-  color: #ffffff !important;
-  height: 56px !important;
+  position: fixed;
+  top: 0px;
+  width: 100%;
+  height: 56px;
   margin-top: -1px;
 }
 
-.top-van > .mu-appbar-title {
-  font-size: 18px !important;
-  font-weight: 500;
+.top-van-backage-iphone {
+  background-color: #ffffff;
+  color: #000000;
 }
 
-.mu-appbar {
-  background-color: #000000 !important;
+.top-van-backage-oneplus {
+  background-image: linear-gradient(0deg, #666 0, #000);
+  color: #ffffff;
+}
+
+.top-van > .mu-appbar-title {
+  font-size: 18px;
+  font-weight: 500;
 }
 </style>
