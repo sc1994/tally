@@ -64,9 +64,10 @@ export default {
     this.value = this.$router.currentRoute.path;
     this.showBot = this.$router.currentRoute.path != "/sign";
     this.init();
-    if (navigator.userAgent.indexOf("iPhone")) {
+    if (navigator.userAgent.indexOf("iPhone") > 0) {
       this.iphoneStyle =
         "background-color:#ffffff !important;color:#000000 !important;";
+        
     }
   }
 };
@@ -83,7 +84,11 @@ export default {
   position: fixed !important;
   top: 0px !important;
   width: 100% !important;
-  background-color: #000000 !important;
+  background-image: linear-gradient(
+    to top,
+    #666666 0%,
+    #000000 100%
+  );
   color: #ffffff !important;
   height: 56px !important;
   margin-top: -1px;
