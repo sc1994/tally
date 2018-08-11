@@ -79,17 +79,17 @@ export default {
 
 <style>
 .bot-van {
-  position: fixed;
-  bottom: 0px;
-  width: 100%;
+  position: fixed !important;
+  bottom: 0px !important;
+  width: 100% !important;
 }
 
 .top-van {
-  position: fixed;
-  top: 0px;
-  width: 100%;
-  height: 56px;
-  margin-top: -1px;
+  position: fixed !important;
+  top: 0px !important;
+  width: 100% !important;
+  height: 56px !important;
+  margin-top: -1px !important;
 }
 
 .top-van-backage-iphone {

@@ -9,6 +9,9 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+const userDB string = "tally"
+const userTable string = "user"
+
 // User 用户信息实体
 type User struct {
 	Id         bson.ObjectId `json:"id" bson:"_id,omitempty"`    // Id
@@ -16,9 +19,6 @@ type User struct {
 	Name       string        `json:"name" bson:"name"`           // Name
 	NickName   string        `json:"nick" bson:"nick"`           // NickName 昵称
 	CreateTime time.Time     `json:"ctime" bson:"ctime"`         // CreateTime 创建时间
-	Consumes   []ManyType    `json:"consumes" bson:"consumes"`   // Consumes 消费类型
-	Channels   []ManyType    `json:"channels" bson:"channels"`   // Channels 消费渠道
-	Modes      []ManyType    `json:"modes" bson:"modes"`         // Modes 消费模式-->支出/收入/预支
 	HeadImg    string        `json:"headImg" bson:"himg"`        // HeadImg 头像
 	Budget     float32       `json:"budget" bson:"budget"`       // 月预算
 	FixDate    float32       `json:"fixDate" bson:"fixDate"`     // 定期
@@ -26,19 +26,6 @@ type User struct {
 	Alipay     float32       `json:"aliPay" bson:"aliPay"`       // 支付宝
 	BackCard   float32       `json:"backCard" bson:"backCard"`   // 银行卡
 }
-
-// ManyType 泛指各种类型
-type ManyType struct {
-	Content string   `json:"content" bson:"content"` // 内容
-	Count   int64    `json:"count" bson:"count"`     // 使用次数
-	Default []string `json:"default" bson:"default"` // 默认关联内容
-}
-
-type ByCount []ManyType
-
-func (c ByCount) Len() int           { return len(c) }
-func (c ByCount) Swap(i, j int)      { c[i], c[j] = c[j], c[i] }
-func (c ByCount) Less(i, j int) bool { return c[i].Count > c[j].Count }
 
 // UserRequest 用户信息请求参数
 type UserRequest struct {
@@ -49,48 +36,50 @@ type UserRequest struct {
 	Remember bool   `json:"remember"`
 }
 
-const userDB string = "tally"
-const userTable string = "user"
+type UserResponse struct {
+	User
+	Consumes []Consume `json:"consumes"`
+	Channels []Channel `json:"channels"`
+}
 
 // FindOne 获取一条用户数据
-func (u *User) FindOne(search interface{}) {
-	r := new(User).Find(search)
+func (u *User) FindOneUser(search interface{}) {
+	r := new(User).FindUser(search)
 	if len(r) > 0 {
 		*u = *(r[0])
 	}
 }
 
 // Find 获取满足条件的用户数据
-func (u *User) Find(search interface{}) (result []*User) {
+func (u *User) FindUser(search interface{}) (result []*User) {
 	data.Find(userDB, userTable, search, &result)
 	return
 }
 
 // Insert 新增一条用户信息
-func (u *User) Insert() bool {
+func (u *User) InsertUser() bool {
 	return data.Insert(userDB, userTable, u)
 }
 
 // Update 更新一条用户信息
-func (u *User) Update(token string, selector interface{}, update interface{}) bool {
+func (u *User) UpdateUser(token string, selector interface{}, update interface{}) bool {
 	b := data.Update(userDB, userTable, selector, update)
-	u.FindOne(selector)
-	if data.RedisDel(token) {
+	u.FindOneUser(selector)
+	if data.DelRedis(token) {
 		j, _ := json.Marshal(u)
-		data.RedisSet(token, j, 7*24*60)
+		data.SetRedis(token, j, 7*24*60)
 	}
 	return b
 }
 
-// Init 依据token获取用户信息
-func (u *User) Init(token string) bool {
-	s, b := data.RedisGet(token)
+// GetUserByToken 依据token获取用户信息
+func (u *User) GetUserByToken(token string) bool {
+	s, b := data.GetRedis(token)
 	if b {
 		e := json.Unmarshal([]byte(s), u)
 		if e != nil {
 			return false
 		}
-		u.Password = "*"
 		return true
 	}
 	return false
@@ -98,5 +87,70 @@ func (u *User) Init(token string) bool {
 
 // RemoveToken 移除token
 func (u *User) RemoveToken(token string) {
-	data.RedisDel(token)
+	data.DelRedis(token)
 }
+
+func (u *User) InitUser(name string, pwd string) bool {
+	if len(name) <= 0 || len(pwd) <= 0 {
+		return false
+	}
+	*u = User{
+		Name:     name,
+		Password: pwd,
+		NickName: "用户: " + name,
+		HeadImg:  "",
+	}
+	return true
+}
+
+/*
+Consumes: []model.ManyType{
+			model.ManyType{
+				Content: "吃饭",
+				Count:   0,
+				Default: []string{"支出", "预支"},
+			},
+			model.ManyType{
+				Content: "房租",
+				Count:   0,
+				Default: []string{"支出", "预支"},
+			},
+			model.ManyType{
+				Content: "工资",
+				Count:   0,
+				Default: []string{"收入"},
+			},
+		},
+		Channels: []model.ManyType{
+			model.ManyType{
+				Content: "银行卡",
+				Count:   0,
+				Default: []string{"收入", "支出"},
+			},
+			model.ManyType{
+				Content: "信用卡",
+				Count:   0,
+				Default: []string{"预支"},
+			},
+			model.ManyType{
+				Content: "支付宝",
+				Count:   0,
+				Default: []string{"收入", "支出"},
+			},
+			model.ManyType{
+				Content: "花呗",
+				Count:   0,
+				Default: []string{"预支"},
+			},
+			model.ManyType{
+				Content: "微信",
+				Count:   0,
+				Default: []string{"收入", "支出"},
+			},
+			model.ManyType{
+				Content: "现金",
+				Count:   0,
+				Default: []string{"收入", "支出"},
+			},
+		},
+*/

@@ -78,8 +78,25 @@ func Update(db string, table string, selector interface{}, update interface{}) b
 	return true
 }
 
-// RedisGet 读取缓存
-func RedisGet(key string) (string, bool) {
+// Delete 删除一条数据
+func Delete(db string, table string, selector interface{}) bool {
+	session, err := mgo.Dial(common.MongoConnect)
+	defer session.Close()
+	if err != nil {
+		panic(err)
+	}
+	session.SetMode(mgo.Monotonic, true)
+	c := session.DB(db).C(table)
+	err = c.Remove(selector)
+	if err != nil {
+		panic(err)
+	} else {
+		return true
+	}
+}
+
+// GetRedis 读取缓存
+func GetRedis(key string) (string, bool) {
 	client := redis.NewClient(options)
 	defer client.Close()
 	r, e := client.Get(key).Result()
@@ -89,8 +106,8 @@ func RedisGet(key string) (string, bool) {
 	return r, true
 }
 
-// RedisSet 设置缓存(过期最小粒度:分钟)
-func RedisSet(key string, value interface{}, minute int32) bool {
+// SetRedis 设置缓存(过期最小粒度:分钟)
+func SetRedis(key string, value interface{}, minute int32) bool {
 	client := redis.NewClient(options)
 	defer client.Close()
 	time := time.Duration(minute * 60 * 1000 * 1000 * 1000)
@@ -101,8 +118,8 @@ func RedisSet(key string, value interface{}, minute int32) bool {
 	return true
 }
 
-// RedisDel 删除一个key
-func RedisDel(key string) bool {
+// DelRedis 删除一个key
+func DelRedis(key string) bool {
 	client := redis.NewClient(options)
 	defer client.Close()
 	info := client.Del(key)

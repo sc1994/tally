@@ -11,12 +11,16 @@ import Axios from 'axios'
 import Toast from "muse-ui-toast";
 import 'muse-ui-loading/dist/muse-ui-loading.css'; // load css
 import Loading from 'muse-ui-loading';
+import Loadsh from 'lodash.uniqby'
 
 Vue.use(MuseUI)
 Vue.use(Toast)
 Vue.use(Loading)
-Axios.defaults.baseURL = 'http://suncheng.xyz:8888';
+Axios.defaults.baseURL = 'http://localhost';
+
 Vue.prototype.$axios = Axios;
+Vue.prototype.$_ = Loadsh;
+
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

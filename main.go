@@ -15,11 +15,9 @@ func main() {
 	r.Static("static", "static")
 	// 用户相关的操作接口======================================================
 	r.POST("/signup", controller.InsertUser)             //  注册
-	r.GET("/signupcheck/:name", controller.GetExist)     //  验证用户名是否存在
+	r.GET("/signupcheck/:name", controller.ExistUser)    //  验证用户名是否存在
 	r.GET("/getuser/:token", controller.GetUser)         //  获取用户信息
-	r.POST("/signin", controller.GetOneUser)             //  登陆验证
-	r.POST("/addconsume", controller.InstertConsume)     //  新增消费类型
-	r.POST("/removeconsume", controller.RemoveConsume)   //  移除消费类型
+	r.POST("/signin", controller.FindOneUser)            //  登陆验证
 	r.GET("/removetoken/:token", controller.RemoveToken) //  移除Token
 	// 账单相关接口=============================================================
 	r.POST("/inserttally", controller.InsertTally)       //   添加消费记录

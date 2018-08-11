@@ -38,7 +38,7 @@ func (t *Tally) InsertTally() bool {
 	return data.Insert(tallyDB, tallyTable, t)
 }
 
-// GetTally 获取消费信息
-func (t *Tally) GetTally(pageIndex int, pageSize int, search interface{}, result interface{}) bool {
+// FindTally 获取消费信息
+func (t *Tally) FindTally(pageIndex int, pageSize int, search interface{}, result interface{}) bool {
 	return data.Page(tallyDB, tallyTable, pageIndex, pageSize, "-ctime", search, result)
 }

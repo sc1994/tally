@@ -14,7 +14,7 @@ func InsertTally(c *gin.Context) {
 	request := new(model.TallyRequest)
 	common.BindExtend(c, request)
 	u := model.User{}
-	b := u.Init(request.Token)
+	b := u.GetUserByToken(request.Token)
 	if !b {
 		c.JSON(200, gin.H{
 			"result": b,
@@ -32,7 +32,7 @@ func InsertTally(c *gin.Context) {
 	}
 	b = t.InsertTally()
 	if b {
-		b = IncConsumeCount(request.Token, request.Type)
+		// b = IncConsumeCount(request.Token, request.Type)
 	}
 	c.JSON(200, gin.H{
 		"result": b,
@@ -44,7 +44,7 @@ func GetTallyByUser(c *gin.Context) {
 	request := new(model.TallyRequest)
 	common.BindExtend(c, request)
 	u := model.User{}
-	b := u.Init(request.Token)
+	b := u.GetUserByToken(request.Token)
 	if !b {
 		c.JSON(200, gin.H{
 			"result": b,
@@ -54,7 +54,7 @@ func GetTallyByUser(c *gin.Context) {
 	}
 	t := model.Tally{}
 	var result []model.Tally
-	b = t.GetTally(request.PageIndex, request.PageSize,
+	b = t.FindTally(request.PageIndex, request.PageSize,
 		bson.M{"uid": u.Id}, &result)
 	if !b {
 		c.JSON(200, gin.H{
