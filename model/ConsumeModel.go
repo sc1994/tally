@@ -1,6 +1,7 @@
 package model
 
 import (
+	"sort"
 	"tally/common"
 	"tally/data"
 	"time"
@@ -41,14 +42,15 @@ func FindConsumeByUserId(userId bson.ObjectId) (result []Consume) {
 	if result == nil {
 		result = []Consume{}
 	}
+	sort.Sort(ConsumebyCount(result))
 	return result
 }
 
 // ExistConsume 是否存在相同的类型
 func ExistConsume(userId bson.ObjectId, content string) bool {
 	search := bson.M{"uid": userId, "content": content}
-	var result []*Consume
-	data.Find(consumeDB, consumeTable, search, result)
+	var result []Consume
+	data.Find(consumeDB, consumeTable, search, &result)
 	if len(result) > 0 {
 		return true
 	}
@@ -58,7 +60,7 @@ func ExistConsume(userId bson.ObjectId, content string) bool {
 // UpdateConsume 更新内容和默认模式信息
 func (c *Consume) UpdateConsume() bool {
 	selector := bson.M{"_id": c.Id}
-	update := bson.M{"content": c.Content, "default": c.Default}
+	update := bson.M{"$set": bson.M{"content": c.Content, "default": c.Default}}
 	return data.Update(consumeDB, consumeTable, selector, update)
 }
 

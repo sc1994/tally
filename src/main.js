@@ -17,11 +17,8 @@ Vue.use(MuseUI)
 Vue.use(Toast)
 Vue.use(Loading)
 
-if (navigator.platform.indexOf("Win")) {
-  Axios.defaults.baseURL = 'http://localhost';
-} else {
-  Axios.defaults.baseURL = 'http://suncheng.xyz:8888';
-}
+Axios.defaults.baseURL = 'http://localhost';
+// Axios.defaults.baseURL = 'http://suncheng.xyz:8888';
 
 Vue.prototype.$axios = Axios;
 Vue.prototype.$_ = Loadsh;

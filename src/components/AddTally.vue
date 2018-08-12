@@ -108,7 +108,7 @@ export default {
       that.$axios
         .post("/inserttally", {
           token: localStorage.getItem("token"),
-          money: that.money,
+          money: parseFloat(that.money),
           type: that.consume,
           mode: that.tallyForm.mode,
           channel: that.tallyForm.channel,

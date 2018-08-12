@@ -14,17 +14,21 @@ const userTable string = "user"
 
 // User 用户信息实体
 type User struct {
-	Id         bson.ObjectId `json:"id" bson:"_id,omitempty"`    // Id
-	Password   string        `json:"pwd" bson:"pwd"`             // Password
-	Name       string        `json:"name" bson:"name"`           // Name
-	NickName   string        `json:"nick" bson:"nick"`           // NickName 昵称
-	CreateTime time.Time     `json:"ctime" bson:"ctime"`         // CreateTime 创建时间
-	HeadImg    string        `json:"headImg" bson:"himg"`        // HeadImg 头像
-	Budget     float32       `json:"budget" bson:"budget"`       // 月预算
-	FixDate    float32       `json:"fixDate" bson:"fixDate"`     // 定期
-	WechatPay  float32       `json:"wechatPay" bson:"wechatPay"` // 微信
-	Alipay     float32       `json:"aliPay" bson:"aliPay"`       // 支付宝
-	BackCard   float32       `json:"backCard" bson:"backCard"`   // 银行卡
+	Id         bson.ObjectId `json:"id" bson:"_id,omitempty"`      // Id
+	Password   string        `json:"pwd" bson:"pwd"`               // Password
+	Name       string        `json:"name" bson:"name"`             // Name
+	NickName   string        `json:"nick" bson:"nick"`             // NickName 昵称
+	CreateTime time.Time     `json:"ctime" bson:"ctime"`           // CreateTime 创建时间
+	HeadImg    string        `json:"headImg" bson:"himg"`          // HeadImg 头像
+	Budget     float32       `json:"budget" bson:"budget"`         // 月预算
+	FixDate    float32       `json:"fixDate" bson:"fixDate"`       // 定期
+	WechatPay  float32       `json:"wechatPay" bson:"wechatPay"`   // 微信
+	Alipay     float32       `json:"aliPay" bson:"aliPay"`         // 支付宝
+	BackCard   float32       `json:"backCard" bson:"backCard"`     // 银行卡
+	CreditCard float32       `json:"creditCard" bson:"creditCard"` // 信用卡
+	Cash       float32       `json:"cash" bson:"cash"`             // 现金
+	AntCheck   float32       `json:"antCheck" bson:"antCheck"`     // 花呗
+	WhiteBar   float32       `json:"whiteBar" bson:"whiteBar"`     // 白条
 }
 
 // UserRequest 用户信息请求参数
@@ -70,7 +74,7 @@ func (u *User) InsertUser() bool {
 }
 
 // Update 更新一条用户信息
-func UpdateUser(token string, name string, update interface{}) bool {
+func UpdateUser(name string, update interface{}) bool {
 	b := data.Update(userDB, userTable, bson.M{"name": name}, update)
 	return b
 }
@@ -126,4 +130,61 @@ func RefreshUserRedis(token string) (bool, string) {
 	j, _ := json.Marshal(ur)         // 序列化用户数据
 	data.SetRedis(token, j, 7*24*60) // 设置到缓存
 	return true, ""
+}
+
+func (u *User) ChangeUserMoney(mode string, channel string, money float32) bool {
+	var updateField string
+	var updateValue float32
+	switch channel {
+	case "支付宝":
+		if mode == "收入" {
+			u.Alipay += money
+			updateValue = money
+		} else if mode == "支出" {
+			u.Alipay -= money
+			updateValue = -money
+		}
+		updateField = "alipay"
+	case "微信":
+		if mode == "收入" {
+			u.WechatPay += money
+			updateValue = money
+		} else if mode == "支出" {
+			u.WechatPay -= money
+			updateValue = -money
+		}
+		updateField = "wechatPay"
+	case "银行卡":
+		if mode == "收入" {
+			u.BackCard += money
+			updateValue = money
+		} else if mode == "支出" {
+			u.BackCard -= money
+			updateValue = -money
+		}
+		updateField = "backCard"
+	case "现金":
+		if mode == "收入" {
+			u.Cash += money
+			updateValue = money
+		} else if mode == "支出" {
+			u.Cash -= money
+			updateValue = -money
+		}
+		updateField = "cash"
+	case "信用卡":
+		u.CreditCard -= money // 信用卡 只有支出,还款在job中进行
+		updateValue = -money
+		updateField = "creditCard"
+	case "花呗":
+		u.AntCheck -= money
+		updateValue = -money
+		updateField = "antCheck"
+	case "白条":
+		u.WhiteBar -= money
+		updateValue = -money
+		updateField = "whiteBar"
+	}
+	update := bson.M{"$inc": bson.M{updateField: updateValue}}
+	return UpdateUser(u.Name, update)
 }
