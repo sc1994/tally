@@ -63,8 +63,8 @@ func (c *Consume) UpdateConsume() bool {
 }
 
 // IncConsumeCount 类型累加1
-func IncConsumeCount(id bson.ObjectId) bool {
-	selector := bson.M{"_id": id}
+func IncConsumeCount(userId bson.ObjectId, content string) bool {
+	selector := bson.M{"content": content, "uid": userId}
 	update := bson.M{"$inc": bson.M{"count": 1}}
 	return data.Update(consumeDB, consumeTable, selector, update)
 }
@@ -88,7 +88,7 @@ func InitConsume(userId bson.ObjectId) int {
 			UserId:  userId,
 			Content: "工资",
 			Count:   0,
-			Default: []string{common.TallyMode[0], common.TallyMode[2]},
+			Default: []string{common.TallyMode[0]},
 		},
 	}
 	result := 0

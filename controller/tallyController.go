@@ -14,12 +14,27 @@ func InsertTally(c *gin.Context) {
 	request := new(model.TallyRequest)
 	common.BindExtend(c, request)
 	u := model.UserResponse{}
+	// 获取用户信息
 	b := u.GetUserByToken(request.Token)
 	if !b {
 		c.JSON(200, gin.H{
 			"result": b,
 		})
 		return
+	}
+	// 检查消费类型是否存在
+	e := model.ExistConsume(u.Id, request.Type)
+	if !e {
+		// 新增消费类型
+		consume := model.Consume{
+			Content: request.Type,
+			Default: []string{common.TallyMode[0], common.TallyMode[1], common.TallyMode[2]},
+			Count:   1,
+			UserId:  u.Id,
+		}
+		consume.InsertConsume()
+	} else {
+		model.IncConsumeCount(u.Id, request.Type)
 	}
 	t := model.Tally{
 		UserId:     u.Id,
@@ -32,7 +47,9 @@ func InsertTally(c *gin.Context) {
 	}
 	b = t.InsertTally()
 	if b {
-		// b = IncConsumeCount(request.Token, request.Type)
+		if request.Channel == "" {
+
+		}
 	}
 	c.JSON(200, gin.H{
 		"result": b,
@@ -72,11 +89,4 @@ func GetTallyByUser(c *gin.Context) {
 		"body":   result,
 	})
 	return
-}
-
-// GetTest 函数封装方式
-func GetTest(c *gin.Context) {
-	c.JSON(200, gin.H{
-		"msg": "查询成功",
-	})
 }

@@ -214,14 +214,11 @@ export default {
         .then(result => {
           if (result.data.result) {
             if (result.data.body != null) that.tallyList = result.data.body;
-          } else {
-            that.$toast.error("网络异常, 请重试");
           }
         });
     },
     formatDate() {
-      // 日期格式化
-      return "1-1-1-";
+      return this.$format(new Date(), "yyyy-MM-dd hh:mm");
     }
   },
   computed: {

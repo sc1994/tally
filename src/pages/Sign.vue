@@ -59,8 +59,8 @@ export default {
           message: "必须填写密码"
         },
         {
-          validate: val => val.length > 6,
-          message: "密码长度大于6小于10"
+          validate: val => val.length > 5,
+          message: "密码长度大于5"
         }
       ]
     };

@@ -85,7 +85,6 @@ export default {
   data() {
     return {
       thatStep: -1,
-      thatOpenTally: this.openTally,
       tallyForm: {
         mode: "",
         channel: "",
@@ -118,9 +117,11 @@ export default {
         })
         .then(result => {
           if (result.data.result) {
-            that.$toast.success("网络异常,请重试");
+            that.$toast.success("添加成功");
             setTimeout(() => {
-              that.thatOpenTally = false;
+              that.$emit("update:openTally", false);
+              that.$emit("update:consume", "");
+              that.$emit("update:money", "");
             }, 1200);
           } else {
             that.$toast.error("网络异常,请重试");
