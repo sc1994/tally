@@ -43,37 +43,40 @@ type UserResponse struct {
 }
 
 // FindOne 获取一条用户数据
-func (u *User) FindOneUser(search interface{}) {
-	r := new(User).FindUser(search)
+func (u *User) FindOneUser(name string, pwd string) bool {
+	search := bson.M{"name": name}
+	if len(pwd) > 0 {
+		search["pwd"] = pwd
+	}
+	r := FindUser(search)
 	if len(r) > 0 {
 		*u = *(r[0])
+		return true
 	}
+	return false
 }
 
 // Find 获取满足条件的用户数据
-func (u *User) FindUser(search interface{}) (result []*User) {
+func FindUser(search interface{}) (result []*User) {
 	data.Find(userDB, userTable, search, &result)
 	return
 }
 
 // Insert 新增一条用户信息
 func (u *User) InsertUser() bool {
+	u.CreateTime = time.Now()
+	u.Id = bson.NewObjectId()
 	return data.Insert(userDB, userTable, u)
 }
 
 // Update 更新一条用户信息
-func (u *User) UpdateUser(token string, selector interface{}, update interface{}) bool {
-	b := data.Update(userDB, userTable, selector, update)
-	u.FindOneUser(selector)
-	if data.DelRedis(token) {
-		j, _ := json.Marshal(u)
-		data.SetRedis(token, j, 7*24*60)
-	}
+func UpdateUser(token string, name string, update interface{}) bool {
+	b := data.Update(userDB, userTable, bson.M{"name": name}, update)
 	return b
 }
 
-// GetUserByToken 依据token获取用户信息
-func (u *User) GetUserByToken(token string) bool {
+// GetUserByToken 依据token获取用户全部信息
+func (u *UserResponse) GetUserByToken(token string) bool {
 	s, b := data.GetRedis(token)
 	if b {
 		e := json.Unmarshal([]byte(s), u)
@@ -85,72 +88,42 @@ func (u *User) GetUserByToken(token string) bool {
 	return false
 }
 
-// RemoveToken 移除token
-func (u *User) RemoveToken(token string) {
+// RemoveUserToken 移除token
+func RemoveUserToken(token string) {
 	data.DelRedis(token)
 }
 
-func (u *User) InitUser(name string, pwd string) bool {
-	if len(name) <= 0 || len(pwd) <= 0 {
-		return false
-	}
-	*u = User{
+// 初始化用户
+func InitUser(name string, pwd string) (bool, User) {
+	u := User{
 		Name:     name,
 		Password: pwd,
 		NickName: "用户: " + name,
-		HeadImg:  "",
+		HeadImg:  "/static/images/head-default.png",
 	}
-	return true
+	b := u.InsertUser()
+	return b, u
 }
 
-/*
-Consumes: []model.ManyType{
-			model.ManyType{
-				Content: "吃饭",
-				Count:   0,
-				Default: []string{"支出", "预支"},
-			},
-			model.ManyType{
-				Content: "房租",
-				Count:   0,
-				Default: []string{"支出", "预支"},
-			},
-			model.ManyType{
-				Content: "工资",
-				Count:   0,
-				Default: []string{"收入"},
-			},
-		},
-		Channels: []model.ManyType{
-			model.ManyType{
-				Content: "银行卡",
-				Count:   0,
-				Default: []string{"收入", "支出"},
-			},
-			model.ManyType{
-				Content: "信用卡",
-				Count:   0,
-				Default: []string{"预支"},
-			},
-			model.ManyType{
-				Content: "支付宝",
-				Count:   0,
-				Default: []string{"收入", "支出"},
-			},
-			model.ManyType{
-				Content: "花呗",
-				Count:   0,
-				Default: []string{"预支"},
-			},
-			model.ManyType{
-				Content: "微信",
-				Count:   0,
-				Default: []string{"收入", "支出"},
-			},
-			model.ManyType{
-				Content: "现金",
-				Count:   0,
-				Default: []string{"收入", "支出"},
-			},
-		},
-*/
+// RefreshUserRedis 刷新用户缓存
+func RefreshUserRedis(token string) (bool, string) {
+	u := User{}
+	ur := UserResponse{}
+	if !ur.GetUserByToken(token) {
+		return false, "token不存在"
+	}
+	if !data.DelRedis(token) {
+		return false, "移除token失败"
+	}
+	if !u.FindOneUser(u.Name, "") {
+		return false, "用户信息不存在"
+	}
+	ur = UserResponse{
+		User:     u,
+		Consumes: FindConsumeByUserId(u.Id),
+		Channels: FindChannelByUserId(u.Id),
+	} // 获取完整用户信息
+	j, _ := json.Marshal(ur)         // 序列化用户数据
+	data.SetRedis(token, j, 7*24*60) // 设置到缓存
+	return true, ""
+}

@@ -1,6 +1,7 @@
 package model
 
 import (
+	"tally/common"
 	"tally/data"
 	"time"
 
@@ -18,12 +19,12 @@ type Consume struct {
 	Count      int64         `json:"count" bson:"count"`     // 使用次数
 	Default    []string      `json:"default" bson:"default"` // 默认消费的模式
 	CreateTime time.Time     `json:"ctime" bson:"ctime"`     // CreateTime 创建时间
-
 }
 
 // InsertConsume 新增一条消费类型
 func (c *Consume) InsertConsume() bool {
 	c.CreateTime = time.Now()
+	c.Id = bson.NewObjectId()
 	return data.Insert(consumeDB, consumeTable, c)
 }
 
@@ -66,6 +67,38 @@ func IncConsumeCount(id bson.ObjectId) bool {
 	selector := bson.M{"_id": id}
 	update := bson.M{"$inc": bson.M{"count": 1}}
 	return data.Update(consumeDB, consumeTable, selector, update)
+}
+
+// InitConsume 初始化用户的消费类型
+func InitConsume(userId bson.ObjectId) int {
+	consumes := []Consume{
+		Consume{
+			UserId:  userId,
+			Content: "吃饭",
+			Count:   0,
+			Default: []string{common.TallyMode[1], common.TallyMode[2]},
+		},
+		Consume{
+			UserId:  userId,
+			Content: "房租",
+			Count:   0,
+			Default: []string{common.TallyMode[1], common.TallyMode[2]},
+		},
+		Consume{
+			UserId:  userId,
+			Content: "工资",
+			Count:   0,
+			Default: []string{common.TallyMode[0], common.TallyMode[2]},
+		},
+	}
+	result := 0
+	for _, v := range consumes {
+		b := v.InsertConsume()
+		if b {
+			result++
+		}
+	}
+	return result
 }
 
 type ConsumebyCount []Consume

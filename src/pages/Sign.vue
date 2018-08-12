@@ -50,7 +50,7 @@ export default {
         },
         {
           validate: val => val.length >= 3,
-          message: "用户名长度大于3"
+          message: "用户名长度大于2"
         }
       ],
       passwordRules: [
@@ -59,8 +59,8 @@ export default {
           message: "必须填写密码"
         },
         {
-          validate: val => val.length >= 3 && val.length <= 10,
-          message: "密码长度大于3小于10"
+          validate: val => val.length > 6,
+          message: "密码长度大于6小于10"
         }
       ]
     };
@@ -90,15 +90,23 @@ export default {
             remember: that.loginModel.remember
           })
           .then(result => {
-            if (result.data.token && result.data.token.length > 10) {
-              that.$toast.success("登陆成功, 请稍等...");
-              localStorage.setItem("token", result.data.token);
-              that.$store.commit("initUser", result.data.user);
-              setTimeout(() => {
-                that.$router.push({ path: "/" });
-              }, 1200);
+            if (result.data.result) {
+              if (that.active == 0) {
+                localStorage.setItem("token", result.data.token);
+                that.$toast.success("登陆成功, 请稍后...");
+                setTimeout(() => {
+                  that.$router.push({ path: "/" });
+                }, 1200);
+              } else {
+                that.$toast.success("注册成功, 请登录");
+                that.active = 0;
+              }
             } else {
-              that.$toast.warning("用户名或者密码错误");
+              if (that.active == 0) {
+                that.$toast.warning("用户名或者密码错误");
+              } else {
+                that.$toast.warning("用户名已存在");
+              }
             }
             loading.close();
           })
@@ -108,7 +116,37 @@ export default {
           });
       });
     },
-    chenkName() {}
+    chenkName() {
+      var that = this;
+      if (that.active == 0 || that.loginModel.username.length < 3) {
+        that.nameErrorText = "";
+        return;
+      }
+      var loading = that.$loading({});
+      that.$axios
+        .get("/signupcheck/" + that.loginModel.username)
+        .then(response => {
+          if (response.data.exist) {
+            that.nameErrorText = "已存在的用户名";
+          }
+          loading.close();
+        })
+        .catch(error => {
+          that.$toast.error("网路异常, 请重试");
+          loading.close();
+        });
+    }
+  },
+  watch: {
+    active(val) {
+      this.$refs.form.clear();
+      if (this.loginModel.username.length <= 2) {
+        this.loginModel.username = "";
+      }
+      this.loginModel.password1 = "";
+      this.loginModel.password2 = "";
+      this.loginModel.remember = true;
+    }
   }
 };
 </script>

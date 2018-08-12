@@ -1,6 +1,7 @@
 package model
 
 import (
+	"tally/common"
 	"tally/data"
 	"time"
 
@@ -23,6 +24,7 @@ type Channel struct {
 // InsertChannel 新增一条消费渠道
 func (c *Channel) InsertChannel() bool {
 	c.CreateTime = time.Now()
+	c.Id = bson.NewObjectId()
 	return data.Insert(channelDB, channelTable, c)
 }
 
@@ -65,6 +67,62 @@ func IncChannelCount(id bson.ObjectId) bool {
 	selector := bson.M{"_id": id}
 	update := bson.M{"$inc": bson.M{"count": 1}}
 	return data.Update(channelDB, channelTable, selector, update)
+}
+
+// InitChannel 初始化用户的渠道数据
+func InitChannel(userId bson.ObjectId) int {
+	channels := []Channel{
+		Channel{
+			UserId:  userId,
+			Content: "支付宝",
+			Count:   0,
+			Default: []string{common.TallyMode[0], common.TallyMode[1]},
+		},
+		Channel{
+			UserId:  userId,
+			Content: "微信",
+			Count:   0,
+			Default: []string{common.TallyMode[0], common.TallyMode[1]},
+		},
+		Channel{
+			UserId:  userId,
+			Content: "银行卡",
+			Count:   0,
+			Default: []string{common.TallyMode[0], common.TallyMode[1]},
+		},
+		Channel{
+			UserId:  userId,
+			Content: "信用卡",
+			Count:   0,
+			Default: []string{common.TallyMode[2]},
+		},
+		Channel{
+			UserId:  userId,
+			Content: "现金",
+			Count:   0,
+			Default: []string{common.TallyMode[0], common.TallyMode[1]},
+		},
+		Channel{
+			UserId:  userId,
+			Content: "花呗",
+			Count:   0,
+			Default: []string{common.TallyMode[2]},
+		},
+		Channel{
+			UserId:  userId,
+			Content: "白条",
+			Count:   0,
+			Default: []string{common.TallyMode[2]},
+		},
+	}
+	result := 0
+	for _, v := range channels {
+		b := v.InsertChannel()
+		if b {
+			result++
+		}
+	}
+	return result
 }
 
 type ChannelbyCount []Channel

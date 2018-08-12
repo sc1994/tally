@@ -12,19 +12,12 @@ import (
 
 // GetUser 使用Token获取用户信息
 func GetUser(c *gin.Context) {
-	user := model.User{}
+	user := model.UserResponse{}
 	b := user.GetUserByToken(c.Param("token"))
 	if b {
-		consumes := model.FindConsumeByUserId(user.Id)
-		channels := model.FindChannelByUserId(user.Id)
-		response := model.UserResponse{
-			User:     user,
-			Consumes: consumes,
-			Channels: channels,
-		}
 		c.JSON(200, gin.H{
 			"result": b,
-			"user":   response,
+			"user":   user,
 		})
 	} else {
 		c.JSON(200, gin.H{
@@ -36,14 +29,14 @@ func GetUser(c *gin.Context) {
 
 // RemoveToken 移除Token，用于注销用户登录
 func RemoveToken(c *gin.Context) {
-	new(model.User).RemoveToken(c.Param("token"))
+	model.RemoveUserToken(c.Param("token"))
 }
 
 // ExistUser 获取用户名是否存在
 func ExistUser(c *gin.Context) {
-	_, _, t := getOneUser(c.Param("name"), "", 0)
+	e := new(model.User).FindOneUser(c.Param("name"), "")
 	c.JSON(200, gin.H{
-		"exist": t == 2,
+		"exist": e,
 	})
 }
 
@@ -51,20 +44,21 @@ func ExistUser(c *gin.Context) {
 func InsertUser(c *gin.Context) {
 	request := new(model.UserRequest)
 	common.BindExtend(c, request)
-	u, _, t := getOneUser(request.Name, request.Password, 0)
-	var b bool
-
-	if t == 2 || t == 3 {
-		b = false
+	e := new(model.User).FindOneUser(request.Name, "")
+	if e {
+		c.JSON(200, gin.H{
+			"result": false,
+		})
 	} else {
-		b = u.InitUser(request.Name, request.Password)
+		b, u := model.InitUser(request.Name, request.Password) // 添加用户
 		if b {
-			b = u.InsertUser()
+			model.InitChannel(u.Id) // 添加消费渠道
+			model.InitConsume(u.Id) // 添加消费类型
 		}
+		c.JSON(200, gin.H{
+			"result": b,
+		})
 	}
-	c.JSON(200, gin.H{
-		"result": b,
-	})
 }
 
 // FindOneUser 获取用户信息用于登陆
@@ -77,35 +71,24 @@ func FindOneUser(c *gin.Context) {
 	} else {
 		hour = 2
 	}
-	u, m, t := getOneUser(request.Name, request.Password, hour)
-	if t == 1 || t == 2 {
+	u := model.User{}
+	e := u.FindOneUser(request.Name, request.Password)
+	if e {
+		ur := model.UserResponse{
+			User:     u,
+			Consumes: model.FindConsumeByUserId(u.Id),
+			Channels: model.FindChannelByUserId(u.Id),
+		} // 获取完整用户信息
+		k := bson.NewObjectId()            // new token
+		j, _ := json.Marshal(ur)           // 序列化用户数据
+		data.SetRedis(k.Hex(), j, hour*60) // 设置到缓存
 		c.JSON(200, gin.H{
-			"msg": m,
+			"result": e,
+			"token":  k,
 		})
 	} else {
 		c.JSON(200, gin.H{
-			"token": m,
-			"user":  u,
+			"result": e,
 		})
 	}
-}
-
-// getOneUser 获取一条用户信息
-func getOneUser(name string, password string, hour int32) (model.User, string, int16) {
-	user := model.User{}
-	user.FindOneUser(bson.M{"name": name})
-	if user.Name != name {
-		return model.User{}, "用户名称不存在", 1
-	}
-	if user.Password != password {
-		return user, "密码不正确", 2
-	}
-	user.Password = "*"
-	var k bson.ObjectId
-	if hour > 0 {
-		k = bson.NewObjectId()
-		j, _ := json.Marshal(user)
-		data.SetRedis(k.Hex(), j, hour*60)
-	}
-	return user, k.Hex(), 3
 }

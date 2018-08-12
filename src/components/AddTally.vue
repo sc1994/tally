@@ -94,7 +94,7 @@ export default {
       },
       manyType: {
         channels: [],
-        modes: [],
+        modes: [{ content: "收入" }, { content: "支出" }, { content: "预支" }],
         consumes: []
       }
     };
@@ -140,13 +140,6 @@ export default {
           default: []
         },
         ...val.channels
-      ];
-      this.manyType.modes = [
-        {
-          content: "",
-          default: []
-        },
-        ...val.modes
       ];
       this.manyType.consumes = [];
       val.consumes.forEach(x => {
