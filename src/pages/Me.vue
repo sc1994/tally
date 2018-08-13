@@ -9,8 +9,8 @@
             </mu-avatar>
           </mu-list-item-action>
           <mu-list-item-content style="margin-left: 22px;">
-            <mu-list-item-title>这里是昵称</mu-list-item-title>
-            <mu-list-item-sub-title>账号 : suncheng</mu-list-item-sub-title>
+            <mu-list-item-title>{{currentUser.nick}}</mu-list-item-title>
+            <mu-list-item-sub-title>账号 : {{currentUser.name}}</mu-list-item-sub-title>
           </mu-list-item-content>
         </mu-list-item>
       </mu-list>
@@ -45,7 +45,7 @@
         <mu-list-item button :ripple="true" slot="nested">
           <mu-list-item-title>
             每月预算 :
-            <span class="span-money">2,876</span>
+            <span class="span-money">{{$numberFormat(currentUser.budget)}}</span>
             元
           </mu-list-item-title>
           <mu-list-item-action>
@@ -62,7 +62,7 @@
         <mu-list-item button :ripple="true" slot="nested">
           <mu-list-item-title>
             银行卡 :
-            <span class="span-money">2,876</span>
+            <span class="span-money">{{$numberFormat(currentUser.backCard)}}</span>
             元
           </mu-list-item-title>
           <mu-list-item-action>
@@ -72,7 +72,7 @@
         <mu-list-item button :ripple="true" slot="nested">
           <mu-list-item-title>
             支付宝 :
-            <span class="span-money">2,876</span>
+            <span class="span-money">{{$numberFormat(currentUser.aliPay)}}</span>
             元
           </mu-list-item-title>
           <mu-list-item-action>
@@ -82,7 +82,7 @@
         <mu-list-item button :ripple="true" slot="nested">
           <mu-list-item-title>
             微信 :
-            <span class="span-money">2,876</span>
+            <span class="span-money">{{$numberFormat(currentUser.wechatPay)}}</span>
             元
           </mu-list-item-title>
           <mu-list-item-action>
@@ -92,7 +92,37 @@
         <mu-list-item button :ripple="true" slot="nested">
           <mu-list-item-title>
             定期 :
-            <span class="span-money">2,876</span>
+            <span class="span-money">{{$numberFormat(currentUser.fixDate)}}</span>
+            元
+          </mu-list-item-title>
+          <mu-list-item-action>
+            <mu-icon value="edit" color="Teal"></mu-icon>
+          </mu-list-item-action>
+        </mu-list-item>
+        <mu-list-item button :ripple="true" slot="nested">
+          <mu-list-item-title>
+            花呗 :
+            <span class="span-money loan">{{$numberFormat(currentUser.antCheck)}}</span>
+            元
+          </mu-list-item-title>
+          <mu-list-item-action>
+            <mu-icon value="edit" color="Teal"></mu-icon>
+          </mu-list-item-action>
+        </mu-list-item>
+        <mu-list-item button :ripple="true" slot="nested">
+          <mu-list-item-title>
+            信用卡 :
+            <span class="span-money loan">{{$numberFormat(currentUser.creditCard)}}</span>
+            元
+          </mu-list-item-title>
+          <mu-list-item-action>
+            <mu-icon value="edit" color="Teal"></mu-icon>
+          </mu-list-item-action>
+        </mu-list-item>
+        <mu-list-item button :ripple="true" slot="nested">
+          <mu-list-item-title>
+            白条 :
+            <span class="span-money loan">{{$numberFormat(currentUser.whiteBar)}}</span>
             元
           </mu-list-item-title>
           <mu-list-item-action>
@@ -179,11 +209,16 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
   data() {
     return {
       open: ""
     };
+  },
+  computed: {
+    ...mapState(["currentUser"])
   },
   methods: {
     loginOut() {
@@ -205,12 +240,12 @@ export default {
   font-size: 16px;
   font-weight: 900;
   color: #ff5722;
-  margin-left: 10px;
+  margin-left: 2px;
 }
 
 .loan {
   color: #4caf50;
-  margin-left: 0px;
+  margin-left: 2px;
 }
 
 .span-content {

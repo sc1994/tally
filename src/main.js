@@ -22,6 +22,7 @@ Axios.defaults.baseURL = 'http://localhost';
 
 Vue.prototype.$axios = Axios;
 Vue.prototype.$_ = Loadsh;
+
 Vue.prototype.$format = (date, fmt) => { // 时间格式化
   var that = new Date(date)
   var o = {
@@ -37,6 +38,33 @@ Vue.prototype.$format = (date, fmt) => { // 时间格式化
   for (var k in o)
     if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
   return fmt;
+};
+
+Vue.prototype.$numberFormat = (number) => {
+  var dec_point = "."
+  var thousands_sep = ","
+  var decimals = 2;
+  number = (number + '').replace(/[^0-9+-Ee.]/g, '');
+  var n = !isFinite(+number) ? 0 : +number,
+    prec = !isFinite(+decimals) ? 0 : Math.abs(decimals),
+    sep = (typeof thousands_sep === 'undefined') ? ',' : thousands_sep,
+    dec = (typeof dec_point === 'undefined') ? '.' : dec_point,
+    s = '',
+    toFixedFix = function (n, prec) {
+      var k = Math.pow(10, prec);
+      return '' + Math.floor(n * k) / k;
+    };
+  s = (prec ? toFixedFix(n, prec) : '' + Math.floor(n)).split('.');
+  var re = /(-?\d+)(\d{3})/;
+  while (re.test(s[0])) {
+    s[0] = s[0].replace(re, "$1" + sep + "$2");
+  }
+
+  if ((s[1] || '').length < prec) {
+    s[1] = s[1] || '';
+    s[1] += new Array(prec - s[1].length + 1).join('0');
+  }
+  return s.join(dec);
 };
 
 Vue.config.productionTip = false

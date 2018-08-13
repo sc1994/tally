@@ -188,7 +188,7 @@ export default {
       let that = this;
       setTimeout(() => {
         that.openTally = true;
-      }, 180);
+      }, 220);
       var isExist = false;
       this.consumes.forEach(x => {
         if (x == this.tallyForm.consume) {
@@ -232,9 +232,13 @@ export default {
       });
     },
     openTally(val) {
+      // todo 刷新时机待考虑
       if (!val) {
-        this.tallyForm.mode = "";
-        this.tallyForm.channel = "";
+        this.tallyForm = {
+          money: "",
+          consume: ""
+        };
+        this.initLate();
       }
     }
   },

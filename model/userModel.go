@@ -119,7 +119,7 @@ func RefreshUserRedis(token string) (bool, string) {
 	if !data.DelRedis(token) {
 		return false, "移除token失败"
 	}
-	if !u.FindOneUser(u.Name, "") {
+	if !u.FindOneUser(ur.Name, "") {
 		return false, "用户信息不存在"
 	}
 	ur = UserResponse{
@@ -144,7 +144,7 @@ func (u *User) ChangeUserMoney(mode string, channel string, money float32) bool 
 			u.Alipay -= money
 			updateValue = -money
 		}
-		updateField = "alipay"
+		updateField = "aliPay"
 	case "微信":
 		if mode == "收入" {
 			u.WechatPay += money
