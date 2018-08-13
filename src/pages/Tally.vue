@@ -217,8 +217,8 @@ export default {
           }
         });
     },
-    formatDate() {
-      return this.$format(new Date(), "yyyy-MM-dd hh:mm");
+    formatDate(date) {
+      return this.$format(date, "yyyy-MM-dd hh:mm");
     }
   },
   computed: {
