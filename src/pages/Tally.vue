@@ -1,8 +1,8 @@
 <template>
   <div>
     <mu-paper :z-depth="0" class="paper-title">
-      <residue :height="165" :residue="90" style="margin-top: -10px;float:left;"></residue>
-      <div style="margin-top: 10px;">
+      <residue :height="165" :residue="90"></residue>
+      <!-- <div style="margin-top: 10px;">
         <span class="span-title">当月剩余：
           <span class="span-money">50,203</span> 元</span>
         <br /><br />
@@ -11,11 +11,11 @@
         <br /><br />
         <span class="span-title">当月预支：
           <span class="span-money" style="color:#4caf50">478</span> 元</span>
-      </div>
+      </div> -->
     </mu-paper>
     <mu-paper :z-depth="1" style="height:100px;padding:10px">
       <mu-text-field @blur="showMode" v-model="tallyForm.money" style="height:80px;width:50%" label="金额" prefix="￥" type="number" label-float></mu-text-field>
-      <mu-auto-complete @change="showMode" v-model="tallyForm.consume" :data="consumes" style="height:80px;width:45%" label="种类" :max-search-results="5" open-on-focus label-float></mu-auto-complete>
+      <mu-auto-complete @change="showMode" v-model="tallyForm.consume" :data="consumes" style="height:80px;width:45%" label="种类" :max-search-results="12" open-on-focus label-float></mu-auto-complete>
     </mu-paper>
     <br/>
     <mu-list>
@@ -265,17 +265,9 @@ export default {
   margin-left: 0px;
 }
 .paper-title {
-  height: 180px;
   padding: 10px;
   margin-bottom: 10px;
-  background-image: linear-gradient(
-    to top,
-    #a7a7a7 0%,
-    lightgrey 1%,
-    #e0e0e0 26%,
-    #efefef 48%,
-    #d9d9d9 75%,
-    #a7a7a7 100%
-  );
+  background-image: linear-gradient(60deg, #29323c 0%, #485563 100%);
+  /* background-color: #efefef; */
 }
 </style>

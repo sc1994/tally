@@ -14,7 +14,7 @@ const userTable string = "user"
 
 // User 用户信息实体
 type User struct {
-	Id         bson.ObjectId `json:"id" bson:"_id,omitempty"`      // Id
+	ID         bson.ObjectId `json:"id" bson:"_id,omitempty"`      // ID
 	Password   string        `json:"pwd" bson:"pwd"`               // Password
 	Name       string        `json:"name" bson:"name"`             // Name
 	NickName   string        `json:"nick" bson:"nick"`             // NickName 昵称
@@ -40,13 +40,14 @@ type UserRequest struct {
 	Remember bool   `json:"remember"`
 }
 
+// UserResponse 用户信息的相应模型
 type UserResponse struct {
 	User
 	Consumes []Consume `json:"consumes"`
 	Channels []Channel `json:"channels"`
 }
 
-// FindOne 获取一条用户数据
+// FindOneUser 获取一条用户数据
 func (u *User) FindOneUser(name string, pwd string) bool {
 	search := bson.M{"name": name}
 	if len(pwd) > 0 {
@@ -60,20 +61,20 @@ func (u *User) FindOneUser(name string, pwd string) bool {
 	return false
 }
 
-// Find 获取满足条件的用户数据
+// FindUser 获取满足条件的用户数据
 func FindUser(search interface{}) (result []*User) {
 	data.Find(userDB, userTable, search, &result)
 	return
 }
 
-// Insert 新增一条用户信息
+// InsertUser 新增一条用户信息
 func (u *User) InsertUser() bool {
 	u.CreateTime = time.Now()
-	u.Id = bson.NewObjectId()
+	u.ID = bson.NewObjectId()
 	return data.Insert(userDB, userTable, u)
 }
 
-// Update 更新一条用户信息
+// UpdateUser 更新一条用户信息
 func UpdateUser(name string, update interface{}) bool {
 	b := data.Update(userDB, userTable, bson.M{"name": name}, update)
 	return b
@@ -97,7 +98,7 @@ func RemoveUserToken(token string) {
 	data.DelRedis(token)
 }
 
-// 初始化用户
+// InitUser 初始化用户
 func InitUser(name string, pwd string) (bool, User) {
 	u := User{
 		Name:     name,
@@ -124,14 +125,15 @@ func RefreshUserRedis(token string) (bool, string) {
 	}
 	ur = UserResponse{
 		User:     u,
-		Consumes: FindConsumeByUserId(u.Id),
-		Channels: FindChannelByUserId(u.Id),
+		Consumes: FindConsumeByUserID(u.ID),
+		Channels: FindChannelByUserID(u.ID),
 	} // 获取完整用户信息
 	j, _ := json.Marshal(ur)         // 序列化用户数据
 	data.SetRedis(token, j, 7*24*60) // 设置到缓存
 	return true, ""
 }
 
+// ChangeUserMoney 变更用户金额
 func (u *User) ChangeUserMoney(mode string, channel string, money float32) bool {
 	var updateField string
 	var updateValue float32

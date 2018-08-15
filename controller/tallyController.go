@@ -23,7 +23,7 @@ func InsertTally(c *gin.Context) {
 		return
 	}
 	t := model.Tally{
-		UserId:     u.Id,
+		UserID:     u.ID,
 		Money:      request.Money,
 		Type:       request.Type,
 		Mode:       request.Mode,
@@ -34,18 +34,18 @@ func InsertTally(c *gin.Context) {
 	b = t.InsertTally()
 	if b {
 		// 检查消费类型是否存在
-		e := model.ExistConsume(u.Id, request.Type)
+		e := model.ExistConsume(u.ID, request.Type)
 		if !e {
 			// 新增消费类型
 			consume := model.Consume{
 				Content: request.Type,
 				Default: []string{common.TallyMode[0], common.TallyMode[1], common.TallyMode[2]},
 				Count:   1,
-				UserId:  u.Id,
+				UserID:  u.ID,
 			}
 			consume.InsertConsume()
 		} else {
-			model.IncConsumeCount(u.Id, request.Type)
+			model.IncConsumeCount(u.ID, request.Type)
 		}
 		b = u.ChangeUserMoney(request.Mode, request.Channel, request.Money)
 		model.RefreshUserRedis(request.Token)
@@ -73,7 +73,7 @@ func GetTallyByUser(c *gin.Context) {
 	b = t.FindTally(
 		request.PageIndex,
 		request.PageSize,
-		bson.M{"uid": u.Id},
+		bson.M{"uid": u.ID},
 		&result)
 	if !b {
 		c.JSON(200, gin.H{

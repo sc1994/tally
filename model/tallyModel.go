@@ -7,9 +7,10 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+// Tally 账单模型
 type Tally struct {
-	Id         bson.ObjectId `json:"id" bson:"_id,omitempty"`
-	UserId     bson.ObjectId `json:"userId" bson:"uid"`
+	ID         bson.ObjectId `json:"id" bson:"_id,omitempty"`
+	UserID     bson.ObjectId `json:"userID" bson:"uid"`
 	Money      float32       `json:"money" bson:"money"`
 	Type       string        `json:"type" bson:"type"`
 	Mode       string        `json:"mode" bson:"mode"`
@@ -18,6 +19,7 @@ type Tally struct {
 	Remark     string        `json:"remark" bson:"remark"`
 }
 
+// TallyRequest 账单模型的请求模型
 type TallyRequest struct {
 	Token      string    `json:"token"`
 	Money      float32   `json:"money"`

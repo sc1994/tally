@@ -52,8 +52,8 @@ func InsertUser(c *gin.Context) {
 	} else {
 		b, u := model.InitUser(request.Name, request.Password) // 添加用户
 		if b {
-			model.InitChannel(u.Id) // 添加消费渠道
-			model.InitConsume(u.Id) // 添加消费类型
+			model.InitChannel(u.ID) // 添加消费渠道
+			model.InitConsume(u.ID) // 添加消费类型
 		}
 		c.JSON(200, gin.H{
 			"result": b,
@@ -76,8 +76,8 @@ func FindOneUser(c *gin.Context) {
 	if e {
 		ur := model.UserResponse{
 			User:     u,
-			Consumes: model.FindConsumeByUserId(u.Id),
-			Channels: model.FindChannelByUserId(u.Id),
+			Consumes: model.FindConsumeByUserID(u.ID),
+			Channels: model.FindChannelByUserID(u.ID),
 		} // 获取完整用户信息
 		k := bson.NewObjectId()            // new token
 		j, _ := json.Marshal(ur)           // 序列化用户数据
