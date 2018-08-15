@@ -23,5 +23,8 @@ func main() {
 	r.POST("/inserttally", controller.InsertTally)       //   添加消费记录
 	r.POST("/gettallybyuser", controller.GetTallyByUser) //  获取当前用户的消费记录
 
+	// 功能或者包的试验
+	r.GET("/test1", controller.Test1) // ling selectMary
+
 	r.Run(":80")
 }
