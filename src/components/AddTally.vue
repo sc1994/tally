@@ -142,29 +142,32 @@ export default {
         },
         ...val.channels
       ];
-      this.manyType.consumes = [];
-      val.consumes.forEach(x => {
-        this.manyType.consumes.push(x.content);
-      });
+      this.manyType.consumes = this.$linq(val.consumes)
+        .select(x => x.content)
+        .toArray();
     },
     thatStep(val) {
       var that = this;
       if (val == 0) {
         var count = 0;
         var currentMode = "";
-        that.currentUser.consumes.forEach(c => {
-          if (c.content == that.consume) {
-            that.manyType.modes.forEach(m => {
-              if (c.default.indexOf(m.content) > -1) {
-                m.hide = false;
-                count++;
-                currentMode = m.content;
-              } else {
-                m.hide = true;
-              }
-            });
-          }
-        });
+
+        var currentConsume = that
+          .$linq(that.currentUser.consumes)
+          .firstOrDefault(x => x.content == that.consume);
+
+        if (currentConsume) {
+          that.manyType.modes.forEach(m => {
+            if (currentConsume.default.indexOf(m.content) > -1) {
+              m.hide = false;
+              count++;
+              currentMode = m.content;
+            } else {
+              m.hide = true;
+            }
+          });
+        }
+
         if (count == 1) {
           that.thatStep += 1;
           that.tallyForm.mode = currentMode;

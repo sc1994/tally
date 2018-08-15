@@ -11,7 +11,7 @@ import Axios from 'axios'
 import Toast from "muse-ui-toast";
 import 'muse-ui-loading/dist/muse-ui-loading.css'; // load css
 import Loading from 'muse-ui-loading';
-import Loadsh from 'lodash.uniqby'
+import Linq from 'linq'
 
 Vue.use(MuseUI)
 Vue.use(Toast)
@@ -21,7 +21,7 @@ Vue.use(Loading)
 Axios.defaults.baseURL = 'http://suncheng.xyz:8888';
 
 Vue.prototype.$axios = Axios;
-Vue.prototype.$_ = Loadsh;
+Vue.prototype.$linq = Linq.from;
 
 Vue.prototype.$format = (date, fmt) => { // 时间格式化
   var that = new Date(date)
@@ -74,6 +74,8 @@ new Vue({
   el: '#app',
   router,
   store: Store,
-  components: { App },
+  components: {
+    App
+  },
   template: '<App/>'
 })

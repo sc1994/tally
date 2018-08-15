@@ -136,20 +136,8 @@
           <mu-icon class="toggle-icon" size="24" value="keyboard_arrow_up" v-if="open === 'type'"></mu-icon>
           <mu-icon class="toggle-icon" size="24" value="keyboard_arrow_down" v-else></mu-icon>
         </mu-list-item-action>
-        <mu-list-item button :ripple="true" slot="nested">
-          <mu-list-item-title>吃饭</mu-list-item-title>
-          <mu-list-item-action>
-            <mu-icon value="edit" color="Teal"></mu-icon>
-          </mu-list-item-action>
-        </mu-list-item>
-        <mu-list-item button :ripple="true" slot="nested">
-          <mu-list-item-title>工资</mu-list-item-title>
-          <mu-list-item-action>
-            <mu-icon value="edit" color="Teal"></mu-icon>
-          </mu-list-item-action>
-        </mu-list-item>
-        <mu-list-item button :ripple="true" slot="nested">
-          <mu-list-item-title>房租</mu-list-item-title>
+        <mu-list-item :key="i" v-for="item,i in currentUser.consumes" button :ripple="true" slot="nested">
+          <mu-list-item-title>{{item.content}}</mu-list-item-title>
           <mu-list-item-action>
             <mu-icon value="edit" color="Teal"></mu-icon>
           </mu-list-item-action>
