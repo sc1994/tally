@@ -1,5 +1,6 @@
 
 @echo build web
+
 @node build/build.js
 
 @echo commit to github
@@ -34,6 +35,7 @@
 
 @cd ../tally
 
-pause
+@echo END
+@pause
 
 
