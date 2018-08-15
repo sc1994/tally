@@ -34,5 +34,6 @@
 
 @cd ../tally
 
+pause
 
 

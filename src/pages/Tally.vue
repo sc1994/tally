@@ -239,6 +239,7 @@ export default {
           consume: ""
         };
         this.initLate();
+        this.$store.dispatch("initUser", { $router: this.$router });
       }
     }
   },

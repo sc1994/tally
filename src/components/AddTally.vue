@@ -149,37 +149,36 @@ export default {
     thatStep(val) {
       var that = this;
       if (val == 0) {
-        var count = 0;
-        var currentMode = "";
-
+        // 当前选中的类型
         var currentConsume = that
           .$linq(that.currentUser.consumes)
           .firstOrDefault(x => x.content == that.consume);
 
         if (currentConsume) {
-          that.manyType.modes.forEach(m => {
-            if (currentConsume.default.indexOf(m.content) > -1) {
-              m.hide = false;
-              count++;
-              currentMode = m.content;
-            } else {
-              m.hide = true;
-            }
-          });
+          that.manyType.modes = that
+            .$linq(that.manyType.modes)
+            .select(x => {
+              x.hide = currentConsume.default.indexOf(x.content) < 0;
+              return x;
+            })
+            .toArray();
         }
-
-        if (count == 1) {
+        var hideMode = that
+          .$linq(that.manyType.modes)
+          .where(x => !x.hide)
+          .toArray();
+        if (hideMode.length == 1) {
           that.thatStep += 1;
-          that.tallyForm.mode = currentMode;
+          that.tallyForm.mode = hideMode[0].content;
         }
       } else if (val == 1) {
-        that.manyType.channels.forEach(c => {
-          if (c.default.indexOf(that.tallyForm.mode) > -1) {
-            c.hide = false;
-          } else {
-            c.hide = true;
-          }
-        });
+        that
+          .$linq(that.manyType.channels)
+          .select(x => {
+            x.hide = x.default.indexOf(that.tallyForm.mode) < 0;
+            return x;
+          })
+          .toArray();
       } else if (val == 2) {
         that.tallyForm.date = new Date();
         var flag = that.tallyForm.mode == "收入" ? "收取" : "支付";
