@@ -1,43 +1,45 @@
 <template>
-  <canvas id="mountNode" width="356" height="246" style="height: 290px;margin-top: -25px;margin-left: -22px;"></canvas>
+  <canvas id="mountNode" height="246" style="width: 100%"></canvas>
 </template>
 
 <script>
 import F2 from "@antv/f2";
+import { mapState } from "vuex";
 
 export default {
   props: {
-    height: {
-      type: Number,
-      required: true
-    },
-    residue: {
-      type: Number,
+    user: {
+      type: Object,
       required: true
     }
   },
   data() {
     return {};
   },
-  methods: {
-    animation(data) {
-      var that = this;
-      setTimeout(() => {
-        data[0].value++;
-        if (data[0].value <= 5000) {
-          that.animation(data);
-        }
-      }, 50);
-    }
-  },
+  methods: {},
   mounted() {
     var that = this;
-    this.$nextTick(() => {
+    setTimeout(() => {
+      // 已使用 //todo
+      var haveBeenUsed = 4896;
+      // 预支
+      var advance = 568.2;
+      var ticks = [];
+
+      var mulriple = parseInt((that.user.budget / 50).toFixed(0));
+      for (let index = 0; index <= that.user.budget; index++) {
+        if (index % mulriple == 0) {
+          ticks.push(index);
+        }
+      }
+      ticks.push(that.user.budget);
+
       var Shape = F2.Shape;
       var data = [
         {
-          pointer: "剩余预算\n\n已消费 60 元\n预支 10 元",
-          value: 1,
+          pointer: `已消费\n\n剩余预算 ${that.user.budget -
+            haveBeenUsed} 元\n\n预支 ${advance} 元`,
+          value: haveBeenUsed,
           length: 0,
           y: 1
         }
@@ -103,24 +105,19 @@ export default {
         animate: false,
         pixelRatio: window.devicePixelRatio
       });
-      var ticks = [];
-      for (var i = 0; i <= 10000; i++) {
-        if (i % 150 == 0) {
-          ticks.push(i);
-        }
-      }
+
       chart.source(data, {
         value: {
           type: "linear",
           min: 0,
-          max: 100,
+          max: that.user.budget,
           ticks: ticks,
           nice: false
         },
         length: {
           type: "linear",
           min: 0,
-          max: 10
+          max: that.user.budget
         },
         y: {
           type: "linear",
@@ -139,7 +136,7 @@ export default {
       chart.axis("value", {
         tickLine: {
           strokeStyle: "#ccc",
-          lineWidth: 2,
+          lineWidth: 3,
           length: -5
         },
         label: null,
@@ -150,36 +147,38 @@ export default {
       chart.axis("y", false);
 
       //绘制仪表盘辅助元素
-      // chart.guide().arc({
-      //   start: [0, 1.05],
-      //   end: [4.8, 1.05],
-      //   style: {
-      //     strokeStyle: "#1890FF",
-      //     lineWidth: 5,
-      //     lineCap: "round"
-      //   }
-      // });
-      // chart.guide().arc({
-      //   start: [5.2, 1.05],
-      //   end: [9.8, 1.05],
-      //   style: {
-      //     strokeStyle: "#ccc",
-      //     lineWidth: 5,
-      //     lineCap: "round"
-      //   }
-      // });
-      // chart.guide().arc({
-      //   start: [10.2, 1.05],
-      //   end: [15, 1.05],
-      //   style: {
-      //     strokeStyle: "#ccc",
-      //     lineWidth: 5,
-      //     lineCap: "round"
-      //   }
-      // });
+      chart.guide().arc({
+        start: [10, 1.05],
+        end: [haveBeenUsed - mulriple / 2, 1.05],
+        style: {
+          strokeStyle: "#d84315",
+          lineWidth: 4,
+          lineCap: "round"
+        }
+      });
+
+      chart.guide().arc({
+        start: [haveBeenUsed + mulriple / 2, 1.05],
+        end: [that.user.budget - 10, 1.05],
+        style: {
+          strokeStyle: "#1890FF",
+          lineWidth: 4,
+          lineCap: "round"
+        }
+      });
 
       chart.guide().text({
-        position: [0, 3000],
+        position: [that.user.budget, 1.2],
+        content: that.user.budget + "",
+        style: {
+          fillStyle: "#ccc",
+          font: "18px Arial",
+          textAlign: "center"
+        }
+      });
+
+      chart.guide().text({
+        position: [0, 1.2],
         content: "0",
         style: {
           fillStyle: "#ccc",
@@ -187,18 +186,10 @@ export default {
           textAlign: "center"
         }
       });
-      // chart.guide().text({
-      //   position: [3100, 7000],
-      //   content: "5000",
-      //   style: {
-      //     fillStyle: "#ccc",
-      //     font: "18px Arial",
-      //     textAlign: "center"
-      //   }
-      // });
+
       chart.guide().text({
-        position: [7100, 10000],
-        content: "10000",
+        position: [that.user.budget / 2, 1.16],
+        content: that.user.budget / 2 + "",
         style: {
           fillStyle: "#ccc",
           font: "18px Arial",
@@ -212,9 +203,8 @@ export default {
         .size("length")
         .color("#1890FF")
         .shape("dashBoard");
-      that.animation(data);
       chart.render();
-    });
+    }, 800);
   }
 };
 </script>

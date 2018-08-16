@@ -1,7 +1,7 @@
 <template>
   <div>
-    <mu-paper :z-depth="0" class="paper-title">
-      <residue :height="165" :residue="90"></residue>
+    <mu-paper :z-depth="0" class="paper-title" :style="'height:'+titleWidth+'px;'">
+      <residue :user="currentUser"></residue>
       <!-- <div style="margin-top: 10px;">
         <span class="span-title">当月剩余：
           <span class="span-money">50,203</span> 元</span>
@@ -175,7 +175,8 @@ export default {
       },
       consumes: [],
       openTally: false,
-      tallyList: []
+      tallyList: [],
+      titleWidth: document.body.clientWidth * 0.72
     };
   },
   methods: {
@@ -265,8 +266,6 @@ export default {
   margin-left: 0px;
 }
 .paper-title {
-  height: 246px;
-  padding: 10px;
   margin-bottom: 10px;
   background-image: linear-gradient(60deg, #29323c 0%, #485563 100%);
   /* background-color: #efefef; */
