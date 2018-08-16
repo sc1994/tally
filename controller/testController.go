@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// Test1 测试SelectMany
 func Test1(c *gin.Context) {
 	books := []Book{
 		Book{
@@ -26,6 +27,7 @@ func Test1(c *gin.Context) {
 	})
 }
 
+// Book 测试
 type Book struct {
 	id      int
 	title   string

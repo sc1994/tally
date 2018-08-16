@@ -24,8 +24,8 @@ export default {
       var Shape = F2.Shape;
       var data = [
         {
-          pointer: "剩余预算\n\n已消费 60 元\n\n预支 10 元",
-          value: 500,
+          pointer: "剩余预算\n\n已消费 60 元\n预支 10 元",
+          value: 800,
           length: 0,
           y: 1
         }
@@ -92,8 +92,8 @@ export default {
         pixelRatio: window.devicePixelRatio
       });
       var ticks = [];
-      for (var i = 0; i <= 9987; i++) {
-        if (i % 5 == 0) {
+      for (var i = 0; i <= 10000; i++) {
+        if (i % 150 == 0) {
           ticks.push(i);
         }
       }
@@ -101,7 +101,7 @@ export default {
         value: {
           type: "linear",
           min: 0,
-          max: 15,
+          max: 100,
           ticks: ticks,
           nice: false
         },
@@ -138,63 +138,55 @@ export default {
       chart.axis("y", false);
 
       //绘制仪表盘辅助元素
-      chart.guide().arc({
-        start: [0, 1.05],
-        end: [4.8, 1.05],
-        style: {
-          strokeStyle: "#1890FF",
-          lineWidth: 5,
-          lineCap: "round"
-        }
-      });
-      chart.guide().arc({
-        start: [5.2, 1.05],
-        end: [9.8, 1.05],
-        style: {
-          strokeStyle: "#ccc",
-          lineWidth: 5,
-          lineCap: "round"
-        }
-      });
-      chart.guide().arc({
-        start: [10.2, 1.05],
-        end: [15, 1.05],
-        style: {
-          strokeStyle: "#ccc",
-          lineWidth: 5,
-          lineCap: "round"
-        }
-      });
-      chart.guide().arc({
-        start: [0, 1.2],
-        end: [15, 1.2],
-        style: {
-          strokeStyle: "#ccc",
-          lineWidth: 1
-        }
-      });
+      // chart.guide().arc({
+      //   start: [0, 1.05],
+      //   end: [4.8, 1.05],
+      //   style: {
+      //     strokeStyle: "#1890FF",
+      //     lineWidth: 5,
+      //     lineCap: "round"
+      //   }
+      // });
+      // chart.guide().arc({
+      //   start: [5.2, 1.05],
+      //   end: [9.8, 1.05],
+      //   style: {
+      //     strokeStyle: "#ccc",
+      //     lineWidth: 5,
+      //     lineCap: "round"
+      //   }
+      // });
+      // chart.guide().arc({
+      //   start: [10.2, 1.05],
+      //   end: [15, 1.05],
+      //   style: {
+      //     strokeStyle: "#ccc",
+      //     lineWidth: 5,
+      //     lineCap: "round"
+      //   }
+      // });
 
       chart.guide().text({
-        position: [-0.5, 1.3],
-        content: "0.00%",
+        position: [0, 3000],
+        content: "0",
         style: {
           fillStyle: "#ccc",
           font: "18px Arial",
           textAlign: "center"
         }
       });
+      // chart.guide().text({
+      //   position: [3100, 7000],
+      //   content: "5000",
+      //   style: {
+      //     fillStyle: "#ccc",
+      //     font: "18px Arial",
+      //     textAlign: "center"
+      //   }
+      // });
       chart.guide().text({
-        position: [7.5, 0.7],
-        content: "7.50%",
-        style: {
-          fillStyle: "#ccc",
-          font: "18px Arial",
-          textAlign: "center"
-        }
-      });
-      chart.guide().text({
-        position: [15.5, 1.3],
-        content: "15.00%",
+        position: [7100, 10000],
+        content: "10000",
         style: {
           fillStyle: "#ccc",
           font: "18px Arial",

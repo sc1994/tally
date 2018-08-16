@@ -46,10 +46,6 @@ func FindConsumeByUserID(userID bson.ObjectId) (result []Consume) {
 		func(x interface{}) interface{} {
 			return x.(Consume).Count
 		},
-	).ThenByDescending(
-		func(x interface{}) interface{} {
-			return x.(Consume).CreateTime
-		},
 	).ToSlice(&result)
 	return result
 	// return result

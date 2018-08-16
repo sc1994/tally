@@ -15,7 +15,7 @@
     </mu-paper>
     <mu-paper :z-depth="1" style="height:100px;padding:10px">
       <mu-text-field @blur="showMode" v-model="tallyForm.money" style="height:80px;width:50%" label="金额" prefix="￥" type="number" label-float></mu-text-field>
-      <mu-auto-complete @change="showMode" v-model="tallyForm.consume" :data="consumes" style="height:80px;width:45%" label="种类" :max-search-results="12" open-on-focus label-float></mu-auto-complete>
+      <mu-auto-complete @change="showMode" v-model="tallyForm.consume" :data="consumes" style="height:80px;width:45%" label="种类" :max-search-results="8" open-on-focus label-float></mu-auto-complete>
     </mu-paper>
     <br/>
     <mu-list>
