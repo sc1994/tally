@@ -37,7 +37,7 @@ export default {
       var Shape = F2.Shape;
       var data = [
         {
-          pointer: `已消费\n\n剩余预算 ${that.user.budget -
+          pointer: `\n剩余预算 ${that.user.budget -
             haveBeenUsed} 元\n\n预支 ${advance} 元`,
           value: haveBeenUsed,
           length: 0,
@@ -56,7 +56,7 @@ export default {
             },
             {
               x: x,
-              y: 0.3
+              y: 0.4
             }
           ];
         },
@@ -69,7 +69,7 @@ export default {
           var line = container.addShape("Polyline", {
             attrs: {
               points: [point1, point2],
-              stroke: "#1890FF",
+              stroke: "#d84315",
               lineWidth: 2
             }
           });
@@ -80,7 +80,7 @@ export default {
               text: text + " 元",
               x: cfg.center.x,
               y: cfg.center.y,
-              fill: "#1890FF",
+              fill: "#d84315",
               fontSize: 22,
               textAlign: "center",
               textBaseline: "bottom"
@@ -117,7 +117,7 @@ export default {
         length: {
           type: "linear",
           min: 0,
-          max: that.user.budget
+          max: 1
         },
         y: {
           type: "linear",
@@ -137,7 +137,7 @@ export default {
         tickLine: {
           strokeStyle: "#ccc",
           lineWidth: 3,
-          length: -5
+          length: -6
         },
         label: null,
         grid: null,
@@ -167,6 +167,7 @@ export default {
         }
       });
 
+      // 周边辅助信息
       chart.guide().text({
         position: [that.user.budget, 1.2],
         content: that.user.budget + "",
