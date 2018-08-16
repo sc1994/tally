@@ -1,5 +1,5 @@
 <template>
-  <canvas id="mountNode" width="356" height="246" style="width: 356px; height: 246.813px;"></canvas>
+  <canvas id="mountNode" width="356" height="246" style="height: 290px;margin-top: -25px;margin-left: -22px;"></canvas>
 </template>
 
 <script>
@@ -19,13 +19,25 @@ export default {
   data() {
     return {};
   },
+  methods: {
+    animation(data) {
+      var that = this;
+      setTimeout(() => {
+        data[0].value++;
+        if (data[0].value <= 5000) {
+          that.animation(data);
+        }
+      }, 50);
+    }
+  },
   mounted() {
+    var that = this;
     this.$nextTick(() => {
       var Shape = F2.Shape;
       var data = [
         {
           pointer: "剩余预算\n\n已消费 60 元\n预支 10 元",
-          value: 800,
+          value: 1,
           length: 0,
           y: 1
         }
@@ -42,7 +54,7 @@ export default {
             },
             {
               x: x,
-              y: 0.4
+              y: 0.3
             }
           ];
         },
@@ -200,6 +212,7 @@ export default {
         .size("length")
         .color("#1890FF")
         .shape("dashBoard");
+      that.animation(data);
       chart.render();
     });
   }

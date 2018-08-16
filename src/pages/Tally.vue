@@ -265,6 +265,7 @@ export default {
   margin-left: 0px;
 }
 .paper-title {
+  height: 246px;
   padding: 10px;
   margin-bottom: 10px;
   background-image: linear-gradient(60deg, #29323c 0%, #485563 100%);
