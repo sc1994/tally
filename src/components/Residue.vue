@@ -16,30 +16,24 @@ export default {
   data() {
     return {};
   },
-  methods: {},
-  mounted() {
-    var that = this;
-    setTimeout(() => {
-      // 已使用 //todo
-      var haveBeenUsed = 4896;
-      // 预支
-      var advance = 568.2;
+  watch: {
+    user(val) {
       var ticks = [];
-
-      var mulriple = parseInt((that.user.budget / 50).toFixed(0));
-      for (let index = 0; index <= that.user.budget; index++) {
+      var mulriple = parseInt((val.budget / 50).toFixed(0));
+      for (let index = 0; index <= val.budget; index++) {
         if (index % mulriple == 0) {
           ticks.push(index);
         }
       }
-      ticks.push(that.user.budget);
+      ticks.push(val.budget);
 
       var Shape = F2.Shape;
       var data = [
         {
-          pointer: `\n剩余预算 ${that.user.budget -
-            haveBeenUsed} 元\n\n预支 ${advance} 元`,
-          value: haveBeenUsed,
+          pointer: `\n剩余预算 ${val.budget - val.haveBeenUsed} 元\n\n预支 ${
+            val.haveBeenAdvance
+          } 元`,
+          value: val.haveBeenUsed,
           length: 0,
           y: 1
         }
@@ -110,7 +104,7 @@ export default {
         value: {
           type: "linear",
           min: 0,
-          max: that.user.budget,
+          max: val.budget,
           ticks: ticks,
           nice: false
         },
@@ -146,20 +140,22 @@ export default {
 
       chart.axis("y", false);
 
+      var userEnd = val.haveBeenUsed - mulriple / 2;
       //绘制仪表盘辅助元素
+      if (val.haveBeenUsed > 0) {
+        chart.guide().arc({
+          start: [10, 1.05],
+          end: [userEnd > mulriple ? userEnd : mulriple / 2, 1.05],
+          style: {
+            strokeStyle: "#d84315",
+            lineWidth: 4,
+            lineCap: "round"
+          }
+        });
+      }
       chart.guide().arc({
-        start: [10, 1.05],
-        end: [haveBeenUsed - mulriple / 2, 1.05],
-        style: {
-          strokeStyle: "#d84315",
-          lineWidth: 4,
-          lineCap: "round"
-        }
-      });
-
-      chart.guide().arc({
-        start: [haveBeenUsed + mulriple / 2, 1.05],
-        end: [that.user.budget - 10, 1.05],
+        start: [val.haveBeenUsed + mulriple / 2, 1.05],
+        end: [val.budget - 10, 1.05],
         style: {
           strokeStyle: "#1890FF",
           lineWidth: 4,
@@ -169,8 +165,8 @@ export default {
 
       // 周边辅助信息
       chart.guide().text({
-        position: [that.user.budget, 1.2],
-        content: that.user.budget + "",
+        position: [val.budget, 1.2],
+        content: val.budget + "",
         style: {
           fillStyle: "#ccc",
           font: "18px Arial",
@@ -189,8 +185,8 @@ export default {
       });
 
       chart.guide().text({
-        position: [that.user.budget / 2, 1.16],
-        content: that.user.budget / 2 + "",
+        position: [val.budget / 2, 1.16],
+        content: val.budget / 2 + "",
         style: {
           fillStyle: "#ccc",
           font: "18px Arial",
@@ -205,7 +201,7 @@ export default {
         .color("#1890FF")
         .shape("dashBoard");
       chart.render();
-    }, 800);
+    }
   }
 };
 </script>

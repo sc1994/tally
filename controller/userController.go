@@ -74,10 +74,13 @@ func FindOneUser(c *gin.Context) {
 	u := model.User{}
 	e := u.FindOneUser(request.Name, request.Password)
 	if e {
+		used, advance := model.AggregationUser(u.ID)
 		ur := model.UserResponse{
-			User:     u,
-			Consumes: model.FindConsumeByUserID(u.ID),
-			Channels: model.FindChannelByUserID(u.ID),
+			User:            u,
+			Consumes:        model.FindConsumeByUserID(u.ID),
+			Channels:        model.FindChannelByUserID(u.ID),
+			HaveBeenUsed:    used,
+			HaveBeenAdvance: advance,
 		} // 获取完整用户信息
 		k := bson.NewObjectId()            // new token
 		j, _ := json.Marshal(ur)           // 序列化用户数据

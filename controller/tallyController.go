@@ -70,7 +70,7 @@ func GetTallyByUser(c *gin.Context) {
 	}
 	t := model.Tally{}
 	var result []model.Tally
-	b = t.FindTally(
+	b = t.FindTallyPage(
 		request.PageIndex,
 		request.PageSize,
 		bson.M{"uid": u.ID},

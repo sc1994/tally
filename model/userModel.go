@@ -43,8 +43,10 @@ type UserRequest struct {
 // UserResponse 用户信息的相应模型
 type UserResponse struct {
 	User
-	Consumes []Consume `json:"consumes"`
-	Channels []Channel `json:"channels"`
+	Consumes        []Consume `json:"consumes"`
+	Channels        []Channel `json:"channels"`
+	HaveBeenUsed    float32   `json:"haveBeenUsed"`
+	HaveBeenAdvance float32   `json:"haveBeenAdvance"`
 }
 
 // FindOneUser 获取一条用户数据
@@ -123,10 +125,13 @@ func RefreshUserRedis(token string) (bool, string) {
 	if !u.FindOneUser(ur.Name, "") {
 		return false, "用户信息不存在"
 	}
+	used, advance := AggregationUser(u.ID)
 	ur = UserResponse{
-		User:     u,
-		Consumes: FindConsumeByUserID(u.ID),
-		Channels: FindChannelByUserID(u.ID),
+		User:            u,
+		Consumes:        FindConsumeByUserID(u.ID),
+		Channels:        FindChannelByUserID(u.ID),
+		HaveBeenUsed:    used,
+		HaveBeenAdvance: advance,
 	} // 获取完整用户信息
 	j, _ := json.Marshal(ur)         // 序列化用户数据
 	data.SetRedis(token, j, 7*24*60) // 设置到缓存
@@ -189,4 +194,19 @@ func (u *User) ChangeUserMoney(mode string, channel string, money float32) bool 
 	}
 	update := bson.M{"$inc": bson.M{updateField: updateValue}}
 	return UpdateUser(u.Name, update)
+}
+
+// AggregationUser 用户的一些统计信息
+func AggregationUser(userID bson.ObjectId) (used float32, advance float32) {
+	result := []Tally{}
+	FindTallyByMonth([]bson.ObjectId{userID}, &result)
+	for _, v := range result {
+		switch v.Mode {
+		case "预支":
+			advance += v.Money
+		case "支出":
+			used += v.Money
+		}
+	}
+	return used, advance
 }

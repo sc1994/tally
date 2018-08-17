@@ -40,7 +40,17 @@ func (t *Tally) InsertTally() bool {
 	return data.Insert(tallyDB, tallyTable, t)
 }
 
-// FindTally 获取消费信息
-func (t *Tally) FindTally(pageIndex int, pageSize int, search interface{}, result interface{}) bool {
+// FindTallyPage 获取消费分页信息 等待重构,查询语法不应该出现在controller
+func (t *Tally) FindTallyPage(pageIndex int, pageSize int, search interface{}, result interface{}) bool {
 	return data.Page(tallyDB, tallyTable, pageIndex, pageSize, "-ctime", search, result)
+}
+
+// FindTallyByMonth 获取当前月消费信息
+func FindTallyByMonth(userIDs []bson.ObjectId, result interface{}) {
+	now := time.Now()
+	currentYear, currentMonth, _ := now.Date()
+	currentLocation := now.Location()
+	firstOfMonth := time.Date(currentYear, currentMonth, 1, 0, 0, 0, 0, currentLocation)
+	search := bson.M{"uid": bson.M{"$in": userIDs}, "ctime": bson.M{"$gte": firstOfMonth}}
+	data.Find(tallyDB, tallyTable, search, result)
 }
