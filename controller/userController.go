@@ -24,7 +24,6 @@ func GetUser(c *gin.Context) {
 			"result": b,
 		})
 	}
-
 }
 
 // RemoveToken 移除Token，用于注销用户登录
@@ -82,16 +81,39 @@ func FindOneUser(c *gin.Context) {
 			HaveBeenUsed:    used,
 			HaveBeenAdvance: advance,
 		} // 获取完整用户信息
-		k := bson.NewObjectId()            // new token
-		j, _ := json.Marshal(ur)           // 序列化用户数据
-		data.SetRedis(k.Hex(), j, hour*60) // 设置到缓存
+		j, _ := json.Marshal(ur)               // 序列化用户数据
+		data.SetRedis(ur.ID.Hex(), j, hour*60) // 设置到缓存
 		c.JSON(200, gin.H{
 			"result": e,
-			"token":  k,
+			"token":  ur.ID.Hex(),
 		})
 	} else {
 		c.JSON(200, gin.H{
 			"result": e,
 		})
 	}
+}
+
+// SetUserBaseInfo 设置用户基本信息
+func SetUserBaseInfo(c *gin.Context) {
+	request := new(model.UserRequest)
+	common.BindExtend(c, request)
+	updater := bson.M{
+		"$set": bson.M{
+			"nick":      request.NickName,
+			"budget":    request.Budget,
+			"fixDate":   request.FixDate,
+			"wechatPay": request.WechatPay,
+			"aliPay":    request.Alipay,
+			"backCard":  request.BackCard,
+			"cash":      request.Cash,
+		},
+	}
+	b := model.UpdateUserByID(request.ID, updater)
+	if b {
+		model.RefreshUserRedis(request.Token)
+	}
+	c.JSON(200, gin.H{
+		"result": b,
+	})
 }

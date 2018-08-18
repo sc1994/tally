@@ -30,7 +30,7 @@
             <mu-icon value="edit" color="Teal"></mu-icon>
           </mu-list-item-action>
         </mu-list-item>
-        <mu-list-item button :ripple="true" slot="nested">
+        <mu-list-item button :ripple="true" slot="nested" @click="openBaseInfoSet('nick')">
           <mu-list-item-title>昵称</mu-list-item-title>
           <mu-list-item-action>
             <mu-icon value="edit" color="Teal"></mu-icon>
@@ -42,7 +42,7 @@
             <mu-icon value="edit" color="Teal"></mu-icon>
           </mu-list-item-action>
         </mu-list-item>
-        <mu-list-item button :ripple="true" slot="nested">
+        <mu-list-item button :ripple="true" slot="nested" @click="openBaseInfoSet('budget')">
           <mu-list-item-title>
             每月预算 :
             <span class="span-money">{{$numberFormat(currentUser.budget)}}</span>
@@ -59,7 +59,7 @@
           <mu-icon class="toggle-icon" size="24" value="keyboard_arrow_up" v-if="open === 'money'"></mu-icon>
           <mu-icon class="toggle-icon" size="24" value="keyboard_arrow_down" v-else></mu-icon>
         </mu-list-item-action>
-        <mu-list-item button :ripple="true" slot="nested">
+        <mu-list-item button :ripple="true" slot="nested" @click="openBaseInfoSet('backCard')">
           <mu-list-item-title>
             银行卡 :
             <span class="span-money">{{$numberFormat(currentUser.backCard)}}</span>
@@ -69,7 +69,7 @@
             <mu-icon value="edit" color="Teal"></mu-icon>
           </mu-list-item-action>
         </mu-list-item>
-        <mu-list-item button :ripple="true" slot="nested">
+        <mu-list-item button :ripple="true" slot="nested" @click="openBaseInfoSet('aliPay')">
           <mu-list-item-title>
             支付宝 :
             <span class="span-money">{{$numberFormat(currentUser.aliPay)}}</span>
@@ -79,7 +79,7 @@
             <mu-icon value="edit" color="Teal"></mu-icon>
           </mu-list-item-action>
         </mu-list-item>
-        <mu-list-item button :ripple="true" slot="nested">
+        <mu-list-item button :ripple="true" slot="nested" @click="openBaseInfoSet('wechatPay')">
           <mu-list-item-title>
             微信 :
             <span class="span-money">{{$numberFormat(currentUser.wechatPay)}}</span>
@@ -89,7 +89,7 @@
             <mu-icon value="edit" color="Teal"></mu-icon>
           </mu-list-item-action>
         </mu-list-item>
-        <mu-list-item button :ripple="true" slot="nested">
+        <mu-list-item button :ripple="true" slot="nested" @click="openBaseInfoSet('fixDate')">
           <mu-list-item-title>
             定期 :
             <span class="span-money">{{$numberFormat(currentUser.fixDate)}}</span>
@@ -99,6 +99,13 @@
             <mu-icon value="edit" color="Teal"></mu-icon>
           </mu-list-item-action>
         </mu-list-item>
+      </mu-list-item>
+      <mu-list-item button :ripple="false" nested :open="open === 'advance'" @toggle-nested="open = arguments[0] ? 'advance' : ''">
+        <mu-list-item-title>预支</mu-list-item-title>
+        <mu-list-item-action>
+          <mu-icon class="toggle-icon" size="24" value="keyboard_arrow_up" v-if="open === 'advance'"></mu-icon>
+          <mu-icon class="toggle-icon" size="24" value="keyboard_arrow_down" v-else></mu-icon>
+        </mu-list-item-action>
         <mu-list-item button :ripple="true" slot="nested">
           <mu-list-item-title>
             花呗 :
@@ -131,7 +138,7 @@
         </mu-list-item>
       </mu-list-item>
       <mu-list-item button :ripple="false" nested :open="open === 'type'" @toggle-nested="open = arguments[0] ? 'type' : ''">
-        <mu-list-item-title>账单种类维护</mu-list-item-title>
+        <mu-list-item-title>账单类型</mu-list-item-title>
         <mu-list-item-action>
           <mu-icon class="toggle-icon" size="24" value="keyboard_arrow_up" v-if="open === 'type'"></mu-icon>
           <mu-icon class="toggle-icon" size="24" value="keyboard_arrow_down" v-else></mu-icon>
@@ -193,16 +200,25 @@
     <mu-flex justify-content="center" align-items="center">
       <mu-button round color="success" @click="loginOut" full-width>退出登陆</mu-button>
     </mu-flex>
+    <setuserbaseinfo :user="currentUser" :type="baseInfo.type" :alert.sync="baseInfo.alert"></setuserbaseinfo>
   </div>
 </template>
 
 <script>
+import setuserbaseinfo from "@/components/setuserbaseinfo";
 import { mapState } from "vuex";
 
 export default {
+  components: {
+    setuserbaseinfo
+  },
   data() {
     return {
-      open: ""
+      open: "",
+      baseInfo: {
+        alert: false,
+        type: ""
+      }
     };
   },
   computed: {
@@ -218,6 +234,12 @@ export default {
           alert("已退出登陆");
           that.$router.push({ path: "/sign" });
         });
+    },
+    openBaseInfoSet(type) {
+      this.baseInfo = {
+        alert: true,
+        type: type
+      };
     }
   }
 };

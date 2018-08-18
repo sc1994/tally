@@ -33,8 +33,8 @@ type User struct {
 
 // UserRequest 用户信息请求参数
 type UserRequest struct {
+	User
 	Token    string `json:"token"`
-	Name     string `json:"name"`
 	Password string `json:"password"`
 	Content  string `json:"content"`
 	Remember bool   `json:"remember"`
@@ -76,9 +76,15 @@ func (u *User) InsertUser() bool {
 	return data.Insert(userDB, userTable, u)
 }
 
-// UpdateUser 更新一条用户信息
-func UpdateUser(name string, update interface{}) bool {
+// UpdateUserByName 更新一条用户信息 以来名称
+func UpdateUserByName(name string, update interface{}) bool {
 	b := data.Update(userDB, userTable, bson.M{"name": name}, update)
+	return b
+}
+
+// UpdateUserByID 更新一条用户信息 依赖ID
+func UpdateUserByID(id bson.ObjectId, update interface{}) bool {
+	b := data.Update(userDB, userTable, bson.M{"_id": id}, update)
 	return b
 }
 
@@ -193,7 +199,7 @@ func (u *User) ChangeUserMoney(mode string, channel string, money float32) bool 
 		updateField = "whiteBar"
 	}
 	update := bson.M{"$inc": bson.M{updateField: updateValue}}
-	return UpdateUser(u.Name, update)
+	return UpdateUserByName(u.Name, update)
 }
 
 // AggregationUser 用户的一些统计信息
