@@ -131,6 +131,7 @@ export default {
       if (val) {
         this.switchType();
         this.thenAlert = val;
+        this.value = "";
       }
     }
   }

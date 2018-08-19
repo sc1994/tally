@@ -12,6 +12,16 @@
             <mu-list-item-title>{{currentUser.nick}}</mu-list-item-title>
             <mu-list-item-sub-title>账号 : {{currentUser.name}}</mu-list-item-sub-title>
           </mu-list-item-content>
+          <mu-list-item-action>
+            <mu-badge :content="readNumber" circle color="secondary" v-if="readNumber>0">
+              <mu-button icon color="blue">
+                <mu-icon value="notifications"></mu-icon>
+              </mu-button>
+            </mu-badge>
+            <mu-button icon v-else>
+              <mu-icon value="notifications"></mu-icon>
+            </mu-button>
+          </mu-list-item-action>
         </mu-list-item>
       </mu-list>
     </mu-paper>
@@ -50,6 +60,19 @@
           </mu-list-item-title>
           <mu-list-item-action>
             <mu-icon value="edit" color="Teal"></mu-icon>
+          </mu-list-item-action>
+        </mu-list-item>
+      </mu-list-item>
+      <mu-list-item button :ripple="false" nested :open="open === 'partner'" @toggle-nested="open = arguments[0] ? 'partner' : ''">
+        <mu-list-item-title>小伙伴</mu-list-item-title>
+        <mu-list-item-action>
+          <mu-icon class="toggle-icon" size="24" value="keyboard_arrow_up" v-if="open === 'partner'"></mu-icon>
+          <mu-icon class="toggle-icon" size="24" value="keyboard_arrow_down" v-else></mu-icon>
+        </mu-list-item-action>
+        <mu-list-item button :ripple="true" slot="nested">
+          <mu-list-item-title>添加更多</mu-list-item-title>
+          <mu-list-item-action>
+            <mu-icon value="add" color="Red"></mu-icon>
           </mu-list-item-action>
         </mu-list-item>
       </mu-list-item>
@@ -218,7 +241,8 @@ export default {
       baseInfo: {
         alert: false,
         type: ""
-      }
+      },
+      readNumber: 0
     };
   },
   computed: {

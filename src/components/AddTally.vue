@@ -1,6 +1,6 @@
 <template>
   <mu-dialog fullscreen :open.sync="openTally">
-    <mu-appbar color="primary" :title="consume+'：'+money+' 元'" :class="appbarStyle">
+    <mu-appbar :title="consume+'：'+money+' 元'" :class="appbarStyle">
       <mu-button slot="left" icon @click="$emit('update:openTally', false)">
         <mu-icon value="close"></mu-icon>
       </mu-button>
