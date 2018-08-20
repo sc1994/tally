@@ -69,10 +69,12 @@
           <mu-icon class="toggle-icon" size="24" value="keyboard_arrow_up" v-if="open === 'partner'"></mu-icon>
           <mu-icon class="toggle-icon" size="24" value="keyboard_arrow_down" v-else></mu-icon>
         </mu-list-item-action>
-        <mu-list-item button :ripple="true" slot="nested">
+        <mu-list-item button :ripple="true" slot="nested" @click="addpartnerOpen=true">
           <mu-list-item-title>添加更多</mu-list-item-title>
           <mu-list-item-action>
-            <mu-icon value="add" color="Red"></mu-icon>
+            <mu-button icon color="#f44336">
+              <i class="fa fa-user-plus" style="font-size: 22px;"></i>
+            </mu-button>
           </mu-list-item-action>
         </mu-list-item>
       </mu-list-item>
@@ -224,16 +226,19 @@
       <mu-button round color="success" @click="loginOut" full-width>退出登陆</mu-button>
     </mu-flex>
     <setuserbaseinfo :user="currentUser" :type="baseInfo.type" :alert.sync="baseInfo.alert"></setuserbaseinfo>
+    <addpartner :open.sync="addpartnerOpen"></addpartner>
   </div>
 </template>
 
 <script>
 import setuserbaseinfo from "@/components/setuserbaseinfo";
+import addpartner from "@/components/addpartner";
 import { mapState } from "vuex";
 
 export default {
   components: {
-    setuserbaseinfo
+    setuserbaseinfo,
+    addpartner
   },
   data() {
     return {
@@ -242,7 +247,8 @@ export default {
         alert: false,
         type: ""
       },
-      readNumber: 0
+      readNumber: 0,
+      addpartnerOpen: false
     };
   },
   computed: {

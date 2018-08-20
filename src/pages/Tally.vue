@@ -2,16 +2,6 @@
   <div>
     <mu-paper :z-depth="0" class="paper-title" :style="'height:'+titleWidth+'px;'">
       <residue :user="currentUser"></residue>
-      <!-- <div style="margin-top: 10px;">
-        <span class="span-title">当月剩余：
-          <span class="span-money">50,203</span> 元</span>
-        <br /><br />
-        <span class="span-title">当月消费：
-          <span class="span-money" style="color:#4caf50">356</span> 元</span>
-        <br /><br />
-        <span class="span-title">当月预支：
-          <span class="span-money" style="color:#4caf50">478</span> 元</span>
-      </div> -->
     </mu-paper>
     <mu-paper :z-depth="1" style="height:100px;padding:10px">
       <mu-text-field @blur="showMode" v-model="tallyForm.money" style="height:80px;width:50%" label="金额" prefix="￥" type="number" label-float></mu-text-field>
@@ -56,97 +46,9 @@
           </mu-button>
         </mu-list-item-action>
       </mu-list-item>
-      <mu-list-item avatar button :ripple="true">
-        <mu-list-item-action style="width:280px">
-          15 元
-        </mu-list-item-action>
-        <mu-list-item-title>午餐</mu-list-item-title>
-        <mu-list-item-action>
-          <mu-button icon color="#4caf50">
-            <i class="fa fa-bolt" style="font-size: 22px;"></i>
-          </mu-button>
-        </mu-list-item-action>
-      </mu-list-item>
-      <mu-list-item avatar button :ripple="true">
-        <mu-list-item-action style="width:280px">
-          15 元
-        </mu-list-item-action>
-        <mu-list-item-title>午餐</mu-list-item-title>
-        <mu-list-item-action>
-          <mu-button icon color="#4caf50">
-            <i class="fa fa-bolt" style="font-size: 22px;"></i>
-          </mu-button>
-        </mu-list-item-action>
-      </mu-list-item>
-      <mu-list-item avatar button :ripple="true">
-        <mu-list-item-action style="width:280px">
-          15 元
-        </mu-list-item-action>
-        <mu-list-item-title>午餐</mu-list-item-title>
-        <mu-list-item-action>
-          <mu-button icon color="#4caf50">
-            <i class="fa fa-bolt" style="font-size: 22px;"></i>
-          </mu-button>
-        </mu-list-item-action>
-      </mu-list-item>
-      <mu-list-item avatar button :ripple="true">
-        <mu-list-item-action style="width:280px">
-          15 元
-        </mu-list-item-action>
-        <mu-list-item-title>午餐</mu-list-item-title>
-        <mu-list-item-action>
-          <mu-button icon color="#4caf50">
-            <i class="fa fa-bolt" style="font-size: 22px;"></i>
-          </mu-button>
-        </mu-list-item-action>
-      </mu-list-item>
-      <mu-list-item avatar button :ripple="true">
-        <mu-list-item-action style="width:280px">
-          15 元
-        </mu-list-item-action>
-        <mu-list-item-title>午餐</mu-list-item-title>
-        <mu-list-item-action>
-          <mu-button icon color="#4caf50">
-            <i class="fa fa-bolt" style="font-size: 22px;"></i>
-          </mu-button>
-        </mu-list-item-action>
-      </mu-list-item>
-      <mu-list-item avatar button :ripple="true">
-        <mu-list-item-action style="width:280px">
-          8 元
-        </mu-list-item-action>
-        <mu-list-item-title>公交</mu-list-item-title>
-        <mu-list-item-action>
-          <mu-button icon color="#4caf50">
-            <i class="fa fa-bolt" style="font-size: 22px;"></i>
-          </mu-button>
-        </mu-list-item-action>
-      </mu-list-item>
-      <mu-list-item avatar button :ripple="true">
-        <mu-list-item-action style="width:280px">
-          8 元
-        </mu-list-item-action>
-        <mu-list-item-title>公交</mu-list-item-title>
-        <mu-list-item-action>
-          <mu-button icon color="#4caf50">
-            <i class="fa fa-bolt" style="font-size: 22px;"></i>
-          </mu-button>
-        </mu-list-item-action>
-      </mu-list-item>
-      <mu-list-item avatar button :ripple="true">
-        <mu-list-item-action style="width:280px">
-          8 元
-        </mu-list-item-action>
-        <mu-list-item-title>公交</mu-list-item-title>
-        <mu-list-item-action>
-          <mu-button icon color="#4caf50">
-            <i class="fa fa-bolt" style="font-size: 22px;"></i>
-          </mu-button>
-        </mu-list-item-action>
-      </mu-list-item>
       <!-- 留个空的撑开样式 -->
       <mu-list-item avatar button :ripple="false">
-        <mu-list-item-action style="width:280px">
+        <mu-list-item-action>
         </mu-list-item-action>
         <mu-list-item-title></mu-list-item-title>
         <mu-list-item-action>
@@ -210,7 +112,7 @@ export default {
         .post("/gettallybyuser", {
           token: localStorage.getItem("token"),
           pageIndex: 1,
-          pageSize: 3
+          pageSize: 5
         })
         .then(result => {
           if (result.data.result) {
