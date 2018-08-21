@@ -18,6 +18,7 @@ type User struct {
 	Password   string        `json:"pwd" bson:"pwd"`               // Password
 	Name       string        `json:"name" bson:"name"`             // Name
 	NickName   string        `json:"nick" bson:"nick"`             // NickName 昵称
+	Intro      string        `json:"intro" bson:"intro"`           // 简介
 	CreateTime time.Time     `json:"ctime" bson:"ctime"`           // CreateTime 创建时间
 	HeadImg    string        `json:"headImg" bson:"himg"`          // HeadImg 头像
 	Budget     float32       `json:"budget" bson:"budget"`         // 月预算

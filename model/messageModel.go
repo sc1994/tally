@@ -34,6 +34,7 @@ const messageTable string = "message"
 
 // InsertMessage 新增一条消息
 func (m *Message) InsertMessage() bool {
+	m.ID = bson.NewObjectId()
 	m.CreateTime = time.Now()
 	m.UpdateTime = time.Now()
 	m.Status = 1

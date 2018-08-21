@@ -117,3 +117,12 @@ func SetUserBaseInfo(c *gin.Context) {
 		"result": b,
 	})
 }
+
+// FindUsersByNick 依据昵称搜索用户
+func FindUsersByNick(c *gin.Context) {
+	search := bson.M{"nick": bson.M{"$regex": c.Param("nick")}}
+	result := model.FindUser(search)
+	c.JSON(200, gin.H{
+		"result": result,
+	})
+}
