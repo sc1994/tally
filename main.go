@@ -20,7 +20,7 @@ func main() {
 	r.POST("/signin", controller.FindOneUser)                   //  登陆验证
 	r.GET("/removetoken/:token", controller.RemoveToken)        //  移除Token
 	r.POST("/setuserbaseinfo", controller.SetUserBaseInfo)      // 设置用户基本信息
-	r.GET("/findusersbynick/:nick", controller.FindUsersByNick) // 查询用户
+	r.GET("/findusersbyname/:name", controller.FindUsersByName) // 查询用户
 	// 账单相关接口=============================================================
 	r.POST("/inserttally", controller.InsertTally)       //   添加消费记录
 	r.POST("/gettallybyuser", controller.GetTallyByUser) //  获取当前用户的消费记录

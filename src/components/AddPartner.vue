@@ -85,7 +85,7 @@ export default {
     search() {
       var that = this;
       that.$axios
-        .get("/findusersbynick/" + that.searchValue)
+        .get("/FindUsersByName/" + that.searchValue)
         .then(response => {
           if (response.data.result != null) {
             that.list = response.data.result;
