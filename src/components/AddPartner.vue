@@ -6,7 +6,7 @@
       </mu-button>
     </mu-appbar>
     <div style="padding: 24px;">
-      <mu-text-field v-model="searchValue" label="搜索对方的账号" action-icon="search" style="width: 100%;"></mu-text-field><br/>
+      <mu-text-field v-model="searchValue" label="搜索对方的账号" :action-icon="searching ? 'autorenew' : 'search'" style="width: 100%;"></mu-text-field><br/>
     </div>
     <div style="padding: 0px 9px;margin-top: -21px;">
       <mu-expansion-panel :expand="panel === item.name" @change="toggle(item.name)" v-for="item in list" :key="item.id">
@@ -29,7 +29,7 @@
           </mu-list>
         </mu-flex>
         <mu-button slot="action" flat color="primary" @click="send(item.id)">
-          发送请求
+          发送邀请
           <mu-icon left value="send"></mu-icon>
         </mu-button>
       </mu-expansion-panel>
@@ -52,7 +52,8 @@ export default {
       searchValue: "",
       panel: "",
       oldSearchValue: [],
-      list: []
+      list: [],
+      searching: false
     };
   },
   methods: {
@@ -66,7 +67,7 @@ export default {
         .post("/sendmessage", {
           tid: tid,
           fid: that.currentUser.id,
-          content: that.currentUser.nick + "向您发送了添加小伙伴的请求",
+          content: that.currentUser.nick + "向您发送了添加小伙伴的邀请",
           needTouch: true
         })
         .then(response => {
@@ -84,8 +85,9 @@ export default {
     },
     search() {
       var that = this;
+      that.searching = true;
       that.$axios
-        .get("/FindUsersByName/" + that.searchValue)
+        .get("/findusersbyname/" + that.searchValue)
         .then(response => {
           if (response.data.result != null) {
             that.list = response.data.result;
@@ -94,6 +96,7 @@ export default {
             that.$toast.info("没有相关用户");
           }
           that.oldSearchValue = [];
+          that.searching = false;
         })
         .catch(error => {
           that.$toast.error("网络异常,请重试");

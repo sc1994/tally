@@ -13,7 +13,7 @@
             <mu-list-item-sub-title>账号 : {{currentUser.name}}</mu-list-item-sub-title>
           </mu-list-item-content>
           <mu-list-item-action>
-            <mu-badge :content="readNumber" circle color="secondary" v-if="readNumber>0">
+            <mu-badge :content="messages.length+''" circle color="secondary" v-if="messages.length>0">
               <mu-button icon color="blue">
                 <mu-icon value="notifications"></mu-icon>
               </mu-button>
@@ -247,8 +247,8 @@ export default {
         alert: false,
         type: ""
       },
-      readNumber: 0,
-      addpartnerOpen: false
+      addpartnerOpen: false,
+      messages: []
     };
   },
   computed: {
@@ -270,6 +270,20 @@ export default {
         alert: true,
         type: type
       };
+    }
+  },
+  watch: {
+    currentUser(val) {
+      var that = this;
+      that.$axios
+        .get("/getmessage/" + val.id)
+        .then(response => {
+          if (response.data.result != null)
+            that.messages = response.data.result;
+        })
+        .catch(error => {
+          that.$toast.error("网络异常,请重试");
+        });
     }
   }
 };
