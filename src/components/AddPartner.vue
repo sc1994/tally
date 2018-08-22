@@ -6,7 +6,7 @@
       </mu-button>
     </mu-appbar>
     <div style="padding: 24px;">
-      <mu-text-field v-model="searchValue" label="搜索对方的账号" action-icon="restore" style="width: 100%;"></mu-text-field><br/>
+      <mu-text-field v-model="searchValue" label="搜索对方的账号" action-icon="search" style="width: 100%;"></mu-text-field><br/>
     </div>
     <div style="padding: 0px 9px;margin-top: -21px;">
       <mu-expansion-panel :expand="panel === item.name" @change="toggle(item.name)" v-for="item in list" :key="item.id">

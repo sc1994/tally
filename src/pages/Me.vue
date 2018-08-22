@@ -73,7 +73,7 @@
           <mu-list-item-title>添加更多</mu-list-item-title>
           <mu-list-item-action>
             <mu-button icon color="#f44336">
-              <i class="fa fa-user-plus" style="font-size: 22px;"></i>
+              <mu-icon value="group_add"></mu-icon>
             </mu-button>
           </mu-list-item-action>
         </mu-list-item>

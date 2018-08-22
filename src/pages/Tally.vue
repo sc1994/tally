@@ -42,7 +42,7 @@
         <mu-list-item-title>午餐</mu-list-item-title>
         <mu-list-item-action>
           <mu-button icon color="#4caf50">
-            <i class="fa fa-bolt" style="font-size: 22px;"></i>
+            <mu-icon value="fast_forward"></mu-icon>
           </mu-button>
         </mu-list-item-action>
       </mu-list-item>
