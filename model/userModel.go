@@ -114,6 +114,7 @@ func InitUser(name string, pwd string) (bool, User) {
 		Password: pwd,
 		NickName: "用户: " + name,
 		HeadImg:  "/static/images/head-default.png",
+		Budget:   2000,
 	}
 	b := u.InsertUser()
 	return b, u
