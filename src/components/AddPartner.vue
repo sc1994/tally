@@ -28,7 +28,7 @@
             </mu-list-item>
           </mu-list>
         </mu-flex>
-        <mu-button slot="action" flat color="primary" @click="send(item.id)">
+        <mu-button slot="action" flat color="primary" @click="send(item.id, item.nick,item.headImg)">
           发送邀请
           <mu-icon left value="send"></mu-icon>
         </mu-button>
@@ -60,15 +60,20 @@ export default {
     toggle(panel) {
       this.panel = panel === this.panel ? "" : panel;
     },
-    send(tid) {
+    send(tid, tnick, timg) {
       var that = this;
       var loading = this.$loading({});
       that.$axios
         .post("/sendmessage", {
           tid: tid,
+          tnick: tnick,
+          timg: timg,
           fid: that.currentUser.id,
-          content: that.currentUser.nick + "向您发送了添加小伙伴的邀请",
-          needTouch: true
+          fnick: that.currentUser.nick,
+          fimg: that.currentUser.headImg,
+          content: "向你发送了添加小伙伴的邀请",
+          needTouch: true,
+          type: 1
         })
         .then(response => {
           if (response.data.result) {

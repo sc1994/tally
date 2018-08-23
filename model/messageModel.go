@@ -11,22 +11,31 @@ import (
 type Message struct {
 	ID         bson.ObjectId `json:"id" bson:"_id"`              // 主键
 	FromID     bson.ObjectId `json:"fid" bson:"fid"`             // 来自谁
+	FromNick   string        `json:"fnick" bson:"fnick"`         // 冗余昵称
+	FromImg    string        `json:"fimg" bson:"fimg"`           // 冗余 头像
 	ToID       bson.ObjectId `json:"tid" bson:"tid"`             // 发送给谁
+	ToNick     string        `json:"tnick" bson:"tnick"`         // 冗余昵称
+	ToImg      string        `json:"timg" bson:"timg"`           // 冗余 头像
 	Content    string        `json:"content" bson:"content"`     // 消息内容
+	Type       int           `json:"type" bson:"type"`           // 消息类型 1.小伙伴邀请 2.邀请回执
 	Status     int           `json:"status" bson:"status"`       // 状态 1.未读 2.已读 3.同意 4.拒绝
-	NeedTouch  int           `json:"needTouch" bson:"needTouch"` // 需要点击阅读 0.false 1.true
+	NeedTouch  bool          `json:"needTouch" bson:"needTouch"` // 需要点击阅读
 	CreateTime time.Time     `json:"ctime" bson:"ctime"`         // 创建时间
 	UpdateTime time.Time     `json:"utime" bson:"utime"`         // 更新时间(代表消息的状态修改时间)
 }
 
 // MessageRequest 消息的请求实体
 type MessageRequest struct {
-	ID        bson.ObjectId `json:"id"`        // 主键
-	FromID    bson.ObjectId `json:"fid"`       // 来自谁
-	ToID      bson.ObjectId `json:"tid"`       // 发送给谁
-	Content   string        `json:"content" `  // 消息内容
-	Type      int           `json:"type"`      // 消息类型 1.邀请记账
-	NeedTouch int           `json:"needTouch"` // 需要点击阅读 0.false 1.true
+	ID        bson.ObjectId `json:"id"`                 // 主键
+	FromID    bson.ObjectId `json:"fid"`                // 来自谁
+	FromNick  string        `json:"fnick" bson:"fnick"` // 冗余昵称
+	ToID      bson.ObjectId `json:"tid" bson:"tid"`     // 发送给谁
+	FromImg   string        `json:"fimg" bson:"fimg"`   // 冗余 头像
+	ToNick    string        `json:"tnick" bson:"tnick"` // 冗余昵称
+	ToImg     string        `json:"timg" bson:"timg"`   // 冗余 头像
+	Content   string        `json:"content" `           // 消息内容
+	Type      int           `json:"type"`               // 消息类型 1.邀请记账
+	NeedTouch bool          `json:"needTouch"`          // 需要点击阅读
 }
 
 const messageDB string = "tally"

@@ -25,9 +25,15 @@ func SendMessage(c *gin.Context) {
 	common.BindExtend(c, &request)
 	m := model.Message{
 		FromID:    request.FromID,
+		FromNick:  request.FromNick,
+		FromImg:   request.FromImg,
 		ToID:      request.ToID,
+		ToNick:    request.ToNick,
+		ToImg:     request.ToImg,
 		Content:   request.Content,
 		NeedTouch: request.NeedTouch,
+
+		Type: request.Type,
 	}
 	b := m.InsertMessage()
 	c.JSON(200, gin.H{

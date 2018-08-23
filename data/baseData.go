@@ -30,6 +30,7 @@ func Find(db string, table string, search interface{}, result interface{}) {
 	return
 }
 
+// Page 分页
 func Page(db string, table string, pageIndex int, pageSize int, fields string, search interface{}, result interface{}) bool {
 	session, err := mgo.Dial(common.MongoConnect)
 	defer session.Close()

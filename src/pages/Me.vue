@@ -14,7 +14,7 @@
           </mu-list-item-content>
           <mu-list-item-action>
             <mu-badge :content="messages.length+''" circle color="secondary" v-if="messages.length>0">
-              <mu-button icon color="blue">
+              <mu-button icon color="blue" @click="openMessage=true">
                 <mu-icon value="notifications"></mu-icon>
               </mu-button>
             </mu-badge>
@@ -227,18 +227,21 @@
     </mu-flex>
     <setuserbaseinfo :user="currentUser" :type="baseInfo.type" :alert.sync="baseInfo.alert"></setuserbaseinfo>
     <addpartner :open.sync="addpartnerOpen"></addpartner>
+    <message :open.sync="openMessage" :messages="messages"></message>
   </div>
 </template>
 
 <script>
 import setuserbaseinfo from "@/components/setuserbaseinfo";
 import addpartner from "@/components/addpartner";
+import message from "@/components/message";
 import { mapState } from "vuex";
 
 export default {
   components: {
     setuserbaseinfo,
-    addpartner
+    addpartner,
+    message
   },
   data() {
     return {
@@ -248,7 +251,8 @@ export default {
         type: ""
       },
       addpartnerOpen: false,
-      messages: []
+      messages: [],
+      openMessage: false
     };
   },
   computed: {
