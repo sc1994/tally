@@ -11,10 +11,12 @@
 @xcopy /E/I/Y "../tally/dist" "."
 @xcopy /E/I/Y "../tally/static" "."
 
-@git pull
+@echo commit to github...
+
+@git pull origin master
 @git add .
 @git commit -m "code build dispense to service"
-@git push origin master 
+@git push -u origin master -f
 
 @cd ../tally
 
@@ -28,10 +30,12 @@
 
 @cd ../go-tally
 
-@echo commit to github
+@echo commit to github...
+
+@git pull origin master
 @git add .
 @git commit -m "code build dispense to service"
-@git push origin master 
+@git push -u origin master -f
 
 @cd ../tally
 
