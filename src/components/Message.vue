@@ -78,9 +78,10 @@ export default {
       return temp.length > 0;
     },
     isYesterday() {
+      debugger
       var that = this;
       var now = new Date();
-      now.setDate(now.getDate() + 1);
+      now.setDate(now.getDate() - 1);
       var temp = this.$linq(this.messageGroup)
         .where(x => x.key == that.$format(now, "yyyy-MM-dd").substring(0, 10))
         .toArray();
