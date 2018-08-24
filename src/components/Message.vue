@@ -29,6 +29,27 @@
         </mu-list-item-action>
       </mu-list-item>
       <mu-sub-header v-if="isYesterday()">昨天</mu-sub-header>
+      <mu-list-item avatar :ripple="false" button v-for="item in yesterdays" :key="item.id">
+        <mu-list-item-action>
+          <mu-avatar>
+            <img :src="item.fimg">
+          </mu-avatar>
+        </mu-list-item-action>
+        <mu-list-item-content>
+          <mu-list-item-title>{{item.fnick}}</mu-list-item-title>
+          <mu-list-item-sub-title>
+            <span style="color: rgba(0, 0, 0, .87)">
+              {{item.content}}
+            </span>
+          </mu-list-item-sub-title>
+        </mu-list-item-content>
+        <mu-list-item-action>
+          <mu-list-item-after-text>{{$format(item.ctime,"hh:mm")}}</mu-list-item-after-text>
+          <mu-button icon color="primary" @click="openAlert=true;currentItem=item">
+            <mu-icon value="sentiment_satisfied"></mu-icon>
+          </mu-button>
+        </mu-list-item-action>
+      </mu-list-item>
       <mu-sub-header>更早</mu-sub-header>
     </mu-list>
     <mu-dialog title="是否同意 ?" width="75%" max-width="75%" :esc-press-close="false" :overlay-close="false" :open.sync="openAlert">
