@@ -17,8 +17,8 @@ Vue.use(MuseUI)
 Vue.use(Toast)
 Vue.use(Loading)
 
-Axios.defaults.baseURL = 'http://192.168.1.5';
-// Axios.defaults.baseURL = 'http://suncheng.xyz:8888';
+// Axios.defaults.baseURL = 'http://192.168.1.5';
+Axios.defaults.baseURL = 'http://suncheng.xyz:8888';
 
 Vue.prototype.$axios = Axios;
 Vue.prototype.$linq = Linq.from;

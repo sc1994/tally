@@ -6,6 +6,7 @@ import (
 
 	"gopkg.in/mgo.v2/bson"
 
+	linq "github.com/ahmetb/go-linq"
 	"github.com/gin-gonic/gin"
 )
 
@@ -14,6 +15,11 @@ func GetMessage(c *gin.Context) {
 	uid := c.Param("uid")
 	var r []model.Message
 	model.FindMessageByMe(bson.ObjectIdHex(uid), &r)
+	linq.From(r).OrderByDescending(
+		func(x interface{}) interface{} {
+			return x.(model.Message).CreateTime.String()
+		},
+	).ToSlice(&r)
 	c.JSON(200, gin.H{
 		"result": &r,
 	})
@@ -32,8 +38,7 @@ func SendMessage(c *gin.Context) {
 		ToImg:     request.ToImg,
 		Content:   request.Content,
 		NeedTouch: request.NeedTouch,
-
-		Type: request.Type,
+		Type:      request.Type,
 	}
 	b := m.InsertMessage()
 	c.JSON(200, gin.H{

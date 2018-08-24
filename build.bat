@@ -16,7 +16,7 @@
 @git pull origin master
 @git add .
 @git commit -m "code build dispense to service"
-@git push origin master 
+@git push -u origin master -f
 
 @cd ../tally
 
@@ -35,7 +35,7 @@
 @git pull origin master
 @git add .
 @git commit -m "code build dispense to service"
-@git push origin master 
+@git push -u origin master -f
 
 @cd ../tally
 
