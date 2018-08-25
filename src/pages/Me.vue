@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <layoutmain>
     <mu-paper :z-depth="2" style="height:110px;padding:10px">
       <mu-list textline="two-line">
         <mu-list-item avatar button :ripple="false">
@@ -226,22 +226,24 @@
       <mu-button round color="success" @click="loginOut" full-width>退出登陆</mu-button>
     </mu-flex>
     <setuserbaseinfo :user="currentUser" :type="baseInfo.type" :alert.sync="baseInfo.alert"></setuserbaseinfo>
-    <addpartner :open.sync="addpartnerOpen"></addpartner>
+    <!-- <addpartner :open.sync="addpartnerOpen"></addpartner> -->
     <message :open.sync="openMessage" :messages="messages"></message>
-  </div>
+  </layoutmain>
 </template>
 
 <script>
+import layoutmain from "@/layout/main";
 import setuserbaseinfo from "@/components/setuserbaseinfo";
-import addpartner from "@/components/addpartner";
+// import addpartner from "@/components/addpartner";
 import message from "@/components/message";
 import { mapState } from "vuex";
 
 export default {
   components: {
     setuserbaseinfo,
-    addpartner,
-    message
+    // addpartner,
+    message,
+    layoutmain
   },
   data() {
     return {

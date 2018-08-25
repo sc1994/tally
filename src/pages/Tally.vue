@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <layoutmain>
     <mu-paper :z-depth="0" class="paper-title" :style="'height:'+titleWidth+'px;'">
       <residue :user="currentUser"></residue>
     </mu-paper>
@@ -56,16 +56,18 @@
       </mu-list-item>
     </mu-list>
     <addtally :openTally.sync="openTally" :money="tallyForm.money" :consume="tallyForm.consume"></addtally>
-  </div>
+  </layoutmain>
 </template>
 
 <script>
+import layoutmain from "@/layout/main";
 import residue from "@/components/residue";
 import addtally from "@/components/addtally";
 import { mapState } from "vuex";
 
 export default {
   components: {
+    layoutmain,
     residue,
     addtally
   },

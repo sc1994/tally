@@ -6,7 +6,7 @@
       </mu-button>
     </mu-appbar>
     <mu-list textline="two-line">
-      <mu-sub-header v-if="isToday()">今天</mu-sub-header>
+      <mu-sub-header v-if="isToday">今天</mu-sub-header>
       <mu-list-item avatar :ripple="false" button v-for="item in todays" :key="item.id">
         <mu-list-item-action>
           <mu-avatar>
@@ -28,7 +28,7 @@
           </mu-button>
         </mu-list-item-action>
       </mu-list-item>
-      <mu-sub-header v-if="isYesterday()">昨天</mu-sub-header>
+      <mu-sub-header v-if="isYesterday">昨天</mu-sub-header>
       <mu-list-item avatar :ripple="false" button v-for="item in yesterdays" :key="item.id">
         <mu-list-item-action>
           <mu-avatar>
@@ -85,7 +85,10 @@ export default {
     submit() {
       alert("好的");
       this.openAlert = false;
-    },
+    }
+  },
+  computed: {
+    ...mapState(["currentUser", "appbarStyle"]),
     isToday() {
       var that = this;
       var temp = this.$linq(this.messageGroup)
@@ -99,7 +102,6 @@ export default {
       return temp.length > 0;
     },
     isYesterday() {
-      debugger
       var that = this;
       var now = new Date();
       now.setDate(now.getDate() - 1);
@@ -111,9 +113,6 @@ export default {
       }
       return temp.length > 0;
     }
-  },
-  computed: {
-    ...mapState(["currentUser", "appbarStyle"])
   },
   watch: {
     "messages.length"(val) {

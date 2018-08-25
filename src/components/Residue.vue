@@ -140,12 +140,12 @@ export default {
 
       chart.axis("y", false);
 
-      var userEnd = val.haveBeenUsed - mulriple / 2;
+      var userEnd = val.haveBeenUsed - mulriple / 3;
       //绘制仪表盘辅助元素
       if (val.haveBeenUsed > 0) {
         chart.guide().arc({
           start: [10, 1.05],
-          end: [userEnd > mulriple ? userEnd : mulriple / 2, 1.05],
+          end: [userEnd > mulriple ? userEnd : mulriple / 3, 1.05],
           style: {
             strokeStyle: "#d84315",
             lineWidth: 4,
@@ -154,7 +154,7 @@ export default {
         });
       }
       chart.guide().arc({
-        start: [val.haveBeenUsed + mulriple / 2, 1.05],
+        start: [val.haveBeenUsed + mulriple / 3, 1.05],
         end: [val.budget - 10, 1.05],
         style: {
           strokeStyle: "#1890FF",
