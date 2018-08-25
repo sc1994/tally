@@ -4,7 +4,7 @@ import Sign from "@/pages/Sign"
 import Tally from "@/pages/Tally"
 import Me from "@/pages/Me"
 import AddPartner from "@/pages/AddPartner"
-// import HelloWorld from "@/components/HelloWorld"
+import Message from "@/pages/Message"
 
 Vue.use(Router)
 
@@ -28,6 +28,11 @@ export default new Router({
       path: "/addpartner",
       Name: "AddPartner",
       component: AddPartner
+    },
+    {
+      path: "/message",
+      Name: "Message",
+      component: Message
     }
   ]
 })

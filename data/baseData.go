@@ -30,21 +30,42 @@ func Find(db string, table string, search interface{}, result interface{}) {
 	return
 }
 
-// Page 分页
-func Page(db string, table string, pageIndex int, pageSize int, fields string, search interface{}, result interface{}) bool {
+// Count 获取数量
+func Count(db string, table string, search interface{}) int {
 	session, err := mgo.Dial(common.MongoConnect)
 	defer session.Close()
 	if err != nil {
-		return false
+		panic(err)
+	}
+	session.SetMode(mgo.Monotonic, true)
+	c := session.DB(db).C(table)
+	i, e := c.Find(search).Count()
+	if e != nil {
+		panic(err)
+	}
+	return i
+}
+
+// Page 分页
+func Page(db string, table string, pageIndex int, pageSize int, fields string, search interface{}, result interface{}) int {
+	session, err := mgo.Dial(common.MongoConnect)
+	defer session.Close()
+	if err != nil {
+		panic(err)
 	}
 	session.SetMode(mgo.Monotonic, true)
 	c := session.DB(db).C(table)
 	skip := (pageIndex - 1) * pageSize
-	err = c.Find(search).Sort(fields).Skip(skip).Limit(pageSize).All(result)
+	find := c.Find(search)
+	count, err := find.Count()
 	if err != nil {
-		return false
+		panic(err)
 	}
-	return true
+	err = find.Sort(fields).Skip(skip).Limit(pageSize).All(result)
+	if err != nil {
+		panic(err)
+	}
+	return count
 }
 
 // Insert 插入一条数据

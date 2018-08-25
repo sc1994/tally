@@ -1,9 +1,10 @@
 <template>
   <div>
     <mu-appbar :class="'top-van ' + appbarStyle">
-      <mu-button icon slot="left">
-        <mu-icon value="reply"></mu-icon>
+      <mu-button icon slot="left" @click="$router.back(-1)">
+        <mu-icon value="reply" left></mu-icon>
       </mu-button>
+      {{title}}
       <mu-button flat slot="right" v-if="righticon" @click="rightevent">
         <mu-icon value="menu"></mu-icon>
       </mu-button>
@@ -24,6 +25,9 @@ export default {
     },
     rightevent: {
       type: Function
+    },
+    title: {
+      type: String
     }
   },
   computed: {

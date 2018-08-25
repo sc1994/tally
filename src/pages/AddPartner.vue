@@ -1,11 +1,5 @@
 <template>
-  <minor></minor>
-  <!-- <mu-dialog transition="slide-bottom" fullscreen :open.sync="open">
-    <mu-appbar color="primary" title="选择小伙伴" :class="appbarStyle">
-      <mu-button slot="left" icon @click="$emit('update:open', false)">
-        <mu-icon value="close"></mu-icon>
-      </mu-button>
-    </mu-appbar>
+  <minor :title="'添加小伙伴'">
     <div style="padding: 24px;">
       <mu-text-field v-model="searchValue" label="搜索对方的账号" :action-icon="searching ? 'autorenew' : 'search'" style="width: 100%;"></mu-text-field><br/>
     </div>
@@ -35,7 +29,7 @@
         </mu-button>
       </mu-expansion-panel>
     </div>
-  </mu-dialog> -->
+  </minor>
 </template>
 
 <script>
@@ -45,92 +39,89 @@ import minor from "@/layout/minor";
 export default {
   components: {
     minor
+  },
+  data() {
+    return {
+      searchValue: "",
+      panel: "",
+      oldSearchValue: [],
+      list: [],
+      searching: false
+    };
+  },
+  methods: {
+    toggle(panel) {
+      this.panel = panel === this.panel ? "" : panel;
+    },
+    send(tid, tnick, timg) {
+      var that = this;
+      var loading = this.$loading({});
+      that.$axios
+        .post("/sendmessage", {
+          tid: tid,
+          tnick: tnick,
+          timg: timg,
+          fid: that.currentUser.id,
+          fnick: that.currentUser.nick,
+          fimg: that.currentUser.headImg,
+          content: "向你发送了添加小伙伴的邀请",
+          needTouch: true,
+          type: 1
+        })
+        .then(response => {
+          if (response.data.result) {
+            that.$toast.success("已发送");
+          } else {
+            that.$toast.error("网络异常,请重试");
+          }
+          loading.close();
+        })
+        .catch(error => {
+          that.$toast.error("网络异常,请重试");
+          loading.close();
+        });
+    },
+    search() {
+      var that = this;
+      that.searching = true;
+      that.$axios
+        .get("/findusersbyname/" + that.searchValue)
+        .then(response => {
+          if (response.data.result != null) {
+            that.list = response.data.result;
+          } else {
+            that.list = [];
+            that.$toast.info("没有相关用户");
+          }
+          that.oldSearchValue = [];
+          that.searching = false;
+        })
+        .catch(error => {
+          that.$toast.error("网络异常,请重试");
+          that.searching = false;
+        });
+    }
+  },
+  watch: {
+    searchValue(val) {
+      var that = this;
+      that.oldSearchValue.push(val);
+      setTimeout(oldSearchValue => {
+        if (that.oldSearchValue.length > 0) {
+          if (val == that.oldSearchValue[that.oldSearchValue.length - 1]) {
+            if (val) {
+              that.search();
+            } else {
+              that.list = [];
+            }
+          }
+        }
+      }, 500);
+    }
+  },
+  computed: {
+    ...mapState(["currentUser"])
   }
-  // // props: {
-  // //   open: {
-  // //     type: Boolean,
-  // //     required: true
-  // //   }
-  // // },
-  // data() {
-  //   return {
-  //     searchValue: "",
-  //     panel: "",
-  //     oldSearchValue: [],
-  //     list: [],
-  //     searching: false
-  //   };
-  // },
-  // methods: {
-  //   toggle(panel) {
-  //     this.panel = panel === this.panel ? "" : panel;
-  //   },
-  //   send(tid, tnick, timg) {
-  //     var that = this;
-  //     var loading = this.$loading({});
-  //     that.$axios
-  //       .post("/sendmessage", {
-  //         tid: tid,
-  //         tnick: tnick,
-  //         timg: timg,
-  //         fid: that.currentUser.id,
-  //         fnick: that.currentUser.nick,
-  //         fimg: that.currentUser.headImg,
-  //         content: "向你发送了添加小伙伴的邀请",
-  //         needTouch: true,
-  //         type: 1
-  //       })
-  //       .then(response => {
-  //         if (response.data.result) {
-  //           that.$toast.success("已发送");
-  //         } else {
-  //           that.$toast.error("网络异常,请重试");
-  //         }
-  //         loading.close();
-  //       })
-  //       .catch(error => {
-  //         that.$toast.error("网络异常,请重试");
-  //         loading.close();
-  //       });
-  //   },
-  //   search() {
-  //     var that = this;
-  //     that.searching = true;
-  //     that.$axios
-  //       .get("/findusersbyname/" + that.searchValue)
-  //       .then(response => {
-  //         if (response.data.result != null) {
-  //           that.list = response.data.result;
-  //         } else {
-  //           that.list = [];
-  //           that.$toast.info("没有相关用户");
-  //         }
-  //         that.oldSearchValue = [];
-  //         that.searching = false;
-  //       })
-  //       .catch(error => {
-  //         that.$toast.error("网络异常,请重试");
-  //       });
-  //   }
-  // },
-  // watch: {
-  //   searchValue(val) {
-  //     var that = this;
-  //     that.oldSearchValue.push(val);
-  //     setTimeout(oldSearchValue => {
-  //       if (that.oldSearchValue.length > 0) {
-  //         if (val == that.oldSearchValue[that.oldSearchValue.length - 1]) {
-  //           if (val) {
-  //             that.search();
-  //           }
-  //         }
-  //       }
-  //     }, 500);
-  //   }
-  // },
-  // computed: {
-  //   ...mapState(["currentUser", "appbarStyle"])
-  // }
 };
 </script>
 

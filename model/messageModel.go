@@ -69,7 +69,14 @@ func FindMessageByID(id bson.ObjectId) (Message, bool) {
 }
 
 // FindMessageByMe 获取我的全部消息
-func FindMessageByMe(toID bson.ObjectId, result interface{}) {
+func FindMessageByMe(toID bson.ObjectId, pageIndex int, pageSize int, result interface{}) int {
 	search := bson.M{"tid": toID}
-	data.Find(messageDB, messageTable, search, result)
+	c := data.Page(messageDB, messageTable, pageIndex, pageSize, "-ctime", search, result)
+	return c
+}
+
+// FindMessageCountByStatus 依据状态获取消息数量
+func FindMessageCountByStatus(toID bson.ObjectId, status int) int {
+	search := bson.M{"tid": toID, "status": status}
+	return data.Count(messageDB, messageTable, search)
 }

@@ -41,7 +41,7 @@ func (t *Tally) InsertTally() bool {
 }
 
 // FindTallyPage 获取消费分页信息 等待重构,查询语法不应该出现在controller
-func (t *Tally) FindTallyPage(pageIndex int, pageSize int, search interface{}, result interface{}) bool {
+func (t *Tally) FindTallyPage(pageIndex int, pageSize int, search interface{}, result interface{}) int {
 	return data.Page(tallyDB, tallyTable, pageIndex, pageSize, "-ctime", search, result)
 }
 

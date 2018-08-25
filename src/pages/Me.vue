@@ -13,12 +13,12 @@
             <mu-list-item-sub-title>账号 : {{currentUser.name}}</mu-list-item-sub-title>
           </mu-list-item-content>
           <mu-list-item-action>
-            <mu-badge :content="messages.length+''" circle color="secondary" v-if="messages.length>0">
-              <mu-button icon color="blue" @click="openMessage=true">
+            <mu-badge :content="messageUnreadCount+''" circle color="secondary" v-if="messageUnreadCount>0">
+              <mu-button icon color="blue" @click="$router.push({ path: 'message' })">
                 <mu-icon value="notifications"></mu-icon>
               </mu-button>
             </mu-badge>
-            <mu-button icon v-else>
+            <mu-button icon v-else @click="$router.push({ path: 'message' })">
               <mu-icon value="notifications"></mu-icon>
             </mu-button>
           </mu-list-item-action>
@@ -69,7 +69,7 @@
           <mu-icon class="toggle-icon" size="24" value="keyboard_arrow_up" v-if="open === 'partner'"></mu-icon>
           <mu-icon class="toggle-icon" size="24" value="keyboard_arrow_down" v-else></mu-icon>
         </mu-list-item-action>
-        <mu-list-item button :ripple="true" slot="nested" @click="addpartnerOpen=true">
+        <mu-list-item button :ripple="true" slot="nested" @click="$router.push({ path: 'addpartner' })">
           <mu-list-item-title>添加更多</mu-list-item-title>
           <mu-list-item-action>
             <mu-button icon color="#f44336">
@@ -226,23 +226,17 @@
       <mu-button round color="success" @click="loginOut" full-width>退出登陆</mu-button>
     </mu-flex>
     <setuserbaseinfo :user="currentUser" :type="baseInfo.type" :alert.sync="baseInfo.alert"></setuserbaseinfo>
-    <!-- <addpartner :open.sync="addpartnerOpen"></addpartner> -->
-    <message :open.sync="openMessage" :messages="messages"></message>
   </layoutmain>
 </template>
 
 <script>
 import layoutmain from "@/layout/main";
 import setuserbaseinfo from "@/components/setuserbaseinfo";
-// import addpartner from "@/components/addpartner";
-import message from "@/components/message";
 import { mapState } from "vuex";
 
 export default {
   components: {
     setuserbaseinfo,
-    // addpartner,
-    message,
     layoutmain
   },
   data() {
@@ -253,7 +247,7 @@ export default {
         type: ""
       },
       addpartnerOpen: false,
-      messages: [],
+      messageUnreadCount: 0,
       openMessage: false
     };
   },
@@ -281,17 +275,12 @@ export default {
   watch: {
     currentUser(val) {
       var that = this;
-      that.$axios
-        .get("/getmessage/" + val.id)
-        .then(response => {
-          if (response.data.result != null)
-            that.messages = response.data.result;
-        })
-        .catch(error => {
-          that.$toast.error("网络异常,请重试");
-        });
+      that.$axios.get("/getmessageunreadcount/" + val.id).then(response => {
+        that.messageUnreadCount = response.data.result;
+      });
     }
-  }
+  },
+  mounted() {}
 };
 </script>
 

@@ -70,20 +70,13 @@ func GetTallyByUser(c *gin.Context) {
 	}
 	t := model.Tally{}
 	var result []model.Tally
-	b = t.FindTallyPage(
+	t.FindTallyPage(
 		request.PageIndex,
 		request.PageSize,
 		bson.M{"uid": u.ID},
 		&result)
-	if !b {
-		c.JSON(200, gin.H{
-			"result": b,
-			"msg":    "查询异常",
-		})
-		return
-	}
 	c.JSON(200, gin.H{
-		"result": b,
+		"result": true,
 		"msg":    "查询成功",
 		"body":   result,
 	})

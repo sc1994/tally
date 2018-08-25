@@ -9,6 +9,11 @@ import { mapState } from "vuex";
 
 export default {
   name: "App",
+  watch: {
+    $route() {
+      this.$store.dispatch("initUser", { $router: this.$router });
+    }
+  },
   mounted() {
     if (navigator.userAgent.indexOf("iPhone") > 0) {
       this.$store.commit("changeAppbarStyle", "top-van-backage-iphone");

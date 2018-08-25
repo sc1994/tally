@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"strconv"
 	"tally/common"
 	"tally/model"
 
@@ -10,11 +11,13 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// GetMessage 获取消息
-func GetMessage(c *gin.Context) {
+// GetMessages 获取消息
+func GetMessages(c *gin.Context) {
 	uid := c.Param("uid")
+	size, _ := strconv.Atoi(c.Param("size"))
+	index, _ := strconv.Atoi(c.Param("index"))
 	var r []model.Message
-	model.FindMessageByMe(bson.ObjectIdHex(uid), &r)
+	count := model.FindMessageByMe(bson.ObjectIdHex(uid), index, size, &r)
 	linq.From(r).OrderByDescending(
 		func(x interface{}) interface{} {
 			return x.(model.Message).CreateTime.String()
@@ -22,6 +25,16 @@ func GetMessage(c *gin.Context) {
 	).ToSlice(&r)
 	c.JSON(200, gin.H{
 		"result": &r,
+		"count":  count,
+	})
+}
+
+// GetMessageUnreadCount 获取未读的消息数量
+func GetMessageUnreadCount(c *gin.Context) {
+	uid := c.Param("uid")
+	i := model.FindMessageCountByStatus(bson.ObjectIdHex(uid), 1)
+	c.JSON(200, gin.H{
+		"result": i,
 	})
 }
 
