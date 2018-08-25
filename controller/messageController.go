@@ -42,20 +42,29 @@ func GetMessageUnreadCount(c *gin.Context) {
 func SendMessage(c *gin.Context) {
 	var request model.MessageRequest
 	common.BindExtend(c, &request)
+	u, b := model.GetUserByID(request.ToID)
+	if !b {
+		c.JSON(200, gin.H{
+			"result": b,
+			"msg":    "不存在的接受用户",
+		})
+		return
+	}
 	m := model.Message{
 		FromID:    request.FromID,
 		FromNick:  request.FromNick,
 		FromImg:   request.FromImg,
 		ToID:      request.ToID,
-		ToNick:    request.ToNick,
-		ToImg:     request.ToImg,
+		ToNick:    u.NickName,
+		ToImg:     u.HeadImg,
 		Content:   request.Content,
 		NeedTouch: request.NeedTouch,
 		Type:      request.Type,
 	}
-	b := m.InsertMessage()
+	b = m.InsertMessage()
 	c.JSON(200, gin.H{
 		"result": b,
+		"msg":    "发送成功",
 	})
 }
 

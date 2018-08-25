@@ -64,6 +64,16 @@ func (u *User) FindOneUser(name string, pwd string) bool {
 	return false
 }
 
+// GetUserByID 依据id获取用户
+func GetUserByID(id bson.ObjectId) (User, bool) {
+	search := bson.M{"_id": id}
+	r := FindUser(search)
+	if len(r) > 0 {
+		return *r[0], true
+	}
+	return User{}, false
+}
+
 // FindUser 获取满足条件的用户数据
 func FindUser(search interface{}) (result []*User) {
 	data.Find(userDB, userTable, search, &result)

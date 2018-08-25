@@ -54,32 +54,33 @@ export default {
       this.panel = panel === this.panel ? "" : panel;
     },
     send(tid, tnick, timg) {
-      var that = this;
-      var loading = this.$loading({});
-      that.$axios
-        .post("/sendmessage", {
-          tid: tid,
-          tnick: tnick,
-          timg: timg,
-          fid: that.currentUser.id,
-          fnick: that.currentUser.nick,
-          fimg: that.currentUser.headImg,
-          content: "向你发送了添加小伙伴的邀请",
-          needTouch: true,
-          type: 1
-        })
-        .then(response => {
-          if (response.data.result) {
-            that.$toast.success("已发送");
-          } else {
-            that.$toast.error("网络异常,请重试");
-          }
-          loading.close();
-        })
-        .catch(error => {
-          that.$toast.error("网络异常,请重试");
-          loading.close();
-        });
+      this.$store.dispatch("sendMessage", {});
+      // var that = this;
+      // var loading = this.$loading({});
+      // that.$axios
+      //   .post("/sendmessage", {
+      //     tid: tid,
+      //     tnick: tnick,
+      //     timg: timg,
+      //     fid: that.currentUser.id,
+      //     fnick: that.currentUser.nick,
+      //     fimg: that.currentUser.headImg,
+      //     content: "向你发送了添加小伙伴的邀请",
+      //     needTouch: true,
+      //     type: 1
+      //   })
+      //   .then(response => {
+      //     if (response.data.result) {
+      //       that.$toast.success("已发送");
+      //     } else {
+      //       that.$toast.error("网络异常,请重试");
+      //     }
+      //     loading.close();
+      //   })
+      //   .catch(error => {
+      //     that.$toast.error("网络异常,请重试");
+      //     loading.close();
+      //   });
     },
     search() {
       var that = this;
@@ -91,7 +92,7 @@ export default {
             that.list = response.data.result;
           } else {
             that.list = [];
-            that.$toast.info("没有相关用户");
+            that.$toast.info("查无结果~~~");
           }
           that.oldSearchValue = [];
           that.searching = false;

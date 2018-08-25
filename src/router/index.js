@@ -1,8 +1,9 @@
 import Vue from "vue"
 import Router from "vue-router"
 import Sign from "@/pages/Sign"
-import Tally from "@/pages/Tally"
+import Home from "@/pages/Home"
 import Me from "@/pages/Me"
+import Tally from "@/pages/Tally"
 import AddPartner from "@/pages/AddPartner"
 import Message from "@/pages/Message"
 
@@ -16,6 +17,11 @@ export default new Router({
     },
     {
       path: "/",
+      name: "Home",
+      component: Home
+    },
+    {
+      path: "/tally",
       name: "Tally",
       component: Tally
     },

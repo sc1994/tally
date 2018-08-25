@@ -32,7 +32,7 @@ export default {
 }
 
 .top-van-backage-oneplus {
-  background-color: #292d30 !important;
+  background-color: #2b2c30 !important;
   color: #ffffff !important;
 }
 
