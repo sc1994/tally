@@ -56,7 +56,7 @@ export default {
     send(tid, tnick, timg) {
       this.$store.dispatch("sendMessage", {
         tid: tid,
-        fid: that.currentUser.id,
+        fid: this.currentUser.id,
         content: "向你发送了添加小伙伴的邀请",
         needTouch: true,
         type: 1
@@ -69,7 +69,17 @@ export default {
         .get("/findusersbyname/" + that.searchValue)
         .then(response => {
           if (response.data.result != null) {
-            that.list = response.data.result;
+            var ids = that
+              .$linq(that.currentUser.partners)
+              .select(x => x.id)
+              .toArray();
+            that.list = that
+              .$linq(response.data.result)
+              .where(x => ids.indexOf(x.id) < 0 && that.currentUser.id != x.id)
+              .toArray();
+            if (that.list.length < 1) {
+              that.$toast.info("可能你们已经是小伙伴了");
+            }
           } else {
             that.list = [];
             that.$toast.info("查无结果~~~");

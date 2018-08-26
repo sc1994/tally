@@ -73,14 +73,26 @@
           <mu-icon class="toggle-icon" size="24" value="keyboard_arrow_up" v-if="open === 'partner'"></mu-icon>
           <mu-icon class="toggle-icon" size="24" value="keyboard_arrow_down" v-else></mu-icon>
         </mu-list-item-action>
+        <mu-list-item button :ripple="true" slot="nested" v-for="item in currentUser.partners" :key="item.id">
+          <mu-list-item-action>
+            <mu-avatar>
+              <img :src="item.headImg">
+            </mu-avatar>
+          </mu-list-item-action>
+          <mu-list-item-title>{{item.nick}}</mu-list-item-title>
+          <mu-list-item-action>
+            <mu-icon value="chat_bubble"></mu-icon>
+          </mu-list-item-action>
+        </mu-list-item>
         <mu-list-item button :ripple="true" slot="nested" @click="$router.push({ path: 'addpartner' })">
           <mu-list-item-title>添加更多</mu-list-item-title>
           <mu-list-item-action>
             <mu-button icon color="#f44336">
-              <mu-icon value="group_add"></mu-icon>
+              <mu-icon value="zoom_in"></mu-icon>
             </mu-button>
           </mu-list-item-action>
         </mu-list-item>
+
       </mu-list-item>
       <mu-divider></mu-divider>
       <mu-list-item button :ripple="false" nested :open="open === 'money'" @toggle-nested="open = arguments[0] ? 'money' : ''">
@@ -91,42 +103,34 @@
         </mu-list-item-action>
         <mu-list-item button :ripple="true" slot="nested" @click="openBaseInfoSet('backCard')">
           <mu-list-item-title>
-            银行卡 :
-            <span class="span-money">{{$numberFormat(currentUser.backCard)}}</span>
-            元
+            银行卡
           </mu-list-item-title>
           <mu-list-item-action>
-            <mu-icon value="edit" color="Teal"></mu-icon>
+            <span class="span-money">{{$numberFormat(currentUser.backCard)}}</span>
           </mu-list-item-action>
         </mu-list-item>
         <mu-list-item button :ripple="true" slot="nested" @click="openBaseInfoSet('aliPay')">
           <mu-list-item-title>
-            支付宝 :
-            <span class="span-money">{{$numberFormat(currentUser.aliPay)}}</span>
-            元
+            支付宝
           </mu-list-item-title>
           <mu-list-item-action>
-            <mu-icon value="edit" color="Teal"></mu-icon>
+            <span class="span-money">{{$numberFormat(currentUser.aliPay)}}</span>
           </mu-list-item-action>
         </mu-list-item>
         <mu-list-item button :ripple="true" slot="nested" @click="openBaseInfoSet('wechatPay')">
           <mu-list-item-title>
-            微信 :
-            <span class="span-money">{{$numberFormat(currentUser.wechatPay)}}</span>
-            元
+            微信
           </mu-list-item-title>
           <mu-list-item-action>
-            <mu-icon value="edit" color="Teal"></mu-icon>
+            <span class="span-money">{{$numberFormat(currentUser.wechatPay)}}</span>
           </mu-list-item-action>
         </mu-list-item>
         <mu-list-item button :ripple="true" slot="nested" @click="openBaseInfoSet('fixDate')">
           <mu-list-item-title>
             定期 :
-            <span class="span-money">{{$numberFormat(currentUser.fixDate)}}</span>
-            元
           </mu-list-item-title>
           <mu-list-item-action>
-            <mu-icon value="edit" color="Teal"></mu-icon>
+            <span class="span-money">{{$numberFormat(currentUser.fixDate)}}</span>
           </mu-list-item-action>
         </mu-list-item>
       </mu-list-item>

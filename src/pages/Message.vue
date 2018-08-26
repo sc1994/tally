@@ -18,7 +18,7 @@
         </mu-list-item-content>
         <mu-list-item-action>
           <mu-list-item-after-text>{{$format(item.ctime,"hh:mm")}}</mu-list-item-after-text>
-          <mu-button icon color="primary" @click="openAlert=true;currentItem=item">
+          <mu-button v-if="item.type==1&&item.status==1" icon color="primary" @click="openAlert=true;currentItem=item">
             <mu-icon value="sentiment_satisfied"></mu-icon>
           </mu-button>
         </mu-list-item-action>
@@ -43,7 +43,7 @@
         </mu-list-item-content>
         <mu-list-item-action>
           <mu-list-item-after-text>{{$format(item.ctime,"hh:mm")}}</mu-list-item-after-text>
-          <mu-button icon color="primary" @click="openAlert=true;currentItem=item">
+          <mu-button v-if="item.type==1&&item.status==1" icon color="primary" @click="openAlert=true;currentItem=item">
             <mu-icon value="sentiment_satisfied"></mu-icon>
           </mu-button>
         </mu-list-item-action>
@@ -68,7 +68,7 @@
         </mu-list-item-content>
         <mu-list-item-action>
           <mu-list-item-after-text>{{$format(item.ctime,"hh:mm")}}</mu-list-item-after-text>
-          <mu-button icon color="primary" @click="openAlert=true;currentItem=item">
+          <mu-button v-if="item.type==1&&item.status==1" icon color="primary" @click="openAlert=true;currentItem=item">
             <mu-icon value="sentiment_satisfied"></mu-icon>
           </mu-button>
         </mu-list-item-action>
