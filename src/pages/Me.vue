@@ -1,16 +1,21 @@
 <template>
   <layoutmain>
     <mu-paper :z-depth="2" style="height:110px;padding:10px">
-      <mu-list textline="two-line">
+      <mu-list textline="three-line">
         <mu-list-item avatar button :ripple="false">
           <mu-list-item-action>
-            <mu-avatar style="width:60px;height:60px">
+            <mu-avatar style="width:70px;height:70px">
               <img src="/static/images/head-default.png">
             </mu-avatar>
           </mu-list-item-action>
-          <mu-list-item-content style="margin-left: 22px;">
+          <mu-list-item-content style="margin-left: 22px;margin-top: -17px;">
             <mu-list-item-title>{{currentUser.nick}}</mu-list-item-title>
-            <mu-list-item-sub-title>账号 : {{currentUser.name}}</mu-list-item-sub-title>
+            <mu-list-item-sub-title>
+              账号 : {{currentUser.name}}
+            </mu-list-item-sub-title>
+            <mu-list-item-sub-title>
+              备注 : {{currentUser.intro}}
+            </mu-list-item-sub-title>
           </mu-list-item-content>
           <mu-list-item-action>
             <mu-badge :content="messageUnreadCount+''" circle color="secondary" v-if="messageUnreadCount>0">
@@ -54,15 +59,14 @@
         </mu-list-item>
         <mu-list-item button :ripple="true" slot="nested" @click="openBaseInfoSet('budget')">
           <mu-list-item-title>
-            每月预算 :
-            <span class="span-money">{{$numberFormat(currentUser.budget)}}</span>
-            元
+            每月预算
           </mu-list-item-title>
           <mu-list-item-action>
-            <mu-icon value="edit" color="Teal"></mu-icon>
+            <span class="span-money">{{$numberFormat(currentUser.budget)}}</span>
           </mu-list-item-action>
         </mu-list-item>
       </mu-list-item>
+      <mu-divider></mu-divider>
       <mu-list-item button :ripple="false" nested :open="open === 'partner'" @toggle-nested="open = arguments[0] ? 'partner' : ''">
         <mu-list-item-title>小伙伴</mu-list-item-title>
         <mu-list-item-action>
@@ -78,6 +82,7 @@
           </mu-list-item-action>
         </mu-list-item>
       </mu-list-item>
+      <mu-divider></mu-divider>
       <mu-list-item button :ripple="false" nested :open="open === 'money'" @toggle-nested="open = arguments[0] ? 'money' : ''">
         <mu-list-item-title>余额</mu-list-item-title>
         <mu-list-item-action>
@@ -125,6 +130,7 @@
           </mu-list-item-action>
         </mu-list-item>
       </mu-list-item>
+      <mu-divider></mu-divider>
       <mu-list-item button :ripple="false" nested :open="open === 'advance'" @toggle-nested="open = arguments[0] ? 'advance' : ''">
         <mu-list-item-title>预支</mu-list-item-title>
         <mu-list-item-action>
@@ -162,6 +168,7 @@
           </mu-list-item-action>
         </mu-list-item>
       </mu-list-item>
+      <mu-divider></mu-divider>
       <mu-list-item button :ripple="false" nested :open="open === 'type'" @toggle-nested="open = arguments[0] ? 'type' : ''">
         <mu-list-item-title>账单类型</mu-list-item-title>
         <mu-list-item-action>
@@ -181,6 +188,7 @@
           </mu-list-item-action>
         </mu-list-item>
       </mu-list-item>
+      <mu-divider></mu-divider>
       <mu-list-item button :ripple="false" nested :open="open === 'loan'" @toggle-nested="open = arguments[0] ? 'loan' : ''">
         <mu-list-item-title>贷款/分期</mu-list-item-title>
         <mu-list-item-action>

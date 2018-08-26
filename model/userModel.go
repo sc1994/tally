@@ -14,22 +14,23 @@ const userTable string = "user"
 
 // User 用户信息实体
 type User struct {
-	ID         bson.ObjectId `json:"id" bson:"_id,omitempty"`      // ID
-	Password   string        `json:"pwd" bson:"pwd"`               // Password
-	Name       string        `json:"name" bson:"name"`             // Name
-	NickName   string        `json:"nick" bson:"nick"`             // NickName 昵称
-	Intro      string        `json:"intro" bson:"intro"`           // 简介
-	CreateTime time.Time     `json:"ctime" bson:"ctime"`           // CreateTime 创建时间
-	HeadImg    string        `json:"headImg" bson:"himg"`          // HeadImg 头像
-	Budget     float32       `json:"budget" bson:"budget"`         // 月预算
-	FixDate    float32       `json:"fixDate" bson:"fixDate"`       // 定期
-	WechatPay  float32       `json:"wechatPay" bson:"wechatPay"`   // 微信
-	Alipay     float32       `json:"aliPay" bson:"aliPay"`         // 支付宝
-	BackCard   float32       `json:"backCard" bson:"backCard"`     // 银行卡
-	CreditCard float32       `json:"creditCard" bson:"creditCard"` // 信用卡
-	Cash       float32       `json:"cash" bson:"cash"`             // 现金
-	AntCheck   float32       `json:"antCheck" bson:"antCheck"`     // 花呗
-	WhiteBar   float32       `json:"whiteBar" bson:"whiteBar"`     // 白条
+	ID         bson.ObjectId   `json:"id" bson:"_id,omitempty"`      // ID
+	Password   string          `json:"pwd" bson:"pwd"`               // Password
+	Name       string          `json:"name" bson:"name"`             // Name
+	NickName   string          `json:"nick" bson:"nick"`             // NickName 昵称
+	Intro      string          `json:"intro" bson:"intro"`           // 简介
+	CreateTime time.Time       `json:"ctime" bson:"ctime"`           // CreateTime 创建时间
+	HeadImg    string          `json:"headImg" bson:"himg"`          // HeadImg 头像
+	Budget     float32         `json:"budget" bson:"budget"`         // 月预算
+	FixDate    float32         `json:"fixDate" bson:"fixDate"`       // 定期
+	WechatPay  float32         `json:"wechatPay" bson:"wechatPay"`   // 微信
+	Alipay     float32         `json:"aliPay" bson:"aliPay"`         // 支付宝
+	BackCard   float32         `json:"backCard" bson:"backCard"`     // 银行卡
+	CreditCard float32         `json:"creditCard" bson:"creditCard"` // 信用卡
+	Cash       float32         `json:"cash" bson:"cash"`             // 现金
+	AntCheck   float32         `json:"antCheck" bson:"antCheck"`     // 花呗
+	WhiteBar   float32         `json:"whiteBar" bson:"whiteBar"`     // 白条
+	Partners   []bson.ObjectId `json:"partners" bson:"partners"`     // 小伙伴
 }
 
 // UserRequest 用户信息请求参数
@@ -48,6 +49,7 @@ type UserResponse struct {
 	Channels        []Channel `json:"channels"`
 	HaveBeenUsed    float32   `json:"haveBeenUsed"`
 	HaveBeenAdvance float32   `json:"haveBeenAdvance"`
+	Partners        []User    `json:"partners"`
 }
 
 // FindOneUser 获取一条用户数据
@@ -72,6 +74,16 @@ func GetUserByID(id bson.ObjectId) (User, bool) {
 		return *r[0], true
 	}
 	return User{}, false
+}
+
+// GetUsersByIDs 获取用户信息通过ids
+func GetUsersByIDs(ids []bson.ObjectId) (result []User) {
+	if len(ids) < 1 {
+		return result
+	}
+	search := bson.M{"_id": bson.M{"$in": ids}}
+	data.Find(userDB, userTable, search, &result)
+	return result
 }
 
 // FindUser 获取满足条件的用户数据
@@ -143,14 +155,7 @@ func RefreshUserRedis(token string) (bool, string) {
 	if !u.FindOneUser(ur.Name, "") {
 		return false, "用户信息不存在"
 	}
-	used, advance := AggregationUser(u.ID)
-	ur = UserResponse{
-		User:            u,
-		Consumes:        FindConsumeByUserID(u.ID),
-		Channels:        FindChannelByUserID(u.ID),
-		HaveBeenUsed:    used,
-		HaveBeenAdvance: advance,
-	} // 获取完整用户信息
+	ur = u.GetUserResponse()
 	j, _ := json.Marshal(ur)         // 序列化用户数据
 	data.SetRedis(token, j, 7*24*60) // 设置到缓存
 	return true, ""
@@ -227,4 +232,25 @@ func AggregationUser(userID bson.ObjectId) (used float32, advance float32) {
 		}
 	}
 	return used, advance
+}
+
+// GetUserResponse 获取完成的响应数据
+func (u *User) GetUserResponse() UserResponse {
+	used, advance := AggregationUser(u.ID)
+	partners := GetUsersByIDs(u.Partners)
+	return UserResponse{
+		User:            *u,
+		Consumes:        FindConsumeByUserID(u.ID),
+		Channels:        FindChannelByUserID(u.ID),
+		HaveBeenUsed:    used,
+		HaveBeenAdvance: advance,
+		Partners:        partners,
+	}
+}
+
+// AddUserPartner 添加小伙伴
+func (u *User) AddUserPartner(partnerID bson.ObjectId) bool {
+	selector := bson.M{"_id": u.ID}
+	update := bson.M{"$push": bson.M{"partners": partnerID}}
+	return data.Update(userDB, userTable, selector, update)
 }

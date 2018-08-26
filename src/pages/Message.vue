@@ -103,8 +103,25 @@ export default {
   },
   methods: {
     submit() {
-      alert("好的");
-      this.openAlert = false;
+      var that = this;
+      var loading = that.$loading({});
+      this.$axios
+        .post("/agreemessage", that.currentItem)
+        .then(response => {
+          if (response.data.result) {
+            that.$toast.success("你们已经是小伙伴啦");
+          } else {
+            that.$toast.error("网络异常,请重试");
+          }
+          loading.close();
+          this.openAlert = false;
+        })
+        .catch(error => {
+          that.$toast.error("网络异常,请重试");
+          console.log(error);
+          loading.close();
+          this.openAlert = false;
+        });
     },
     search(index) {
       var that = this;

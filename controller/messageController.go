@@ -7,7 +7,6 @@ import (
 
 	"gopkg.in/mgo.v2/bson"
 
-	linq "github.com/ahmetb/go-linq"
 	"github.com/gin-gonic/gin"
 )
 
@@ -16,13 +15,7 @@ func GetMessages(c *gin.Context) {
 	uid := c.Param("uid")
 	size, _ := strconv.Atoi(c.Param("size"))
 	index, _ := strconv.Atoi(c.Param("index"))
-	var r []model.Message
-	count := model.FindMessageByMe(bson.ObjectIdHex(uid), index, size, &r)
-	linq.From(r).OrderByDescending(
-		func(x interface{}) interface{} {
-			return x.(model.Message).CreateTime.String()
-		},
-	).ToSlice(&r)
+	count, r := model.FindMessageByMe(bson.ObjectIdHex(uid), index, size)
 	c.JSON(200, gin.H{
 		"result": &r,
 		"count":  count,
@@ -42,26 +35,14 @@ func GetMessageUnreadCount(c *gin.Context) {
 func SendMessage(c *gin.Context) {
 	var request model.MessageRequest
 	common.BindExtend(c, &request)
-	u, b := model.GetUserByID(request.ToID)
-	if !b {
-		c.JSON(200, gin.H{
-			"result": b,
-			"msg":    "不存在的接受用户",
-		})
-		return
-	}
 	m := model.Message{
 		FromID:    request.FromID,
-		FromNick:  request.FromNick,
-		FromImg:   request.FromImg,
 		ToID:      request.ToID,
-		ToNick:    u.NickName,
-		ToImg:     u.HeadImg,
 		Content:   request.Content,
 		NeedTouch: request.NeedTouch,
 		Type:      request.Type,
 	}
-	b = m.InsertMessage()
+	b := m.InsertMessage()
 	c.JSON(200, gin.H{
 		"result": b,
 		"msg":    "发送成功",
@@ -73,10 +54,19 @@ func AgreeMessage(c *gin.Context) {
 	var request model.MessageRequest
 	common.BindExtend(c, &request)
 	b := model.UpdateMessageStatus(request.ID, 3)
+	tu, _ := model.GetUserByID(request.ToID)
+	fu, _ := model.GetUserByID(request.FromID)
 	if b {
 		switch request.Type {
-		case 1:
-			// todo 添加绑定关系
+		case 1: // 添加互相之间的绑定关系
+			go func() {
+				tu.AddUserPartner(request.FromID)
+				model.RefreshUserRedis(request.FromID.Hex())
+			}()
+			go func() {
+				fu.AddUserPartner(request.ToID)
+				model.RefreshUserRedis(request.ToID.Hex())
+			}()
 		}
 	}
 	c.JSON(200, gin.H{

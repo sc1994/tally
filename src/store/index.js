@@ -43,15 +43,12 @@ export default new Vuex.Store({
     sendMessage({
       commit
     }, data) {
-      debugger
       var that = this._vm;
       var loading = that.$loading({});
       that.$axios
         .post("/sendmessage", {
           tid: data.tid,
           fid: this.state.currentUser.id,
-          fnick: this.state.currentUser.nick,
-          fimg: this.state.currentUser.headImg,
           content: data.content,
           needTouch: data.needTouch,
           type: data.type
@@ -67,6 +64,7 @@ export default new Vuex.Store({
         .catch(error => {
           that.$toast.error("网络异常,请重试");
           loading.close();
+          console.log(error)
         });
     }
   }

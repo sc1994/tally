@@ -28,6 +28,7 @@ func main() {
 	r.POST("/sendmessage", controller.SendMessage)                         // 发送消息
 	r.GET("/getmessage/:uid/:index/:size", controller.GetMessages)         // 获取全部消息
 	r.GET("/getmessageunreadcount/:uid", controller.GetMessageUnreadCount) // 获取未读的消息量
+	r.POST("/agreemessage", controller.AgreeMessage)                       // 同意对方的消息
 	// 功能或者包的试验
 	r.GET("/test1", controller.Test1) // ling selectMary
 
