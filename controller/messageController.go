@@ -62,6 +62,15 @@ func AgreeMessage(c *gin.Context) {
 			go func() {
 				tu.AddUserPartner(request.FromID)
 				model.RefreshUserRedis(request.FromID.Hex())
+				m := model.Message{
+					FromID:    bson.ObjectIdHex(common.AdminID),
+					ToID:      request.FromID,
+					Content:   tu.NickName + "同意了你的邀请",
+					Type:      2,
+					Status:    1,
+					NeedTouch: false,
+				}
+				m.InsertMessage()
 			}()
 			go func() {
 				fu.AddUserPartner(request.ToID)
