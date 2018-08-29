@@ -40,10 +40,10 @@
           <mu-icon class="toggle-icon" size="24" value="keyboard_arrow_up" v-if="open === 'base'"></mu-icon>
           <mu-icon class="toggle-icon" size="24" value="keyboard_arrow_down" v-else></mu-icon>
         </mu-list-item-action>
-        <mu-list-item button :ripple="true" slot="nested">
+        <mu-list-item button :ripple="true" slot="nested" @click="openUpload=true">
           <mu-list-item-title>头像</mu-list-item-title>
           <mu-list-item-action>
-            <mu-icon value="edit" color="Teal"></mu-icon>
+            <mu-icon value="backup" color="Teal"></mu-icon>
           </mu-list-item-action>
         </mu-list-item>
         <mu-list-item button :ripple="true" slot="nested" @click="openBaseInfoSet('nick')">
@@ -96,7 +96,7 @@
       </mu-list-item>
     </mu-list>
     <mu-list toggle-nested>
-      <mu-sub-header>账单</mu-sub-header>
+      <mu-sub-header>钱钱钱</mu-sub-header>
       <mu-divider></mu-divider>
       <mu-list-item button :ripple="false" nested :open="open === 'money'" @toggle-nested="open = arguments[0] ? 'money' : ''">
         <mu-list-item-title>余额</mu-list-item-title>
@@ -228,19 +228,23 @@
     <mu-flex justify-content="center" align-items="center">
       <mu-button round color="success" @click="loginOut" full-width>退出登陆</mu-button>
     </mu-flex>
+    <div style="height:80px;"></div>
     <setuserbaseinfo :user="currentUser" :type="baseInfo.type" :alert.sync="baseInfo.alert"></setuserbaseinfo>
+    <uploadimage :open.sync="openUpload"></uploadimage>
   </layoutmain>
 </template>
 
 <script>
 import layoutmain from "@/layout/main";
 import setuserbaseinfo from "@/components/setuserbaseinfo";
+import uploadimage from "@/components/uploadimage";
 import { mapState } from "vuex";
 
 export default {
   components: {
     setuserbaseinfo,
-    layoutmain
+    layoutmain,
+    uploadimage
   },
   data() {
     return {
@@ -251,7 +255,8 @@ export default {
       },
       addpartnerOpen: false,
       messageUnreadCount: 0,
-      openMessage: false
+      openMessage: false,
+      openUpload: false
     };
   },
   computed: {

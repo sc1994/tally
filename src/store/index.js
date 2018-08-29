@@ -35,9 +35,6 @@ export default new Vuex.Store({
               }, 1200)
           }
         })
-        .catch(() => {
-          that.$toast.error("网络异常, 请重试~")
-        })
     },
     sendMessage({
       commit
@@ -60,9 +57,6 @@ export default new Vuex.Store({
           }
           loading.close();
         })
-        .catch(() => {
-          loading.close();
-        });
     }
   }
 })

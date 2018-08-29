@@ -33,10 +33,11 @@
       </mu-sub-header>
       <mu-divider></mu-divider>
       <mu-list-item avatar button :ripple="true">
-        <mu-list-item-action style="width:280px">
+        <mu-list-item-action style="text-align: right;">
           15 元
+          <br> 微信支出
         </mu-list-item-action>
-        <mu-list-item-title>午餐</mu-list-item-title>
+        <mu-list-item-title style="text-align: center;">午餐</mu-list-item-title>
         <mu-list-item-action>
           <mu-button icon color="#4caf50">
             <mu-icon value="fast_forward"></mu-icon>

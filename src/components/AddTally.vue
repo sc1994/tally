@@ -1,14 +1,5 @@
 <template>
-  <mu-dialog fullscreen :open.sync="openTally">
-    <mu-appbar :title="consume+'：'+money+' 元'" :class="appbarStyle">
-      <mu-button slot="left" icon @click="$emit('update:openTally', false)">
-        <mu-icon value="close"></mu-icon>
-      </mu-button>
-      <mu-button slot="right" flat @click="submit" v-if="thatStep==2">
-        完成
-      </mu-button>
-    </mu-appbar>
-    <br/>
+  <dialoghead :title="consume+'：'+money+' 元'" :open.sync="thatOpenTally" :buttonshow="thatStep==2" :buttonclick="submit" buttonicon="done">
     <mu-stepper :active-step="thatStep" orientation="vertical">
       <mu-step>
         <mu-step-label>
@@ -61,13 +52,17 @@
         </mu-step-content>
       </mu-step>
     </mu-stepper>
-  </mu-dialog>
+  </dialoghead>
 </template>
  
  <script>
 import { mapState } from "vuex";
+import dialoghead from "@/layout/dialog";
 
 export default {
+  components: {
+    dialoghead
+  },
   props: {
     openTally: {
       type: Boolean,
@@ -84,6 +79,7 @@ export default {
   },
   data() {
     return {
+      thatOpenTally: false,
       thatStep: -1,
       tallyForm: {
         mode: "",
@@ -99,7 +95,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["currentUser", "appbarStyle"])
+    ...mapState(["currentUser"])
   },
   methods: {
     submit() {
@@ -120,6 +116,7 @@ export default {
             that.$toast.success("添加成功");
             setTimeout(() => {
               that.$emit("update:openTally", false);
+              that.thatOpenTally = false;
               that.$emit("update:consume", "");
               that.$emit("update:money", "");
             }, 1200);
@@ -127,7 +124,7 @@ export default {
             that.$toast.error("网络异常,请重试");
           }
           loading.close();
-        })
+        });
     }
   },
   watch: {
@@ -184,7 +181,7 @@ export default {
         }元，通过${that.tallyForm.channel}${flag}。`;
       }
     },
-    openTally(val) {
+    thatOpenTally(val) {
       if (!val) {
         // 初始化记录步骤里面的数据,但是保留金额和类型
         this.thatStep = -1;
@@ -194,8 +191,14 @@ export default {
           date: "",
           remark: ""
         };
+        this.$emit("update:openTally", false);
       } else {
         this.thatStep = 0;
+      }
+    },
+    openTally(val) {
+      if (val) {
+        this.thatOpenTally = true;
       }
     }
   }

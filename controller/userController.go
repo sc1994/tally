@@ -119,3 +119,24 @@ func FindUsersByName(c *gin.Context) {
 		"result": result,
 	})
 }
+
+// UploadUserHeadImg 上传用户头像
+func UploadUserHeadImg(c *gin.Context) {
+	// id := c.Param("id")
+	f, err := c.FormFile("files")
+	if err != nil {
+		c.JSON(200, gin.H{
+			"result": false,
+			"msg":    "文件错误",
+		})
+		return
+	}
+	err = c.SaveUploadedFile(f, "C:\\Users\\孙诚\\go\\src\\tally\\static\\images\\123.png")
+	if err != nil {
+		c.JSON(200, gin.H{
+			"result": false,
+			"msg":    "文件保存时,发生异常",
+		})
+		return
+	}
+}
