@@ -116,9 +116,9 @@ export default {
           pageIndex: 1,
           pageSize: 5
         })
-        .then(result => {
-          if (result.data.result) {
-            if (result.data.body != null) that.tallyList = result.data.body;
+        .then(response => {
+          if (response.result) {
+            if (response.body != null) that.tallyList = response.body;
           }
         });
     },

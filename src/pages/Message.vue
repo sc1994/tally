@@ -108,7 +108,7 @@ export default {
       this.$axios
         .post("/agreemessage", that.currentItem)
         .then(response => {
-          if (response.data.result) {
+          if (response.result) {
             that.$toast.success("你们已经是小伙伴啦");
           } else {
             that.$toast.error("网络异常,请重试");
@@ -116,9 +116,7 @@ export default {
           loading.close();
           this.openAlert = false;
         })
-        .catch(error => {
-          that.$toast.error("网络异常,请重试");
-          console.log(error);
+        .catch(() => {
           loading.close();
           this.openAlert = false;
         });
@@ -128,17 +126,14 @@ export default {
       that.$axios
         .get(`/getmessage/${that.currentUser.id}/${index}/100`)
         .then(response => {
-          if (response.data.result != null)
+          if (response.result != null)
             that.messageGroup = that
-              .$linq(response.data.result)
+              .$linq(response.result)
               .groupBy("r=>(r.ctime+'').substring(0,10)")
               .select("{key:$.key(),value:$.toArray()}")
               .toArray();
           // todo 按今天昨天更早来分页
         })
-        .catch(error => {
-          that.$toast.error("网络异常,请重试");
-        });
     }
   },
   computed: {

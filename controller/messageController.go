@@ -104,7 +104,13 @@ func RejectMessage(c *gin.Context) {
 	})
 }
 
-// ReadMessage 阅读消息
+// ReadMessageAll 阅读消息
+func ReadMessageAll(c *gin.Context) {
+
+}
+
+// ReadMessageAll 阅读消息
 func ReadMessage(c *gin.Context) {
+	// c.Param("id")
 
 }

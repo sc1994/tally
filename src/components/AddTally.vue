@@ -115,8 +115,8 @@ export default {
           remark: that.tallyForm.remark,
           ctime: that.tallyForm.date
         })
-        .then(result => {
-          if (result.data.result) {
+        .then(response => {
+          if (response.result) {
             that.$toast.success("添加成功");
             setTimeout(() => {
               that.$emit("update:openTally", false);
@@ -128,9 +128,6 @@ export default {
           }
           loading.close();
         })
-        .catch(err => {
-          that.$toast.error("系统错误");
-        });
     }
   },
   watch: {

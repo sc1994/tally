@@ -9,7 +9,7 @@ import Store from './store';
 import 'typeface-roboto';
 import Axios from 'axios'
 import Toast from "muse-ui-toast";
-import 'muse-ui-loading/dist/muse-ui-loading.css'; // load css
+import 'muse-ui-loading/dist/muse-ui-loading.css'; 
 import Loading from 'muse-ui-loading';
 import Linq from 'linq'
 
@@ -17,12 +17,23 @@ Vue.use(MuseUI)
 Vue.use(Toast)
 Vue.use(Loading)
 
+
+// axios 初始化----------------------------------------------------------
 // Axios.defaults.baseURL = 'http://192.168.1.5';
 Axios.defaults.baseURL = 'http://suncheng.xyz:8888';
+// 添加响应拦截器
+Axios.interceptors.response.use(function (response) {
+  // 不需要判断响应状态
+  return response.data;
+}, function (error) {
+  Toast.error("系统错误");
+  console.log(error)
+  return Promise.reject(error);
+});
 
+// vue 初始化------------------------------------------------------------
 Vue.prototype.$axios = Axios;
 Vue.prototype.$linq = Linq.from;
-
 Vue.prototype.$format = (date, fmt) => { // 时间格式化
   var that = new Date(date)
   var o = {
@@ -67,7 +78,7 @@ Vue.prototype.$numberFormat = (number) => {
   return s.join(dec);
 };
 
-Vue.config.productionTip = false
+// Vue.config.productionTip = false
 
 /* eslint-disable no-new */
 new Vue({

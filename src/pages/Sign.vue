@@ -88,10 +88,10 @@ export default {
             password: that.loginModel.password1,
             remember: that.loginModel.remember
           })
-          .then(result => {
-            if (result.data.result) {
+          .then(response => {
+            if (response.result) {
               if (that.active == 0) {
-                localStorage.setItem("token", result.data.token);
+                localStorage.setItem("token", response.token);
                 that.$toast.success("登陆成功, 请稍后...");
                 setTimeout(() => {
                   that.$router.push({ path: "/" });
@@ -109,8 +109,7 @@ export default {
             }
             loading.close();
           })
-          .catch(err => {
-            that.$toast.error("登陆异常, 请重试~");
+          .catch(() => {
             loading.close();
           });
       });
@@ -125,13 +124,12 @@ export default {
       that.$axios
         .get("/signupcheck/" + that.loginModel.username)
         .then(response => {
-          if (response.data.exist) {
+          if (response.exist) {
             that.nameErrorText = "已存在的用户名";
           }
           loading.close();
         })
-        .catch(error => {
-          that.$toast.error("网路异常, 请重试");
+        .catch(() => {
           loading.close();
         });
     }

@@ -22,12 +22,12 @@ export default new Vuex.Store({
     }, data) {
       var that = this._vm;
       that.$axios.get("/getuser/" + localStorage.getItem("token"))
-        .then(result => {
-          if (result.data.result) {
-            commit("changeUser", result.data.user)
+        .then(response => {
+          if (response.result) {
+            commit("changeUser", response.user)
           } else {
             that.$toast.warning("token失效,稍后将跳转到登陆页面")
-            if (result.data)
+            if (response)
               setTimeout(() => {
                 data.$router.push({
                   path: "/sign"
@@ -35,8 +35,7 @@ export default new Vuex.Store({
               }, 1200)
           }
         })
-        .catch(error => {
-          console.log(error)
+        .catch(() => {
           that.$toast.error("网络异常, 请重试~")
         })
     },
@@ -54,17 +53,15 @@ export default new Vuex.Store({
           type: data.type
         })
         .then(response => {
-          if (response.data.result) {
+          if (response.result) {
             that.$toast.success("已发送");
           } else {
             that.$toast.error("网络异常,请重试");
           }
           loading.close();
         })
-        .catch(error => {
-          that.$toast.error("网络异常,请重试");
+        .catch(() => {
           loading.close();
-          console.log(error)
         });
     }
   }

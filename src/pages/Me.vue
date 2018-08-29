@@ -271,7 +271,7 @@ export default {
       var that = this;
       that.$axios
         .get("/removetoken/" + localStorage.getItem("token"))
-        .then(result => {
+        .then(() => {
           localStorage.clear();
           alert("已退出登陆");
           that.$router.push({ path: "/sign" });
@@ -288,7 +288,7 @@ export default {
     currentUser(val) {
       var that = this;
       that.$axios.get("/getmessageunreadcount/" + val.id).then(response => {
-        that.messageUnreadCount = response.data.result;
+        that.messageUnreadCount = response.result;
       });
     }
   },

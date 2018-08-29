@@ -68,13 +68,13 @@ export default {
       that.$axios
         .get("/findusersbyname/" + that.searchValue)
         .then(response => {
-          if (response.data.result != null) {
+          if (response.result != null) {
             var ids = that
               .$linq(that.currentUser.partners)
               .select(x => x.id)
               .toArray();
             that.list = that
-              .$linq(response.data.result)
+              .$linq(response.result)
               .where(x => ids.indexOf(x.id) < 0 && that.currentUser.id != x.id)
               .toArray();
             if (that.list.length < 1) {
@@ -87,8 +87,7 @@ export default {
           that.oldSearchValue = [];
           that.searching = false;
         })
-        .catch(error => {
-          that.$toast.error("网络异常,请重试");
+        .catch(() => {
           that.searching = false;
         });
     }

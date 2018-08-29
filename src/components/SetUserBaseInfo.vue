@@ -71,7 +71,7 @@ export default {
       that.$axios
         .post("/setuserbaseinfo", request)
         .then(response => {
-          if (response.data.result) {
+          if (response.result) {
             that.$toast.success("修改成功");
             that.$store.dispatch("initUser", { $router: this.$router }); // 刷新用户信息
             that.thenAlert = false;
@@ -80,8 +80,7 @@ export default {
           }
           loading.close();
         })
-        .catch(error => {
-          that.$toast.error("网络异常, 请重试...");
+        .catch(() => {
           loading.close();
         });
     },
