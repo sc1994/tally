@@ -8,6 +8,12 @@ import (
 )
 
 func main() {
+
+	// // http.HandleFunc("/echo", echo)
+	// // http.HandleFunc("/", home)
+	// log.Fatal(http.ListenAndServe("localhost:8080", nil))
+
+	// api ------------------------------------------------------------------
 	r := gin.Default()
 	config := cors.DefaultConfig()
 	config.AllowAllOrigins = true
