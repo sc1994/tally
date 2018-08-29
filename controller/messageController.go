@@ -119,7 +119,7 @@ func ReadMessageAll(c *gin.Context) {
 }
 
 // ReadMessageAll 阅读消息
-func ReadMessageAll(c *gin.Context) {
-	// c.Param("id")
+// func ReadMessageAll(c *gin.Context) {
+// 	// c.Param("id")
 
-}
+// }
