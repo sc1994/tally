@@ -8,10 +8,10 @@
       <mu-auto-complete @change="showMode" v-model="tallyForm.consume" :data="consumes" style="height:80px;width:45%" label="种类" :max-search-results="8" open-on-focus label-float></mu-auto-complete>
     </mu-paper>
     <br/>
-    <mu-list>
+    <mu-list v-if="tallyList.length!=0">
       <mu-sub-header>
         最近消费
-        <mu-button flat color="primary" class="button-right">查看全部</mu-button>
+        <mu-button flat color="primary" class="button-right">更多</mu-button>
       </mu-sub-header>
       <mu-divider></mu-divider>
       <mu-list-item :key="index" v-for="item,index in tallyList" avatar :ripple="false">
@@ -25,14 +25,11 @@
           <mu-list-item-sub-title>{{formatDate(item.ctime)}}</mu-list-item-sub-title>
         </mu-list-item-content>
       </mu-list-item>
-      <div style="text-align: center;color: rgba(0,0,0,.54);" v-if="tallyList.length==0">
-        <h4>==暂 无==</h4>
-      </div>
     </mu-list>
     <mu-list>
       <mu-sub-header>
         快速记录
-        <mu-button flat color="primary" class="button-right">添加更多</mu-button>
+        <mu-button flat color="primary" class="button-right">新增</mu-button>
       </mu-sub-header>
       <mu-divider></mu-divider>
       <mu-list-item avatar button :ripple="true">
@@ -157,7 +154,7 @@ export default {
 
 <style scoped>
 .button-right {
-  margin-left: 55%;
+  margin-left: 60%;
 }
 .span-title {
   color: rgb(20, 20, 20);

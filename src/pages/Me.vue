@@ -33,6 +33,7 @@
     <br/>
     <mu-list toggle-nested>
       <mu-sub-header>个人设置</mu-sub-header>
+      <mu-divider></mu-divider>
       <mu-list-item button :ripple="false" nested :open="open === 'base'" @toggle-nested="open = arguments[0] ? 'base' : ''">
         <mu-list-item-title>基本信息</mu-list-item-title>
         <mu-list-item-action>
@@ -66,7 +67,7 @@
           </mu-list-item-action>
         </mu-list-item>
       </mu-list-item>
-      <mu-divider></mu-divider>
+
       <mu-list-item button :ripple="false" nested :open="open === 'partner'" @toggle-nested="open = arguments[0] ? 'partner' : ''">
         <mu-list-item-title>小伙伴</mu-list-item-title>
         <mu-list-item-action>
@@ -92,8 +93,10 @@
             </mu-button>
           </mu-list-item-action>
         </mu-list-item>
-
       </mu-list-item>
+    </mu-list>
+    <mu-list toggle-nested>
+      <mu-sub-header>账单</mu-sub-header>
       <mu-divider></mu-divider>
       <mu-list-item button :ripple="false" nested :open="open === 'money'" @toggle-nested="open = arguments[0] ? 'money' : ''">
         <mu-list-item-title>余额</mu-list-item-title>
@@ -134,7 +137,6 @@
           </mu-list-item-action>
         </mu-list-item>
       </mu-list-item>
-      <mu-divider></mu-divider>
       <mu-list-item button :ripple="false" nested :open="open === 'advance'" @toggle-nested="open = arguments[0] ? 'advance' : ''">
         <mu-list-item-title>预支</mu-list-item-title>
         <mu-list-item-action>
@@ -143,56 +145,29 @@
         </mu-list-item-action>
         <mu-list-item button :ripple="true" slot="nested">
           <mu-list-item-title>
-            花呗 :
+            花呗
+          </mu-list-item-title>
+          <mu-list-item-action>
             <span class="span-money loan">{{$numberFormat(currentUser.antCheck)}}</span>
-            元
-          </mu-list-item-title>
-          <mu-list-item-action>
-            <mu-icon value="edit" color="Teal"></mu-icon>
           </mu-list-item-action>
         </mu-list-item>
         <mu-list-item button :ripple="true" slot="nested">
           <mu-list-item-title>
-            信用卡 :
+            信用卡
+          </mu-list-item-title>
+          <mu-list-item-action>
             <span class="span-money loan">{{$numberFormat(currentUser.creditCard)}}</span>
-            元
-          </mu-list-item-title>
-          <mu-list-item-action>
-            <mu-icon value="edit" color="Teal"></mu-icon>
           </mu-list-item-action>
         </mu-list-item>
         <mu-list-item button :ripple="true" slot="nested">
           <mu-list-item-title>
-            白条 :
-            <span class="span-money loan">{{$numberFormat(currentUser.whiteBar)}}</span>
-            元
+            白条
           </mu-list-item-title>
           <mu-list-item-action>
-            <mu-icon value="edit" color="Teal"></mu-icon>
+            <span class="span-money loan">{{$numberFormat(currentUser.whiteBar)}}</span>
           </mu-list-item-action>
         </mu-list-item>
       </mu-list-item>
-      <mu-divider></mu-divider>
-      <mu-list-item button :ripple="false" nested :open="open === 'type'" @toggle-nested="open = arguments[0] ? 'type' : ''">
-        <mu-list-item-title>账单类型</mu-list-item-title>
-        <mu-list-item-action>
-          <mu-icon class="toggle-icon" size="24" value="keyboard_arrow_up" v-if="open === 'type'"></mu-icon>
-          <mu-icon class="toggle-icon" size="24" value="keyboard_arrow_down" v-else></mu-icon>
-        </mu-list-item-action>
-        <mu-list-item :key="i" v-for="item,i in currentUser.consumes" button :ripple="true" slot="nested">
-          <mu-list-item-title>{{item.content}}</mu-list-item-title>
-          <mu-list-item-action>
-            <mu-icon value="edit" color="Teal"></mu-icon>
-          </mu-list-item-action>
-        </mu-list-item>
-        <mu-list-item button :ripple="true" slot="nested">
-          <mu-list-item-title>添加更多</mu-list-item-title>
-          <mu-list-item-action>
-            <mu-icon value="add" color="Red"></mu-icon>
-          </mu-list-item-action>
-        </mu-list-item>
-      </mu-list-item>
-      <mu-divider></mu-divider>
       <mu-list-item button :ripple="false" nested :open="open === 'loan'" @toggle-nested="open = arguments[0] ? 'loan' : ''">
         <mu-list-item-title>贷款/分期</mu-list-item-title>
         <mu-list-item-action>
@@ -231,6 +206,22 @@
             <mu-icon value="add" color="Red"></mu-icon>
           </mu-list-item-action>
         </mu-list-item>
+      </mu-list-item>
+    </mu-list>
+    <mu-list>
+      <mu-sub-header>其他</mu-sub-header>
+      <mu-divider></mu-divider>
+      <mu-list-item button>
+        <mu-list-item-title>快速消费类型</mu-list-item-title>
+        <mu-list-item-action>
+          <mu-icon value="navigate_next"></mu-icon>
+        </mu-list-item-action>
+      </mu-list-item>
+      <mu-list-item button>
+        <mu-list-item-title>账单类型</mu-list-item-title>
+        <mu-list-item-action>
+          <mu-icon value="navigate_next"></mu-icon>
+        </mu-list-item-action>
       </mu-list-item>
     </mu-list>
     <br/><br/>
