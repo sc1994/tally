@@ -40,7 +40,7 @@
           <mu-icon class="toggle-icon" size="24" value="keyboard_arrow_up" v-if="open === 'base'"></mu-icon>
           <mu-icon class="toggle-icon" size="24" value="keyboard_arrow_down" v-else></mu-icon>
         </mu-list-item-action>
-        <mu-list-item button :ripple="true" slot="nested" @click="openUpload=true">
+        <mu-list-item button :ripple="true" slot="nested" @click="openUpload()">
           <mu-list-item-title>头像</mu-list-item-title>
           <mu-list-item-action>
             <mu-icon value="backup" color="Teal"></mu-icon>
@@ -230,21 +230,28 @@
     </mu-flex>
     <div style="height:80px;"></div>
     <setuserbaseinfo :user="currentUser" :type="baseInfo.type" :alert.sync="baseInfo.alert"></setuserbaseinfo>
-    <uploadimage :open.sync="openUpload"></uploadimage>
+    <vuecoreimageupload
+         crop-ratio="1:1"
+         crop="local"
+         :url="uploadUrl"
+         extensions="png,jpeg,jpg"
+         compress="20">
+      </vue-core-image-upload>
+    </vuecoreimageupload>
   </layoutmain>
 </template>
 
 <script>
 import layoutmain from "@/layout/main";
 import setuserbaseinfo from "@/components/setuserbaseinfo";
-import uploadimage from "@/components/uploadimage";
+import vuecoreimageupload from "vue-core-image-upload";
 import { mapState } from "vuex";
 
 export default {
   components: {
     setuserbaseinfo,
     layoutmain,
-    uploadimage
+    vuecoreimageupload
   },
   data() {
     return {
@@ -256,7 +263,7 @@ export default {
       addpartnerOpen: false,
       messageUnreadCount: 0,
       openMessage: false,
-      openUpload: false
+      uploadUrl: ""
     };
   },
   computed: {
@@ -278,6 +285,9 @@ export default {
         alert: true,
         type: type
       };
+    },
+    openUpload() {
+      document.getElementsByName("files")[0].click();
     }
   },
   watch: {
@@ -286,6 +296,8 @@ export default {
       that.$axios.get("/getmessageunreadcount/" + val.id).then(response => {
         that.messageUnreadCount = response.result;
       });
+      this.uploadUrl = // this.$axios.defaults.baseURL
+        "http://localhost:81" + "/uploaduserheadimage/" + this.currentUser.id;
     }
   },
   mounted() {}

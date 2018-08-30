@@ -19,7 +19,7 @@
     "muse-ui-toast": "^0.3.0",
     "typeface-roboto": "0.0.54",
     "vue": "^2.5.2",
-    "vue-core-image-upload": "^2.4.11",
+    "vue-core-image-upload": "git+https://github.com/sc1994/vue-core-image-upload.git",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1"
   },

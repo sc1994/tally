@@ -16,7 +16,9 @@ func main() {
 	// api ------------------------------------------------------------------
 	r := gin.Default()
 	config := cors.DefaultConfig()
-	config.AllowAllOrigins = true
+	// config.AllowAllOrigins = true
+	config.AllowCredentials = true
+	config.AllowOrigins = []string{"http://localhost:8080"}
 	r.Use(cors.New(config))
 	r.Static("static", "static")
 	// 用户相关的操作接口======================================================
@@ -39,5 +41,5 @@ func main() {
 	// 功能或者包的试验
 	r.GET("/test1", controller.Test1) // ling selectMary
 
-	r.Run(":80")
+	r.Run(":81")
 }

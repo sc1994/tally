@@ -2,6 +2,9 @@ package controller
 
 import (
 	"encoding/json"
+	"io"
+	"os"
+	"strings"
 	"tally/common"
 	"tally/data"
 	"tally/model"
@@ -122,21 +125,39 @@ func FindUsersByName(c *gin.Context) {
 
 // UploadUserHeadImg 上传用户头像
 func UploadUserHeadImg(c *gin.Context) {
-	// id := c.Param("id")
-	f, err := c.FormFile("files")
+	id := c.Param("id")
+	file, err := c.FormFile("files")
 	if err != nil {
 		c.JSON(200, gin.H{
 			"result": false,
-			"msg":    "文件错误",
+			"msg":    "c.FormFile",
 		})
 		return
 	}
-	err = c.SaveUploadedFile(f, "C:\\Users\\孙诚\\go\\src\\tally\\static\\images\\123.png")
+	src, err := file.Open()
 	if err != nil {
 		c.JSON(200, gin.H{
 			"result": false,
-			"msg":    "文件保存时,发生异常",
+			"msg":    "file.Open",
 		})
 		return
 	}
+	defer src.Close()
+	suffix := strings.Split(file.Filename, ".")[1]
+	dst, createErr := os.Create("static/images/" + id + "." + suffix)
+	if createErr != nil {
+		c.JSON(200, gin.H{
+			"result": false,
+			"msg":    "os.Create",
+		})
+		return
+	}
+	defer dst.Close()
+
+	_, err = io.Copy(dst, src)
+
+	c.JSON(200, gin.H{
+		"result": err == nil,
+		"msg":    "io.Copy",
+	})
 }
