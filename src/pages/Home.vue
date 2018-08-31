@@ -16,7 +16,7 @@
       <mu-list-item :key="index" v-for="item,index in tallyList" avatar :ripple="false">
         <mu-list-item-action>
           <mu-avatar>
-            <img src="/static/images/head-default.png">
+            <img :src="getUserHeadImg(item.userID)">
           </mu-avatar>
         </mu-list-item-action>
         <mu-list-item-content>
@@ -120,6 +120,16 @@ export default {
     },
     formatDate(date) {
       return this.$format(date, "yyyy-MM-dd hh:mm");
+    },
+    getUserHeadImg(id) {
+      if (!this.currentUser) return "";
+      if (!this.currentUser.partners) return "";
+      for (var i = 0; i < this.currentUser.partners.length; i++) {
+        if (this.currentUser.partners[i].id == id) {
+          return this.currentUser.partners[i].headImg;
+        }
+      }
+      return this.currentUser.headImg;
     }
   },
   computed: {

@@ -5,7 +5,7 @@
         <mu-list-item avatar button :ripple="false">
           <mu-list-item-action>
             <mu-avatar style="width:70px;height:70px">
-              <img src="/static/images/head-default.png">
+              <img :src="currentUser.headImg">
             </mu-avatar>
           </mu-list-item-action>
           <mu-list-item-content style="margin-left: 22px;margin-top: -17px;">
@@ -261,7 +261,7 @@ export default {
       uploadUrl: this.$fileUrl,
       uploadData: {
         id: "",
-        fileName: "head-image"
+        fileName: "head-image-" + new Date().getMilliseconds()
       }
     };
   },
@@ -292,14 +292,16 @@ export default {
       if (response.result) {
         this.currentUser.headImg = response.path;
         var that = this;
-        this.$axios("/setuserheadimage", {
-          id: this.currentUser.id,
-          headImg: this.currentUser.headImg
-        }).then(response => {
-          if (!response.result) {
-            that.$toast.error("出现错误");
-          }
-        });
+        this.$axios
+          .post("/setuserheadimage", {
+            id: this.currentUser.id,
+            headImg: this.currentUser.headImg
+          })
+          .then(response => {
+            if (!response.result) {
+              that.$toast.error("出现错误");
+            }
+          });
       }
     }
   },

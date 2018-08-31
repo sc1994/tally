@@ -10,7 +10,8 @@ import { mapState } from "vuex";
 export default {
   name: "App",
   watch: {
-    $route() {
+    $route(val) {
+      if (val.path == "/sign") return;
       this.$store.dispatch("initUser", { $router: this.$router });
     }
   },
@@ -20,7 +21,9 @@ export default {
     } else {
       this.$store.commit("changeAppbarStyle", "top-van-backage-oneplus");
     }
-    this.$store.dispatch("initUser", { $router: this.$router });
+    if (window.document.URL.indexOf("/sign") < 0) {
+      this.$store.dispatch("initUser", { $router: this.$router });
+    }
   }
 };
 </script>
