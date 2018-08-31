@@ -11,7 +11,6 @@
     <mu-list v-if="tallyList.length!=0">
       <mu-sub-header>
         最近消费
-        <mu-button flat color="primary" class="button-right">更多</mu-button>
       </mu-sub-header>
       <mu-divider></mu-divider>
       <mu-list-item :key="index" v-for="item,index in tallyList" avatar :ripple="false">
@@ -29,7 +28,6 @@
     <mu-list>
       <mu-sub-header>
         快速记录
-        <mu-button flat color="primary" class="button-right">新增</mu-button>
       </mu-sub-header>
       <mu-divider></mu-divider>
       <mu-list-item avatar button :ripple="true">

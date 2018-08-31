@@ -290,8 +290,16 @@ export default {
     },
     uploaded(response) {
       if (response.result) {
-        // todo
-        alert(response.path);
+        this.currentUser.headImg = response.path;
+        var that = this;
+        this.$axios("/setuserheadimage", {
+          id: this.currentUser.id,
+          headImg: this.currentUser.headImg
+        }).then(response => {
+          if (!response.result) {
+            that.$toast.error("出现错误");
+          }
+        });
       }
     }
   },

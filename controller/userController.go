@@ -2,9 +2,6 @@ package controller
 
 import (
 	"encoding/json"
-	"io"
-	"os"
-	"strings"
 	"tally/common"
 	"tally/data"
 	"tally/model"
@@ -123,41 +120,16 @@ func FindUsersByName(c *gin.Context) {
 	})
 }
 
-// UploadUserHeadImg 上传用户头像
-func UploadUserHeadImg(c *gin.Context) {
-	id := c.Param("id")
-	file, err := c.FormFile("files")
-	if err != nil {
-		c.JSON(200, gin.H{
-			"result": false,
-			"msg":    "c.FormFile",
-		})
-		return
+// SetUserHeadImage 设置头像
+func SetUserHeadImage(c *gin.Context) {
+	var request model.UserRequest
+	common.BindExtend(c, &request)
+	update := bson.M{"$set": bson.M{"himg": request.HeadImg}}
+	r := model.UpdateUserByID(request.ID, update)
+	if r {
+		go model.RefreshUserRedis(request.ID.Hex())
 	}
-	src, err := file.Open()
-	if err != nil {
-		c.JSON(200, gin.H{
-			"result": false,
-			"msg":    "file.Open",
-		})
-		return
-	}
-	defer src.Close()
-	suffix := strings.Split(file.Filename, ".")[1]
-	dst, createErr := os.Create("static/headimages/" + id + "." + suffix)
-	if createErr != nil {
-		c.JSON(200, gin.H{
-			"result": false,
-			"msg":    "os.Create",
-		})
-		return
-	}
-	defer dst.Close()
-
-	_, err = io.Copy(dst, src)
-
 	c.JSON(200, gin.H{
-		"result": err == nil,
-		"msg":    "io.Copy",
+		"result": r,
 	})
 }
