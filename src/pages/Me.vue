@@ -230,12 +230,7 @@
     </mu-flex>
     <div style="height:80px;"></div>
     <setuserbaseinfo :user="currentUser" :type="baseInfo.type" :alert.sync="baseInfo.alert"></setuserbaseinfo>
-    <vuecoreimageupload
-         crop-ratio="1:1"
-         crop="local"
-         :url="uploadUrl"
-         extensions="png,jpeg,jpg"
-         compress="20">
+    <vuecoreimageupload :data="uploadData" crop="local" :url="uploadUrl" @imageuploaded="uploaded" crop-ratio="1:1" extensions="png,jpeg,jpg" compress="60">
       </vue-core-image-upload>
     </vuecoreimageupload>
   </layoutmain>
@@ -263,7 +258,11 @@ export default {
       addpartnerOpen: false,
       messageUnreadCount: 0,
       openMessage: false,
-      uploadUrl: ""
+      uploadUrl: this.$fileUrl,
+      uploadData: {
+        id: "",
+        fileName: "head-image"
+      }
     };
   },
   computed: {
@@ -288,6 +287,12 @@ export default {
     },
     openUpload() {
       document.getElementsByName("files")[0].click();
+    },
+    uploaded(response) {
+      if (response.result) {
+        // todo
+        alert(response.path);
+      }
     }
   },
   watch: {
@@ -296,8 +301,7 @@ export default {
       that.$axios.get("/getmessageunreadcount/" + val.id).then(response => {
         that.messageUnreadCount = response.result;
       });
-      this.uploadUrl = // this.$axios.defaults.baseURL
-        "http://localhost:81" + "/uploaduserheadimage/" + this.currentUser.id;
+      this.uploadData.id = this.currentUser.id;
     }
   },
   mounted() {}

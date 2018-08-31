@@ -144,7 +144,7 @@ func UploadUserHeadImg(c *gin.Context) {
 	}
 	defer src.Close()
 	suffix := strings.Split(file.Filename, ".")[1]
-	dst, createErr := os.Create("static/images/" + id + "." + suffix)
+	dst, createErr := os.Create("static/headimages/" + id + "." + suffix)
 	if createErr != nil {
 		c.JSON(200, gin.H{
 			"result": false,

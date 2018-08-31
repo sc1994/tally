@@ -9,7 +9,7 @@ import Store from './store';
 import 'typeface-roboto';
 import Axios from 'axios'
 import Toast from "muse-ui-toast";
-import 'muse-ui-loading/dist/muse-ui-loading.css'; 
+import 'muse-ui-loading/dist/muse-ui-loading.css';
 import Loading from 'muse-ui-loading';
 import Linq from 'linq'
 
@@ -32,6 +32,8 @@ Axios.interceptors.response.use(function (response) {
 });
 
 // vue 初始化------------------------------------------------------------
+Vue.prototype.$fileUrl = "http://118.24.27.231:81/uploadfile"
+// Vue.prototype.$fileUrl = "http://localhost:81/uploadfile"
 Vue.prototype.$axios = Axios;
 Vue.prototype.$linq = Linq.from;
 Vue.prototype.$format = (date, fmt) => { // 时间格式化

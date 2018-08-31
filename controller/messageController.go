@@ -101,7 +101,7 @@ func RejectMessage(c *gin.Context) {
 		case 1:
 			// 回执消息
 			receipt := model.Message{
-				FromID:  m.ToID,
+				FromID:  bson.ObjectIdHex(common.AdminID),
 				ToID:    m.FromID,
 				Content: "伙伴邀请被拒绝", // todo
 			}

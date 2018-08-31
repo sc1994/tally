@@ -8,8 +8,7 @@ import (
 )
 
 func main() {
-
-	// // http.HandleFunc("/echo", echo)
+	// // http.HandleFunc("/echo", echo) todo websocker
 	// // http.HandleFunc("/", home)
 	// log.Fatal(http.ListenAndServe("localhost:8080", nil))
 
@@ -18,7 +17,7 @@ func main() {
 	config := cors.DefaultConfig()
 	// config.AllowAllOrigins = true
 	config.AllowCredentials = true
-	config.AllowOrigins = []string{"http://localhost:8080"}
+	config.AllowOrigins = []string{"http://localhost:8080", "http://suncheng.xyz:7777"}
 	r.Use(cors.New(config))
 	r.Static("static", "static")
 	// 用户相关的操作接口======================================================
@@ -38,8 +37,9 @@ func main() {
 	r.GET("/getmessage/:uid/:index/:size", controller.GetMessages)         // 获取全部消息
 	r.GET("/getmessageunreadcount/:uid", controller.GetMessageUnreadCount) // 获取未读的消息量
 	r.POST("/agreemessage", controller.AgreeMessage)                       // 同意对方的消息
-	// 功能或者包的试验
+
+	// 功能或者包的试验---------------------------------------------------------------
 	r.GET("/test1", controller.Test1) // ling selectMary
 
-	r.Run(":81")
+	r.Run(":80")
 }
