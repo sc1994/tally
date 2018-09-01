@@ -1,82 +1,8 @@
 <template>
-  <minor :title="'消息中心'" :righticon="'done_all'" :rightevent="readlyAll">
-    <mu-list textline="two-line">
-      <mu-sub-header v-if="isToday">今天</mu-sub-header>
-      <mu-list-item avatar :ripple="false" button v-for="item in todays" :key="item.id">
-        <mu-list-item-action>
-          <mu-avatar>
-            <img :src="item.fimg">
-          </mu-avatar>
-        </mu-list-item-action>
-        <mu-list-item-content>
-          <mu-list-item-title>{{item.fnick}}</mu-list-item-title>
-          <mu-list-item-sub-title>
-            <span style="color: rgba(0, 0, 0, .87)">
-              {{item.content}}
-            </span>
-          </mu-list-item-sub-title>
-        </mu-list-item-content>
-        <mu-list-item-action>
-          <mu-list-item-after-text>{{$format(item.ctime,"hh:mm")}}</mu-list-item-after-text>
-          <mu-button v-if="item.type==1&&item.status==1" icon color="primary" @click="openAlert=true;currentItem=item">
-            <mu-icon value="sentiment_satisfied"></mu-icon>
-          </mu-button>
-        </mu-list-item-action>
-      </mu-list-item>
-      <div v-if="isYesterday">
-        <mu-divider></mu-divider>
-        <mu-sub-header>昨天</mu-sub-header>
-      </div>
-      <mu-list-item avatar :ripple="false" button v-for="item in yesterdays" :key="item.id">
-        <mu-list-item-action>
-          <mu-avatar>
-            <img :src="item.fimg">
-          </mu-avatar>
-        </mu-list-item-action>
-        <mu-list-item-content>
-          <mu-list-item-title>{{item.fnick}}</mu-list-item-title>
-          <mu-list-item-sub-title>
-            <span style="color: rgba(0, 0, 0, .87)">
-              {{item.content}}
-            </span>
-          </mu-list-item-sub-title>
-        </mu-list-item-content>
-        <mu-list-item-action>
-          <mu-list-item-after-text>{{$format(item.ctime,"hh:mm")}}</mu-list-item-after-text>
-          <mu-button v-if="item.type==1&&item.status==1" icon color="primary" @click="openAlert=true;currentItem=item">
-            <mu-icon value="sentiment_satisfied"></mu-icon>
-          </mu-button>
-        </mu-list-item-action>
-      </mu-list-item>
-      <div v-if="isEarlier">
-        <mu-divider></mu-divider>
-        <mu-sub-header>更早</mu-sub-header>
-      </div>
-      <mu-list-item avatar :ripple="false" button v-for="item in earlier" :key="item.id">
-        <mu-list-item-action>
-          <mu-avatar>
-            <img :src="item.fimg">
-          </mu-avatar>
-        </mu-list-item-action>
-        <mu-list-item-content>
-          <mu-list-item-title>{{item.fnick}}</mu-list-item-title>
-          <mu-list-item-sub-title>
-            <span style="color: rgba(0, 0, 0, .87)">
-              {{item.content}}
-            </span>
-          </mu-list-item-sub-title>
-        </mu-list-item-content>
-        <mu-list-item-action>
-          <mu-list-item-after-text>{{$format(item.ctime,"hh:mm")}}</mu-list-item-after-text>
-          <mu-button v-if="item.type==1&&item.status==1" icon color="primary" @click="openAlert=true;currentItem=item">
-            <mu-icon value="sentiment_satisfied"></mu-icon>
-          </mu-button>
-          <mu-button icon color="error" v-if="!item.needTouch&&item.status==1" :ripple="false">
-            <mu-icon value="lens" :size="1"></mu-icon>
-          </mu-button>
-        </mu-list-item-action>
-      </mu-list-item>
-    </mu-list>
+  <minor :title="'消息中心'" :righticon="righticon" :rightevent="readlyAll">
+    <messagelist :list="todays"></messagelist>
+    <messagelist :list="yesterdays"></messagelist>
+    <messagelist :list="earlier"></messagelist>
     <mu-dialog title="是否同意 ?" width="75%" max-width="75%" :esc-press-close="false" :overlay-close="false" :open.sync="openAlert">
       <span style="color: rgba(0,0,0,.87);">{{currentItem.fnick}}&nbsp;-&nbsp;</span>
       {{currentItem.content}}
@@ -89,18 +15,17 @@
 <script>
 import { mapState } from "vuex";
 import minor from "@/layout/minor";
+import messagelist from "@/components/messagelist";
 
 export default {
   components: {
-    minor
+    minor,
+    messagelist
   },
   data() {
     return {
       openAlert: false,
       messageGroup: [],
-      todays: [],
-      yesterdays: [],
-      earlier: [],
       currentItem: {},
       righticon: ""
     };
@@ -134,7 +59,7 @@ export default {
             that.righticon =
               that
                 .$linq(response.result)
-                .where(x => !x.needTouch)
+                .where(x => !x.needTouch && x.status == 1)
                 .toArray().length > 0
                 ? "done_all"
                 : "";
@@ -147,7 +72,6 @@ export default {
         });
     },
     readlyAll() {
-      debugger;
       var that = this;
       var loading = that.$loading();
       that.$axios
@@ -166,31 +90,25 @@ export default {
   },
   computed: {
     ...mapState(["currentUser"]),
-    isToday() {
+    todays() {
       var that = this;
       var temp = this.$linq(this.messageGroup)
         .where(
           x => x.key == that.$format(new Date(), "yyyy-MM-dd").substring(0, 10)
         )
         .toArray();
-      if (temp.length > 0) {
-        this.todays = temp[0].value;
-      }
-      return temp.length > 0;
+      return temp;
     },
-    isYesterday() {
+    yesterdays() {
       var that = this;
       var now = new Date();
       now.setDate(now.getDate() - 1);
       var temp = this.$linq(this.messageGroup)
         .where(x => x.key == that.$format(now, "yyyy-MM-dd").substring(0, 10))
         .toArray();
-      if (temp.length > 0) {
-        this.yesterdays = temp[0].value;
-      }
-      return temp.length > 0;
+      return temp;
     },
-    isEarlier() {
+    earlier() {
       var that = this;
       var now = new Date();
       now.setDate(now.getDate() - 1);
@@ -202,12 +120,13 @@ export default {
         )
         .select(x => x.value)
         .toArray();
+      var earline = [];
       temp.forEach(x => {
         x.forEach(i => {
-          that.earlier.push(i);
+          earline.push(i);
         });
       });
-      return temp.length > 0;
+      return earline;
     }
   },
   watch: {

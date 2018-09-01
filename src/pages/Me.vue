@@ -67,7 +67,6 @@
           </mu-list-item-action>
         </mu-list-item>
       </mu-list-item>
-
       <mu-list-item button :ripple="false" nested :open="open === 'partner'" @toggle-nested="open = arguments[0] ? 'partner' : ''">
         <mu-list-item-title>小伙伴</mu-list-item-title>
         <mu-list-item-action>

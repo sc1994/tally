@@ -49,6 +49,18 @@ func InsertTally(c *gin.Context) {
 		}
 		b = u.ChangeUserMoney(request.Mode, request.Channel, request.Money)
 		model.RefreshUserRedis(request.Token)
+		go func() {
+			for _, val := range u.Partners {
+				m := model.Message{
+					FromID:    u.ID,
+					ToID:      val.ID,
+					Content:   val.NickName + "添加了一笔50元的消费",
+					Type:      3,
+					NeedTouch: false,
+				}
+				m.InsertMessage()
+			}
+		}()
 	}
 	c.JSON(200, gin.H{
 		"result": b,

@@ -15,7 +15,7 @@ type Message struct {
 	FromID     bson.ObjectId `json:"fid" bson:"fid"`             // 来自谁
 	ToID       bson.ObjectId `json:"tid" bson:"tid"`             // 发送给谁
 	Content    string        `json:"content" bson:"content"`     // 消息内容
-	Type       int           `json:"type" bson:"type"`           // 消息类型 1.小伙伴邀请 2.邀请回执 3.
+	Type       int           `json:"type" bson:"type"`           // 消息类型 1.小伙伴邀请 2.邀请回执 3.账单消息
 	Status     int           `json:"status" bson:"status"`       // 状态 1.未读 2.已读 3.同意 4.拒绝
 	NeedTouch  bool          `json:"needTouch" bson:"needTouch"` // 需要点击阅读
 	CreateTime time.Time     `json:"ctime" bson:"ctime"`         // 创建时间

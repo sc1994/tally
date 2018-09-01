@@ -24,7 +24,10 @@ export default {
       type: String
     },
     rightevent: {
-      type: Function
+      type: Function,
+      default: () => {
+        return;
+      }
     },
     title: {
       type: String
