@@ -61,8 +61,8 @@ func UpdateMessageStatus(id bson.ObjectId, status int) bool {
 }
 
 // UpdateMessageToRead 更新无需点击的消息到已读
-func UpdateMessageToRead() bool {
-	selector := bson.M{"needTouch": false}
+func UpdateMessageToRead(uid bson.ObjectId) bool {
+	selector := bson.M{"needTouch": false, "tid": uid, "status": 1}
 	update := bson.M{"$set": bson.M{"status": 2}}
 	return data.Update(messageDB, messageTable, selector, update)
 }

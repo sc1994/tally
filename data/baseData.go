@@ -84,7 +84,7 @@ func Insert(db string, table string, data interface{}) bool {
 	return true
 }
 
-// Update 更新一条数据
+// Update 更新数据
 func Update(db string, table string, selector interface{}, update interface{}) bool {
 	session, err := mgo.Dial(common.MongoConnect)
 	defer session.Close()
@@ -93,7 +93,7 @@ func Update(db string, table string, selector interface{}, update interface{}) b
 	}
 	session.SetMode(mgo.Monotonic, true)
 	c := session.DB(db).C(table)
-	err = c.Update(selector, update)
+	_, err = c.UpdateAll(selector, update)
 	if err != nil {
 		panic(err)
 	}
@@ -109,7 +109,7 @@ func Delete(db string, table string, selector interface{}) bool {
 	}
 	session.SetMode(mgo.Monotonic, true)
 	c := session.DB(db).C(table)
-	err = c.Remove(selector)
+	_, err = c.RemoveAll(selector)
 	if err != nil {
 		panic(err)
 	} else {

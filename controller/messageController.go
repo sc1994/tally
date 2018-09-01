@@ -115,11 +115,9 @@ func RejectMessage(c *gin.Context) {
 
 // ReadMessageAll 阅读消息
 func ReadMessageAll(c *gin.Context) {
-
+	uid := c.Param("uid")
+	b := model.UpdateMessageToRead(bson.ObjectIdHex(uid))
+	c.JSON(200, gin.H{
+		"result": b,
+	})
 }
-
-// ReadMessageAll 阅读消息
-// func ReadMessageAll(c *gin.Context) {
-// 	// c.Param("id")
-
-// }

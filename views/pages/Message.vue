@@ -1,5 +1,5 @@
 <template>
-  <minor :title="'消息中心'">
+  <minor :title="'消息中心'" :righticon="'done_all'" :rightevent="readlyAll">
     <mu-list textline="two-line">
       <mu-sub-header v-if="isToday">今天</mu-sub-header>
       <mu-list-item avatar :ripple="false" button v-for="item in todays" :key="item.id">
@@ -71,6 +71,9 @@
           <mu-button v-if="item.type==1&&item.status==1" icon color="primary" @click="openAlert=true;currentItem=item">
             <mu-icon value="sentiment_satisfied"></mu-icon>
           </mu-button>
+          <mu-button icon color="error" v-if="!item.needTouch&&item.status==1" :ripple="false">
+            <mu-icon value="lens" :size="1"></mu-icon>
+          </mu-button>
         </mu-list-item-action>
       </mu-list-item>
     </mu-list>
@@ -98,7 +101,8 @@ export default {
       todays: [],
       yesterdays: [],
       earlier: [],
-      currentItem: {}
+      currentItem: {},
+      righticon: ""
     };
   },
   methods: {
@@ -127,13 +131,37 @@ export default {
         .get(`/getmessage/${that.currentUser.id}/${index}/100`)
         .then(response => {
           if (response.result != null)
-            that.messageGroup = that
-              .$linq(response.result)
-              .groupBy("r=>(r.ctime+'').substring(0,10)")
-              .select("{key:$.key(),value:$.toArray()}")
-              .toArray();
+            that.righticon =
+              that
+                .$linq(response.result)
+                .where(x => !x.needTouch)
+                .toArray().length > 0
+                ? "done_all"
+                : "";
+          that.messageGroup = that
+            .$linq(response.result)
+            .groupBy("r=>(r.ctime+'').substring(0,10)")
+            .select("{key:$.key(),value:$.toArray()}")
+            .toArray();
           // todo 按今天昨天更早来分页
+        });
+    },
+    readlyAll() {
+      debugger;
+      var that = this;
+      var loading = that.$loading();
+      that.$axios
+        .get("/readmessageall/" + that.currentUser.id)
+        .then(response => {
+          if (response.result) {
+            that.$toast.success("无需确认的消息, 已标记为已读");
+            that.$router.back(-1);
+          }
+          loading.close();
         })
+        .catch(error => {
+          loading.close();
+        });
     }
   },
   computed: {

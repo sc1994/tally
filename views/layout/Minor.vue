@@ -4,10 +4,10 @@
       <mu-button icon slot="left" @click="$router.back(-1)">
         <mu-icon value="reply" left></mu-icon>
       </mu-button>
-      {{title}}
-      <mu-button flat slot="right" v-if="righticon" @click="rightevent">
-        <mu-icon value="menu"></mu-icon>
+      <mu-button icon flat slot="right" @click="rightevent">
+        <mu-icon :value="righticon" left v-if="righticon"></mu-icon>
       </mu-button>
+      {{title}}
     </mu-appbar>
     <mu-container style="position: absolute;top: 65px;">
       <slot></slot>
@@ -33,6 +33,12 @@ export default {
   computed: {
     ...mapState(["appbarStyle"])
   }
+  // methods: {
+  //   clickRightIcon() {
+  //     debugger
+  //     this.();
+  //   }
+  // }
 };
 </script>
 

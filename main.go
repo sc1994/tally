@@ -37,7 +37,7 @@ func main() {
 	r.GET("/getmessage/:uid/:index/:size", controller.GetMessages)         // 获取全部消息
 	r.GET("/getmessageunreadcount/:uid", controller.GetMessageUnreadCount) // 获取未读的消息量
 	r.POST("/agreemessage", controller.AgreeMessage)                       // 同意对方的消息
-
+	r.GET("/readmessageall/:uid", controller.ReadMessageAll)               // 无需阅读的消息全部已读
 	// 功能或者包的试验---------------------------------------------------------------
 	r.GET("/test1", controller.Test1) // ling selectMary
 
