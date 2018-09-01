@@ -54,7 +54,7 @@ func InsertTally(c *gin.Context) {
 				m := model.Message{
 					FromID:    u.ID,
 					ToID:      val.ID,
-					Content:   val.NickName + "添加了一笔50元的消费",
+					Content:   "添加了一笔50元的消费",
 					Type:      3,
 					NeedTouch: false,
 				}
@@ -81,11 +81,16 @@ func GetTallyByUser(c *gin.Context) {
 		return
 	}
 	t := model.Tally{}
+	uids := make([]bson.ObjectId, 0)
+	uids = append(uids, u.ID)
+	for _, val := range u.Partners {
+		uids = append(uids, val.ID)
+	}
 	var result []model.Tally
 	t.FindTallyPage(
 		request.PageIndex,
 		request.PageSize,
-		bson.M{"uid": u.ID},
+		bson.M{"uid": bson.M{"$in": uids}},
 		&result)
 	c.JSON(200, gin.H{
 		"result": true,

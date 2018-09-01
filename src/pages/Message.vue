@@ -97,7 +97,10 @@ export default {
           x => x.key == that.$format(new Date(), "yyyy-MM-dd").substring(0, 10)
         )
         .toArray();
-      return temp;
+      if (temp.length > 0) {
+        return temp[0].value;
+      }
+      return [];
     },
     yesterdays() {
       var that = this;
@@ -106,7 +109,10 @@ export default {
       var temp = this.$linq(this.messageGroup)
         .where(x => x.key == that.$format(now, "yyyy-MM-dd").substring(0, 10))
         .toArray();
-      return temp;
+      if (temp.length > 0) {
+        return temp[0].value;
+      }
+      return [];
     },
     earlier() {
       var that = this;

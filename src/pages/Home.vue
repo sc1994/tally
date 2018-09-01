@@ -42,14 +42,6 @@
           </mu-button>
         </mu-list-item-action>
       </mu-list-item>
-      <!-- 留个空的撑开样式 -->
-      <mu-list-item avatar button :ripple="false">
-        <mu-list-item-action>
-        </mu-list-item-action>
-        <mu-list-item-title></mu-list-item-title>
-        <mu-list-item-action>
-        </mu-list-item-action>
-      </mu-list-item>
     </mu-list>
     <addtally :openTally.sync="openTally" :money="tallyForm.money" :consume="tallyForm.consume"></addtally>
   </layoutmain>

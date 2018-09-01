@@ -42,21 +42,21 @@ export default {
       if (this.list.length < 1) return "";
       var now = new Date();
       if (
-        this.list[0].ctime.substring(0, 10) ==
+        (this.list[0].ctime + "").substring(0, 10) ==
         this.$format(now, "yyyy-MM-dd").substring(0, 10)
       ) {
         return "今天";
       }
       now.setDate(now.getDate() - 1);
       if (
-        this.list[0].ctime.substring(0, 10) ==
+        (this.list[0].ctime + "").substring(0, 10) ==
         this.$format(now, "yyyy-MM-dd").substring(0, 10)
       ) {
         return "昨天";
       }
       now.setDate(now.getDate() - 1);
       if (
-        this.list[0].ctime.substring(0, 10) ==
+        (this.list[0].ctime + "").substring(0, 10) ==
         this.$format(now, "yyyy-MM-dd").substring(0, 10)
       ) {
         return "更早";

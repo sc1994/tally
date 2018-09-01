@@ -1,12 +1,16 @@
 <template>
   <div>
     <mu-appbar :class="'top-van ' + appbarStyle" :title="title">
+      <mu-button icon slot="left" v-if="lefticon" @click="leftevent" :style="letfstyle">
+        <mu-icon :value="lefticon"></mu-icon>
+      </mu-button>
       <mu-button icon flat slot="right">
         <i class="fa fa-github" style="font-size: 26px;margin-right: 15px;"></i>
       </mu-button>
     </mu-appbar>
     <mu-container style="position: absolute;top: 65px;">
       <slot></slot>
+      <div style="height:70px;"></div>
     </mu-container>
     <mu-bottom-nav :value.sync="value" v-on:change="goto" class="bot-van">
       <mu-bottom-nav-item value="/" icon=":fa fa-circle-o-notch" class="bot-font-icon">
@@ -21,6 +25,17 @@
 import { mapState } from "vuex";
 
 export default {
+  props: {
+    lefticon: {
+      type: String
+    },
+    leftevent: {
+      type: Function
+    },
+    letfstyle: {
+      type: String
+    }
+  },
   data() {
     return {
       title: "",
