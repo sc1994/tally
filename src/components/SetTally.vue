@@ -53,23 +53,40 @@ export default {
         mode: "",
         channel: "",
         ctime: "",
-        remark: "",
-        type: ""
+        remark: ""
       },
-      thatSetInterval: {}
+      thatSetInterval: 0
     };
   },
   methods: {
     submit() {
       var that = this;
       var loading = that.$loading({});
-      debugger;
+      that.form.money = parseFloat(that.form.money);
       that.$axios.post("/updatetallybyid", that.form).then(response => {
         if (response.result) {
           that.$toast.success("修改完成");
-          clearInterval(that.thatSetInterval);
+          // 反过来赋值
+          that.currentItem.money = that.form.money;
+          that.currentItem.type = that.form.type;
+          that.currentItem.mode = that.form.mode;
+          that.currentItem.ctime = that.form.ctime;
+          that.currentItem.remark = that.form.remark;
+          // 关闭窗口
           setTimeout(() => {
-            that.$emit("update:open", false);
+            if (that.thatSetInterval != 0) {
+              clearInterval(that.thatSetInterval);
+            }
+            that.form = {
+              id: 0,
+              money: 0,
+              type: "",
+              mode: "",
+              channel: "",
+              ctime: "",
+              remark: ""
+            };
+            that.thatOpen = false;
           }, 800);
         } else {
           that.$toast.info("数据异常,请重试");
@@ -89,9 +106,13 @@ export default {
       if (val) this.thatOpen = true;
     },
     thatOpen(val) {
-      if (!val) this.$emit("update:open", false);
+      if (!val) {
+        this.$emit("update:currentItem", {});
+        this.$emit("update:open", false);
+      }
     },
     currentItem(val) {
+      if (!val.money) return;
       this.form = {
         id: val.tid,
         money: val.money,
@@ -103,6 +124,8 @@ export default {
       };
     },
     form(val) {
+      console.log(val);
+      if (!val.money) return;
       var flag = val.mode == "收入" ? "收取" : "支付";
       var def = `${val.type}${val.mode}了${val.money}元，通过${
         val.channel
