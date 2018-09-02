@@ -20,7 +20,7 @@
         </mu-list>
       </mu-load-more>
     </mu-container>
-    <mu-drawer :open.sync="open" letf :docked="false" style="top:55px;border-radius:0px;" :z-depth="0">
+    <mu-drawer :open.sync="open" letf :docked="true" style="top:55px;border-radius:0px;" :z-depth="0">
       <mu-list>
         <mu-list-item button>
           <mu-list-item-action>

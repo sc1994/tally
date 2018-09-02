@@ -6,6 +6,7 @@ import Me from "@/pages/Me"
 import Tally from "@/pages/Tally"
 import AddPartner from "@/pages/AddPartner"
 import Message from "@/pages/Message"
+import testupload from "@/pages/testupload"
 
 Vue.use(Router)
 
@@ -39,6 +40,11 @@ export default new Router({
       path: "/message",
       Name: "Message",
       component: Message
+    },
+    {
+      path: "/testupload",
+      Name: "testupload",
+      component: testupload
     }
   ]
 })

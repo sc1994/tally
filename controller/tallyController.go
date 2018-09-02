@@ -56,7 +56,7 @@ func InsertTally(c *gin.Context) {
 				m := model.Message{
 					FromID:    u.ID,
 					ToID:      val.ID,
-					Content:   "添加了一笔50元的消费",
+					Content:   "添加了一笔" + request.Money + "元的消费",
 					Type:      3,
 					NeedTouch: false,
 				}
