@@ -4,7 +4,7 @@
       <mu-button slot="left" icon @click="$emit('update:open', false)">
         <mu-icon value="close"></mu-icon>
       </mu-button>
-      <mu-button slot="right" flat @click="buttonclick" v-if="buttonshow">
+      <mu-button slot="right" flat @click="buttonclick" v-if="buttonicon">
         <mu-icon :value="buttonicon"></mu-icon>
       </mu-button>
     </mu-appbar>
@@ -21,9 +21,6 @@ export default {
       type: String
     },
     open: {
-      type: Boolean
-    },
-    buttonshow: {
       type: Boolean
     },
     buttonclick: {

@@ -21,7 +21,7 @@
           <mu-icon value="sentiment_satisfied"></mu-icon>
         </mu-button>
         <mu-button icon color="error" v-if="!item.needTouch&&item.status==1" :ripple="false">
-          <mu-icon value="lens" :size="1"></mu-icon>
+          <mu-icon value="lens" :size="8"></mu-icon>
         </mu-button>
       </mu-list-item-action>
     </mu-list-item>

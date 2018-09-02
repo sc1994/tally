@@ -15,11 +15,9 @@ func main() {
 	// api ------------------------------------------------------------------
 	r := gin.Default()
 	config := cors.DefaultConfig()
-	// config.AllowAllOrigins = true
 	config.AllowCredentials = true
 	config.AllowOrigins = []string{"http://localhost:8080", "http://suncheng.xyz:7777"}
 	r.Use(cors.New(config))
-	r.Static("static", "static")
 	// 用户相关的操作接口======================================================
 	r.POST("/signup", controller.InsertUser)                    //  注册
 	r.GET("/signupcheck/:name", controller.ExistUser)           //  验证用户名是否存在
@@ -30,8 +28,9 @@ func main() {
 	r.GET("/findusersbyname/:name", controller.FindUsersByName) // 查询用户
 	r.POST("/setuserheadimage", controller.SetUserHeadImage)    // 设置用户头像
 	// 账单相关接口=============================================================
-	r.POST("/inserttally", controller.InsertTally)       //   添加消费记录
-	r.POST("/gettallybyuser", controller.GetTallyByUser) //  获取当前用户的消费记录
+	r.POST("/inserttally", controller.InsertTally)         //   添加消费记录
+	r.POST("/gettallybyuser", controller.GetTallyByUser)   //  获取当前用户的消费记录
+	r.POST("/updatetallybyid", controller.UpdateTallyByID) // 更新一条消费记录
 	// 消息相关=================================================================
 	r.POST("/sendmessage", controller.SendMessage)                         // 发送消息
 	r.GET("/getmessage/:uid/:index/:size", controller.GetMessages)         // 获取全部消息

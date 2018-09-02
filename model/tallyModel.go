@@ -21,15 +21,16 @@ type Tally struct {
 
 // TallyRequest 账单模型的请求模型
 type TallyRequest struct {
-	Token      string    `json:"token"`
-	Money      float32   `json:"money"`
-	Type       string    `json:"type"`
-	Mode       string    `json:"mode"`
-	Channel    string    `json:"channel"`
-	Remark     string    `json:"remark"`
-	CreateTime time.Time `json:"ctime"`
-	PageIndex  int       `json:"pageIndex"`
-	PageSize   int       `json:"pageSize"`
+	ID         bson.ObjectId `json:"id"`
+	Token      string        `json:"token"`
+	Money      float32       `json:"money"`
+	Type       string        `json:"type"`
+	Mode       string        `json:"mode"`
+	Channel    string        `json:"channel"`
+	Remark     string        `json:"remark"`
+	CreateTime time.Time     `json:"ctime"`
+	PageIndex  int           `json:"pageIndex"`
+	PageSize   int           `json:"pageSize"`
 }
 
 // TallyResponse 响应实体
@@ -61,4 +62,18 @@ func FindTallyByMonth(userIDs []bson.ObjectId, result interface{}) {
 	firstOfMonth := time.Date(currentYear, currentMonth, 1, 0, 0, 0, 0, currentLocation)
 	search := bson.M{"uid": bson.M{"$in": userIDs}, "ctime": bson.M{"$gte": firstOfMonth}}
 	data.Find(tallyDB, tallyTable, search, result)
+}
+
+// UpdateTallyByID 依据id更新数据
+func (t *Tally) UpdateTallyByID() bool {
+	selector := bson.M{"_id": t.ID}
+	update := bson.M{"$set": bson.M{
+		"money":   t.Money,
+		"type":    t.Type,
+		"mode":    t.Mode,
+		"channel": t.Channel,
+		"remark":  t.Remark,
+	},
+	}
+	return data.Update(tallyDB, tallyTable, selector, update)
 }

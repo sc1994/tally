@@ -43,7 +43,7 @@
         <mu-list-item button :ripple="true" slot="nested" @click="openUpload()">
           <mu-list-item-title>头像</mu-list-item-title>
           <mu-list-item-action>
-
+            <mu-icon value="cloud_upload" color="Teal"></mu-icon>
           </mu-list-item-action>
         </mu-list-item>
         <mu-list-item button :ripple="true" slot="nested" @click="openBaseInfoSet('nick')">

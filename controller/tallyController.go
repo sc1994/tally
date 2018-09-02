@@ -5,6 +5,7 @@ import (
 	"tally/model"
 
 	"github.com/ahmetb/go-linq"
+	"github.com/leekchan/accounting"
 
 	"gopkg.in/mgo.v2/bson"
 
@@ -49,14 +50,15 @@ func InsertTally(c *gin.Context) {
 		} else {
 			model.IncConsumeCount(u.ID, request.Type)
 		}
-		b = u.ChangeUserMoney(request.Mode, request.Channel, request.Money)
-		model.RefreshUserRedis(request.Token)
 		go func() {
+			b = u.ChangeUserMoney(request.Mode, request.Channel, request.Money)
+			model.RefreshUserRedis(request.Token)
+			ac := accounting.Accounting{Symbol: "", Precision: 2}
 			for _, val := range u.Partners {
 				m := model.Message{
 					FromID:    u.ID,
 					ToID:      val.ID,
-					Content:   "添加了一笔" + request.Money + "元的消费",
+					Content:   "添加了一笔" + ac.FormatMoney(request.Money) + "元的" + request.Mode,
 					Type:      3,
 					NeedTouch: false,
 				}
@@ -110,11 +112,28 @@ func GetTallyByUser(c *gin.Context) {
 		}
 		response = append(response, r)
 	}
-
 	c.JSON(200, gin.H{
 		"result": true,
 		"msg":    "查询成功",
 		"body":   response,
 	})
 	return
+}
+
+// UpdateTallyByID 更新一条消费记录
+func UpdateTallyByID(c *gin.Context) {
+	var request model.TallyRequest
+	common.BindExtend(c, &request)
+	t := &model.Tally{
+		ID:      request.ID,
+		Money:   request.Money,
+		Type:    request.Type,
+		Mode:    request.Mode,
+		Channel: request.Channel,
+		Remark:  request.Remark,
+	}
+	b := t.UpdateTallyByID()
+	c.JSON(200, gin.H{
+		"result": b,
+	})
 }

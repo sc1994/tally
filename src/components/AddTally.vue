@@ -1,5 +1,5 @@
 <template>
-  <dialoghead :title="consume+'：'+money+' 元'" :open.sync="thatOpenTally" :buttonshow="thatStep==2" :buttonclick="submit" buttonicon="done">
+  <dialoghead :title="consume+'：'+money+' 元'" :open.sync="thatOpenTally" :buttonclick="submit" :buttonicon="buttonicon">
     <mu-stepper :active-step="thatStep" orientation="vertical">
       <mu-step>
         <mu-step-label>
@@ -91,7 +91,8 @@ export default {
         channels: [],
         modes: [{ content: "收入" }, { content: "支出" }, { content: "预支" }],
         consumes: []
-      }
+      },
+      buttonicon: ""
     };
   },
   computed: {
@@ -142,6 +143,7 @@ export default {
     },
     thatStep(val) {
       var that = this;
+      this.buttonicon = val == 2 ? "done" : ""; // 是否显示完成按钮
       if (val == 0) {
         // 当前选中的类型
         var currentConsume = that
