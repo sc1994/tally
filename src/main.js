@@ -32,8 +32,7 @@ Axios.interceptors.response.use(function (response) {
 });
 
 // vue 初始化------------------------------------------------------------
-Vue.prototype.$fileUrl = "http://118.24.27.231:81"
-Vue.prototype.$fileApi = "/uploadfile"
+Vue.prototype.$fileUrl = "http://118.24.27.231:81/uploadfile"
 Vue.prototype.$axios = Axios;
 Vue.prototype.$linq = Linq.from;
 Vue.prototype.$format = (date, fmt) => { // 时间格式化

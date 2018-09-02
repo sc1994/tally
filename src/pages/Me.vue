@@ -43,7 +43,7 @@
         <mu-list-item button :ripple="true" slot="nested" @click="openUpload()">
           <mu-list-item-title>头像</mu-list-item-title>
           <mu-list-item-action>
-            <mu-icon value="backup" color="Teal"></mu-icon>
+
           </mu-list-item-action>
         </mu-list-item>
         <mu-list-item button :ripple="true" slot="nested" @click="openBaseInfoSet('nick')">
@@ -125,6 +125,14 @@
           </mu-list-item-title>
           <mu-list-item-action>
             <span class="span-money">{{$numberFormat(currentUser.wechatPay)}}</span>
+          </mu-list-item-action>
+        </mu-list-item>
+        <mu-list-item button :ripple="true" slot="nested" @click="openBaseInfoSet('fixDate')">
+          <mu-list-item-title>
+            现金 :
+          </mu-list-item-title>
+          <mu-list-item-action>
+            <span class="span-money">{{$numberFormat(currentUser.cash)}}</span>
           </mu-list-item-action>
         </mu-list-item>
         <mu-list-item button :ripple="true" slot="nested" @click="openBaseInfoSet('fixDate')">
@@ -223,14 +231,13 @@
         </mu-list-item-action>
       </mu-list-item>
     </mu-list>
-    <br/><br/>
+    <br/>
+    <vuecoreimageupload :data="uploadData" crop="local" :url="uploadUrl" @imageuploaded="uploaded" crop-ratio="1:1" extensions="png,jpeg,jpg" compress="60" :text="''">
+    </vuecoreimageupload>
     <mu-flex justify-content="center" align-items="center">
       <mu-button round color="success" @click="loginOut" full-width>退出登陆</mu-button>
     </mu-flex>
     <setuserbaseinfo :user="currentUser" :type="baseInfo.type" :alert.sync="baseInfo.alert"></setuserbaseinfo>
-    <vuecoreimageupload :data="uploadData" crop="local" :url="uploadUrl" @imageuploaded="uploaded" crop-ratio="1:1" extensions="png,jpeg,jpg" compress="60" :text="'1'">
-      </vue-core-image-upload>
-    </vuecoreimageupload>
   </layoutmain>
 </template>
 
