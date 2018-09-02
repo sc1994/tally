@@ -3,12 +3,6 @@
     <messagelist :list="todays"></messagelist>
     <messagelist :list="yesterdays"></messagelist>
     <messagelist :list="earlier"></messagelist>
-    <mu-dialog title="是否同意 ?" width="75%" max-width="75%" :esc-press-close="false" :overlay-close="false" :open.sync="openAlert">
-      <span style="color: rgba(0,0,0,.87);">{{currentItem.fnick}}&nbsp;-&nbsp;</span>
-      {{currentItem.content}}
-      <mu-button slot="actions" flat color="primary" @click="openAlert=false">算了</mu-button>
-      <mu-button slot="actions" flat color="primary" @click="submit">没问题</mu-button>
-    </mu-dialog>
   </minor>
 </template>
 
@@ -24,9 +18,7 @@ export default {
   },
   data() {
     return {
-      openAlert: false,
       messageGroup: [],
-      currentItem: {},
       righticon: ""
     };
   },

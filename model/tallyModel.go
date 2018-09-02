@@ -32,6 +32,14 @@ type TallyRequest struct {
 	PageSize   int       `json:"pageSize"`
 }
 
+// TallyResponse 响应实体
+type TallyResponse struct {
+	Tally
+	User
+	TID        bson.ObjectId `json:"tid"`
+	CreateTime time.Time     `json:"ctime"`
+}
+
 const tallyDB string = "tally"
 const tallyTable string = "tally"
 

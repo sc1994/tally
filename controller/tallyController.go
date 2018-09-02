@@ -4,6 +4,8 @@ import (
 	"tally/common"
 	"tally/model"
 
+	"github.com/ahmetb/go-linq"
+
 	"gopkg.in/mgo.v2/bson"
 
 	"github.com/gin-gonic/gin"
@@ -86,16 +88,33 @@ func GetTallyByUser(c *gin.Context) {
 	for _, val := range u.Partners {
 		uids = append(uids, val.ID)
 	}
+
+	us := model.GetUsersByIDs(uids)
 	var result []model.Tally
 	t.FindTallyPage(
 		request.PageIndex,
 		request.PageSize,
 		bson.M{"uid": bson.M{"$in": uids}},
 		&result)
+
+	response := make([]model.TallyResponse, 0)
+	for _, val := range result {
+		first := linq.From(us).WhereT(func(x model.User) bool {
+			return x.ID == val.UserID
+		}).First().(model.User)
+		r := model.TallyResponse{
+			Tally:      val,
+			User:       first,
+			TID:        val.ID,
+			CreateTime: val.CreateTime,
+		}
+		response = append(response, r)
+	}
+
 	c.JSON(200, gin.H{
 		"result": true,
 		"msg":    "查询成功",
-		"body":   result,
+		"body":   response,
 	})
 	return
 }

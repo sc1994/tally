@@ -228,7 +228,7 @@
       <mu-button round color="success" @click="loginOut" full-width>退出登陆</mu-button>
     </mu-flex>
     <setuserbaseinfo :user="currentUser" :type="baseInfo.type" :alert.sync="baseInfo.alert"></setuserbaseinfo>
-    <vuecoreimageupload :data="uploadData" crop="local" :url="uploadUrl" @imageuploaded="uploaded" crop-ratio="1:1" extensions="png,jpeg,jpg" compress="60">
+    <vuecoreimageupload :data="uploadData" crop="local" :url="uploadUrl" @imageuploaded="uploaded" crop-ratio="1:1" extensions="png,jpeg,jpg" compress="60" :text="'1'">
       </vue-core-image-upload>
     </vuecoreimageupload>
   </layoutmain>

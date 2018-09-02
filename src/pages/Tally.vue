@@ -7,7 +7,7 @@
             <mu-list-item avatar :ripple="false" :key="index">
               <mu-list-item-action>
                 <mu-avatar>
-                  <img :src="getUserHeadImg(item.userID)">
+                  <img :src="item.headImg">
                 </mu-avatar>
               </mu-list-item-action>
               <mu-list-item-content>
@@ -17,12 +17,6 @@
             </mu-list-item>
             <mu-divider />
           </template>
-          <!-- <template v-for="i in num">
-            <mu-list-item>
-              <mu-list-item-title>{{text}} Item {{i}}</mu-list-item-title>
-            </mu-list-item>
-            <mu-divider />
-          </template> -->
         </mu-list>
       </mu-load-more>
     </mu-container>
@@ -95,6 +89,9 @@ export default {
             if (response.body != null) {
               that.pageIndex++;
               that.list.push(...response.body);
+              if (response.body.length < 12) {
+                that.notNextList = true;
+              }
             } else {
               that.notNextList = true;
             }

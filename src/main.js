@@ -20,7 +20,7 @@ Vue.use(Loading)
 
 // axios 初始化----------------------------------------------------------
 // Axios.defaults.baseURL = 'http://localhost';
-Axios.defaults.baseURL = 'http://suncheng.xyz:8888';
+Axios.defaults.baseURL = 'http://118.24.27.231:8888';
 // 添加响应拦截器
 Axios.interceptors.response.use(function (response) {
   // 不需要判断响应状态

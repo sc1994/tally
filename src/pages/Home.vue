@@ -16,12 +16,12 @@
       <mu-list-item :key="index" v-for="item,index in tallyList" avatar :ripple="false">
         <mu-list-item-action>
           <mu-avatar>
-            <img :src="getUserHeadImg(item.userID)">
+            <img :src="item.headImg">
           </mu-avatar>
         </mu-list-item-action>
         <mu-list-item-content>
           <mu-list-item-title>{{item.remark}}</mu-list-item-title>
-          <mu-list-item-sub-title>{{formatDate(item.ctime)}}</mu-list-item-sub-title>
+          <mu-list-item-sub-title>{{$format(item.ctime, "yyyy-MM-dd hh:mm")}}</mu-list-item-sub-title>
         </mu-list-item-content>
       </mu-list-item>
     </mu-list>
@@ -46,7 +46,6 @@
     <addtally :openTally.sync="openTally" :money="tallyForm.money" :consume="tallyForm.consume"></addtally>
   </layoutmain>
 </template>
-
 <script>
 import layoutmain from "@/layout/main";
 import residue from "@/components/residue";
@@ -109,19 +108,6 @@ export default {
             if (response.body != null) that.tallyList = response.body;
           }
         });
-    },
-    formatDate(date) {
-      return this.$format(date, "yyyy-MM-dd hh:mm");
-    },
-    getUserHeadImg(id) {
-      if (!this.currentUser) return "";
-      if (!this.currentUser.partners) return "";
-      for (var i = 0; i < this.currentUser.partners.length; i++) {
-        if (this.currentUser.partners[i].id == id) {
-          return this.currentUser.partners[i].headImg;
-        }
-      }
-      return this.currentUser.headImg;
     }
   },
   computed: {

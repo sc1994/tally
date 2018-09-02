@@ -26,6 +26,12 @@
       </mu-list-item-action>
     </mu-list-item>
     <mu-divider v-if="title!='更早'"></mu-divider>
+    <mu-dialog title="是否同意 ?" width="75%" max-width="75%" :esc-press-close="false" :overlay-close="false" :open.sync="openAlert">
+      <span style="color: rgba(0,0,0,.87);">{{currentItem.fnick}}&nbsp;-&nbsp;</span>
+      {{currentItem.content}}
+      <mu-button slot="actions" flat color="primary" @click="openAlert=false">算了</mu-button>
+      <mu-button slot="actions" flat color="primary" @click="submit()">没问题</mu-button>
+    </mu-dialog>
   </mu-list>
 </template>
 
@@ -35,6 +41,33 @@ export default {
     list: {
       type: Array,
       default: []
+    }
+  },
+  data() {
+    return {
+      openAlert: false,
+      currentItem: {}
+    };
+  },
+  methods: {
+    submit() {
+      var that = this;
+      var loading = that.$loading({});
+      this.$axios
+        .post("/agreemessage", that.currentItem)
+        .then(response => {
+          if (response.result) {
+            that.$toast.success("你们已经是小伙伴啦");
+          } else {
+            that.$toast.error("网络异常,请重试");
+          }
+          loading.close();
+          this.openAlert = false;
+        })
+        .catch(() => {
+          loading.close();
+          this.openAlert = false;
+        });
     }
   },
   computed: {
