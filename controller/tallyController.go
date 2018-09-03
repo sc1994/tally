@@ -134,6 +134,18 @@ func UpdateTallyByID(c *gin.Context) {
 		Remark:  request.Remark,
 	}
 	b := t.UpdateTallyByID()
+	go model.RefreshUserRedis(request.Token)
+	c.JSON(200, gin.H{
+		"result": b,
+	})
+}
+
+// DeleteTallyByID 删除一条消费记录
+func DeleteTallyByID(c *gin.Context) {
+	id := c.Param("id")
+	token := c.Param("token")
+	b := model.DeleteTallyByID(id)
+	go model.RefreshUserRedis(token)
 	c.JSON(200, gin.H{
 		"result": b,
 	})

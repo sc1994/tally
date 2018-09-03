@@ -16,11 +16,8 @@
       <mu-bottom-nav-item value="/" icon=":fa fa-circle-o-notch" class="bot-font-icon">
       </mu-bottom-nav-item>
       <mu-bottom-nav-item value="/tally" icon=":fa fa-pie-chart" class="bot-font-icon"></mu-bottom-nav-item>
-      <!-- <mu-badge class="demo-badge-content" color="transparent"> -->
-        <mu-bottom-nav-item value="/me" icon=":fa fa-user-circle-o" class="bot-font-icon">
-        </mu-bottom-nav-item>
-        <!-- <span style="font-size: 20px; color: red;" slot="content">&copy;</span>
-      </mu-badge> -->
+      <mu-bottom-nav-item value="/me" :icon="iconThree" class="bot-font-icon" :style="colorThree">
+      </mu-bottom-nav-item>
     </mu-bottom-nav>
   </div>
 </template>
@@ -43,7 +40,9 @@ export default {
   data() {
     return {
       title: "",
-      value: ""
+      value: "",
+      iconThree: ":fa fa-user-circle-o",
+      colorThree: ""
     };
   },
   methods: {
@@ -51,6 +50,7 @@ export default {
       this.$router.push({ path: val });
     },
     init() {
+      this.$store.dispatch("initUnreadNumber");
       switch (this.$router.currentRoute.path) {
         case "/":
           this.title = "添加一笔";
@@ -60,16 +60,37 @@ export default {
           break;
         case "/me":
           this.title = "我";
+          this.colorThree = "color:#2196f3";
           break;
       }
       this.value = this.$router.currentRoute.path;
+      if (this.unreadNumber == 0) {
+        this.iconThree = ":fa fa-user-circle-o";
+      } else if (this.unreadNumber > 9) {
+        this.iconThree = "filter_9_plus";
+        if (this.$router.currentRoute.path != "/me") {
+          this.colorThree = "color:#ff4081";
+        } else {
+          this.colorThree = "";
+        }
+      } else {
+        this.iconThree = "filter_" + this.unreadNumber;
+        if (this.$router.currentRoute.path != "/me") {
+          this.colorThree = "color:#ff4081";
+        } else {
+          this.colorThree = "";
+        }
+      }
     }
   },
   computed: {
-    ...mapState(["appbarStyle"])
+    ...mapState(["appbarStyle", "unreadNumber"])
   },
   watch: {
     $route(val) {
+      this.init();
+    },
+    unreadNumber(val) {
       this.init();
     }
   },

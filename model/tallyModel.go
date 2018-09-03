@@ -78,3 +78,9 @@ func (t *Tally) UpdateTallyByID() bool {
 	}
 	return data.Update(tallyDB, tallyTable, selector, update)
 }
+
+// DeleteTallyByID 删除一条消费记录
+func DeleteTallyByID(id string) bool {
+	selector := bson.M{"_id": bson.ObjectIdHex(id)}
+	return data.Delete(tallyDB, tallyTable, selector)
+}

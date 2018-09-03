@@ -5,7 +5,7 @@
         <template v-for="list in group">
           <mu-list textline="two-line">
             <mu-sub-header>{{list.key}}</mu-sub-header>
-            <mu-list-item avatar :ripple="false" v-for="item,index in list.value" :key="index">
+            <mu-list-item avatar :ripple="false" v-for="item,index in list.value" :key="index" v-if="item.tid">
               <mu-list-item-action>
                 <mu-avatar>
                   <img :src="item.headImg">
@@ -139,6 +139,9 @@ export default {
         }
       }
       return this.currentUser.headImg;
+    },
+    removeItem(id) {
+      console.log(id);
     }
   },
   computed: {

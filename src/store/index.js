@@ -6,7 +6,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     currentUser: {},
-    appbarStyle: ""
+    appbarStyle: "",
+    unreadNumber: 0
   },
   mutations: {
     changeUser(state, data) {
@@ -14,6 +15,9 @@ export default new Vuex.Store({
     },
     changeAppbarStyle(state, data) {
       state.appbarStyle = data
+    },
+    changeUnreadNumber(state, data) {
+      state.unreadNumber = data
     }
   },
   actions: {
@@ -21,10 +25,12 @@ export default new Vuex.Store({
       commit
     }, data) {
       var that = this._vm;
+      var vuex = this;
       that.$axios.get("/getuser/" + localStorage.getItem("token"))
         .then(response => {
           if (response.result) {
             commit("changeUser", response.user)
+            vuex.dispatch("initUnreadNumber");
           } else {
             that.$toast.warning("token失效,稍后将跳转到登陆页面")
             if (response)
@@ -57,6 +63,15 @@ export default new Vuex.Store({
           }
           loading.close();
         })
+    },
+    initUnreadNumber({
+      commit
+    }) {
+      if (!this.state.currentUser.id) return
+      var that = this._vm;
+      that.$axios.get("/getmessageunreadcount/" + this.state.currentUser.id).then(response => {
+        commit("changeUnreadNumber", response.result)
+      });
     }
   }
 })

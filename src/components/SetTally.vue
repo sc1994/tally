@@ -22,6 +22,17 @@
         <mu-text-field v-model="form.remark"></mu-text-field>
       </mu-form-item>
     </mu-form>
+    <div style="text-align: right;margin-right: 10px;margin-top: 10px;">
+      <mu-button color="red" @click="openAlert=true">
+        删除当前账单
+        <mu-icon right value="delete"></mu-icon>
+      </mu-button>
+    </div>
+    <mu-dialog title="确认操作 ?" width="600" max-width="80%" :esc-press-close="false" :overlay-close="false" :open.sync="openAlert">
+      是否确定删除当前订单,删除后不可恢复!
+      <mu-button slot="actions" flat color="primary" @click="openAlert=false">取消</mu-button>
+      <mu-button slot="actions" flat color="primary" @click="del()">删除</mu-button>
+    </mu-dialog>
   </dialoghead>
 </template>
 
@@ -55,7 +66,8 @@ export default {
         ctime: "",
         remark: ""
       },
-      thatSetInterval: 0
+      thatSetInterval: 0,
+      openAlert: false
     };
   },
   methods: {
@@ -63,6 +75,7 @@ export default {
       var that = this;
       var loading = that.$loading({});
       that.form.money = parseFloat(that.form.money);
+      that.form.token = localStorage.getItem("token");
       that.$axios.post("/updatetallybyid", that.form).then(response => {
         if (response.result) {
           that.$toast.success("修改完成");
@@ -93,6 +106,30 @@ export default {
         }
         loading.close();
       });
+    },
+    del() {
+      var that = this;
+      var loading = that.$loading({});
+      that.$axios
+        .get(
+          `/deletetallybyid/${that.form.id}/${localStorage.getItem("token")}`
+        )
+        .then(response => {
+          if (response.result) {
+            that.$toast.success("已删除");
+            that.openAlert = false;
+            that.currentItem.tid = "";
+            setTimeout(() => {
+              that.thatOpen = false;
+            }, 300);
+          } else {
+            that.$toast.warning("发生异常,稍后重试~~~");
+          }
+          loading.close();
+        })
+        .catch(() => {
+          loading.close();
+        });
     }
   },
   watch: {
@@ -124,7 +161,6 @@ export default {
       };
     },
     form(val) {
-      console.log(val);
       if (!val.money) return;
       var flag = val.mode == "收入" ? "收取" : "支付";
       var def = `${val.type}${val.mode}了${val.money}元，通过${

@@ -18,7 +18,7 @@
             </mu-list-item-sub-title>
           </mu-list-item-content>
           <mu-list-item-action>
-            <mu-badge :content="messageUnreadCount+''" circle color="secondary" v-if="messageUnreadCount>0">
+            <mu-badge :content="unreadNumber+''" circle color="secondary" v-if="unreadNumber>0">
               <mu-button icon color="blue" @click="$router.push({ path: 'message' })">
                 <mu-icon value="notifications"></mu-icon>
               </mu-button>
@@ -261,7 +261,6 @@ export default {
         type: ""
       },
       addpartnerOpen: false,
-      messageUnreadCount: 0,
       openMessage: false,
       uploadUrl: this.$fileUrl,
       uploadData: {
@@ -271,7 +270,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["currentUser"])
+    ...mapState(["currentUser", "unreadNumber"])
   },
   methods: {
     loginOut() {
@@ -312,10 +311,6 @@ export default {
   },
   watch: {
     currentUser(val) {
-      var that = this;
-      that.$axios.get("/getmessageunreadcount/" + val.id).then(response => {
-        that.messageUnreadCount = response.result;
-      });
       this.uploadData.id = this.currentUser.id;
     }
   },
