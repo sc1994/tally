@@ -101,7 +101,8 @@ export default {
         .post("/gettallybyuser", {
           token: localStorage.getItem("token"),
           pageIndex: 1,
-          pageSize: 5
+          pageSize: 3,
+          onlyMe: true
         })
         .then(response => {
           if (response.result) {

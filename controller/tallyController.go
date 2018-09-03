@@ -87,10 +87,11 @@ func GetTallyByUser(c *gin.Context) {
 	t := model.Tally{}
 	uids := make([]bson.ObjectId, 0)
 	uids = append(uids, u.ID)
-	for _, val := range u.Partners {
-		uids = append(uids, val.ID)
+	if !request.OnlyMe {
+		for _, val := range u.Partners {
+			uids = append(uids, val.ID)
+		}
 	}
-
 	us := model.GetUsersByIDs(uids)
 	var result []model.Tally
 	t.FindTallyPage(

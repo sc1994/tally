@@ -16,7 +16,11 @@
       <mu-bottom-nav-item value="/" icon=":fa fa-circle-o-notch" class="bot-font-icon">
       </mu-bottom-nav-item>
       <mu-bottom-nav-item value="/tally" icon=":fa fa-pie-chart" class="bot-font-icon"></mu-bottom-nav-item>
-      <mu-bottom-nav-item value="/me" icon=":fa fa-user-circle-o" class="bot-font-icon"></mu-bottom-nav-item>
+      <!-- <mu-badge class="demo-badge-content" color="transparent"> -->
+        <mu-bottom-nav-item value="/me" icon=":fa fa-user-circle-o" class="bot-font-icon">
+        </mu-bottom-nav-item>
+        <!-- <span style="font-size: 20px; color: red;" slot="content">&copy;</span>
+      </mu-badge> -->
     </mu-bottom-nav>
   </div>
 </template>

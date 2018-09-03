@@ -22,7 +22,7 @@
               </mu-list-item-content>
               <mu-list-item-action>
                 <mu-list-item-after-text>{{$format(item.ctime, "hh:mm")}}</mu-list-item-after-text>
-                <mu-button icon color="#2196f3" @click="currentTally=item;openSetTally=true">
+                <mu-button icon color="#2196f3" @click="currentTally=item;openSetTally=true" v-if="item.userID==currentUser.id">
                   <mu-icon value="edit_location"></mu-icon>
                 </mu-button>
               </mu-list-item-action>
@@ -99,7 +99,8 @@ export default {
         .post("/gettallybyuser", {
           token: localStorage.getItem("token"),
           pageIndex: that.pageIndex,
-          pageSize: 10
+          pageSize: 10,
+          onlyMe: false
         })
         .then(response => {
           if (response.result) {

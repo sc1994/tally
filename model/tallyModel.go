@@ -31,6 +31,7 @@ type TallyRequest struct {
 	CreateTime time.Time     `json:"ctime"`
 	PageIndex  int           `json:"pageIndex"`
 	PageSize   int           `json:"pageSize"`
+	OnlyMe     bool          `json:"onlyMe"`
 }
 
 // TallyResponse 响应实体
