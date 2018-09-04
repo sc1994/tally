@@ -1,5 +1,5 @@
 <template>
-  <layoutmain :lefticon="'toc'" :leftevent="()=>open=!open" :letfstyle="open?'':'transform:rotate(180deg);'">
+  <layoutmain :lefticon="'toc'" :leftevent="()=>openDrawer=!openDrawer" :letfstyle="openDrawer?'':'transform:rotate(180deg);'" :righticon="'settings'" :rightevent="()=>openSetDrawer=!openSetDrawer" :rightstyle="openSetDrawer?'':'transform:rotate(360deg);'">
     <mu-container ref="container">
       <mu-load-more :loading="loading" @load="load">
         <template v-for="list in group">
@@ -32,51 +32,30 @@
         </template>
       </mu-load-more>
     </mu-container>
-    <mu-drawer :open.sync="open" letf :docked="true" style="top:55px;border-radius:0px;" :z-depth="0">
-      <mu-list>
-        <mu-list-item button>
-          <mu-list-item-action>
-            <i class="fa fa-pie-chart" style="font-size: 20px;"></i>
-          </mu-list-item-action>
-          <mu-list-item-title>资产配置</mu-list-item-title>
-        </mu-list-item>
-        <mu-list-item button>
-          <mu-list-item-action>
-            <i class="fa fa-bar-chart" style="font-size: 20px;"></i>
-          </mu-list-item-action>
-          <mu-list-item-title>柱状图统计</mu-list-item-title>
-        </mu-list-item>
-        <mu-list-item button>
-          <mu-list-item-action>
-            <i class="fa fa-area-chart" style="font-size: 20px;"></i>
-          </mu-list-item-action>
-          <mu-list-item-title>消费折线图</mu-list-item-title>
-        </mu-list-item>
-        <mu-list-item button>
-          <mu-list-item-action>
-            <i class="fa fa-location-arrow" style="font-size: 20px;"></i>
-          </mu-list-item-action>
-          <mu-list-item-title>费用去向</mu-list-item-title>
-        </mu-list-item>
-      </mu-list>
-    </mu-drawer>
     <settally :open.sync="openSetTally" :currentItem="currentTally"></settally>
+    <tallysetdrawer :open.sync="openSetDrawer"></tallysetdrawer>
+    <tallydrawer :open.sync="openDrawer"></tallydrawer>
   </layoutmain>
 </template>
 
 <script>
 import layoutmain from "@/layout/main";
 import settally from "@/components/settally";
+import tallydrawer from "@/components/tallydrawer";
+import tallysetdrawer from "@/components/tallysetdrawer";
 import { mapState } from "vuex";
 
 export default {
   components: {
     layoutmain,
-    settally
+    settally,
+    tallydrawer,
+    tallysetdrawer
   },
   data() {
     return {
-      open: false,
+      openDrawer: false,
+      openSetDrawer: false,
       group: [],
       loading: false,
       pageIndex: 1,
@@ -146,6 +125,14 @@ export default {
   },
   computed: {
     ...mapState(["currentUser"])
+  },
+  watch: {
+    openDrawer(val) {
+      if (val) this.openSetDrawer = !val;
+    },
+    openSetDrawer(val) {
+      if (val) this.openDrawer = !val;
+    }
   },
   mounted() {
     this.getList(this.pageIndex);

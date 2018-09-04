@@ -45,7 +45,7 @@ export default {
     search(index) {
       var that = this;
       that.$axios
-        .get(`/getmessage/${that.currentUser.id}/${index}/100`)
+        .get(`/getmessage/${that.currentUser.id}/${index}/50`)
         .then(response => {
           if (response.result != null)
             that.righticon =

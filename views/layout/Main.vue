@@ -4,8 +4,11 @@
       <mu-button icon slot="left" v-if="lefticon" @click="leftevent" :style="letfstyle">
         <mu-icon :value="lefticon"></mu-icon>
       </mu-button>
-      <mu-button icon flat slot="right">
-        <i class="fa fa-github" style="font-size: 26px;margin-right: 15px;"></i>
+      <mu-button icon flat slot="right" v-if="righticon" @click="rightevent" :style="rightstyle">
+        <mu-icon :value="righticon" left></mu-icon>
+      </mu-button>
+      <mu-button icon flat slot="right" v-else>
+        <i class="fa fa-github" style="font-size: 26px;margin-right: 8px;"></i>
       </mu-button>
     </mu-appbar>
     <mu-container style="position: absolute;top: 65px;">
@@ -34,6 +37,16 @@ export default {
       type: Function
     },
     letfstyle: {
+      type: String
+    },
+    righticon: {
+      type: String
+    },
+    rightevent: {
+      type: Function,
+      default: () => {}
+    },
+    rightstyle: {
       type: String
     }
   },
