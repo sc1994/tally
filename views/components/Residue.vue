@@ -19,7 +19,7 @@ export default {
   watch: {
     user(val) {
       var ticks = [];
-      var mulriple = parseInt((val.budget / 50).toFixed(0));
+      var mulriple = parseInt((val.budget / 50).toFixed(1));
       for (let index = 0; index <= val.budget; index++) {
         if (index % mulriple == 0) {
           ticks.push(index);
@@ -32,8 +32,8 @@ export default {
         {
           pointer: `\n剩余预算 ${parseFloat(
             val.budget - val.haveBeenUsed
-          ).toFixed(2)} 元\n\n预支 ${val.haveBeenAdvance} 元`,
-          value: parseFloat(val.haveBeenUsed).toFixed(2),
+          ).toFixed(1)} 元\n\n预支 ${val.haveBeenAdvance} 元`,
+          value: parseFloat(val.haveBeenUsed).toFixed(1),
           length: 0,
           y: 1
         }
@@ -160,18 +160,18 @@ export default {
           }
         });
       }
-      var userStart = userEnd + mulriple / 3;
-      userStart =
-        val.haveBeenUsed > val.budget ? val.budget - mulriple / 2 : userStart;
-      chart.guide().arc({
-        start: [userStart, 1.05],
-        end: [val.budget - 10, 1.05],
-        style: {
-          strokeStyle: "#1890FF",
-          lineWidth: 4,
-          lineCap: "round"
-        }
-      });
+
+      if (!val.haveBeenUsed > val.budget) {
+        chart.guide().arc({
+          start: [userEnd + mulriple / 3, 1.05],
+          end: [val.budget - 10, 1.05],
+          style: {
+            strokeStyle: "#1890FF",
+            lineWidth: 4,
+            lineCap: "round"
+          }
+        });
+      }
 
       // 周边辅助信息
       chart.guide().text({
