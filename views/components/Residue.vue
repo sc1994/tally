@@ -30,9 +30,9 @@ export default {
       var Shape = F2.Shape;
       var data = [
         {
-          pointer: `\n剩余预算 ${parseFloat(val.budget - val.haveBeenUsed).toFixed(2)} 元\n\n预支 ${
-            val.haveBeenAdvance
-          } 元`,
+          pointer: `\n剩余预算 ${parseFloat(
+            val.budget - val.haveBeenUsed
+          ).toFixed(2)} 元\n\n预支 ${val.haveBeenAdvance} 元`,
           value: parseFloat(val.haveBeenUsed).toFixed(2),
           length: 0,
           y: 1
@@ -42,6 +42,12 @@ export default {
       Shape.registerShape("point", "dashBoard", {
         getPoints: function getPoints(cfg) {
           var x = cfg.x;
+          if (x > 1) {
+            x = 1;
+          }
+          if (x < 0) {
+            x = 0;
+          }
           var y = cfg.y;
           return [
             {
@@ -139,13 +145,14 @@ export default {
       });
 
       chart.axis("y", false);
-
       var userEnd = val.haveBeenUsed - mulriple / 3;
+      userEnd = userEnd > 10 ? userEnd : 10;
+      userEnd = userEnd > val.budget ? val.budget - 1 : userEnd;
       //绘制仪表盘辅助元素
       if (val.haveBeenUsed > 0) {
         chart.guide().arc({
           start: [10, 1.05],
-          end: [userEnd > mulriple ? userEnd : mulriple / 3, 1.05],
+          end: [userEnd, 1.05],
           style: {
             strokeStyle: "#d84315",
             lineWidth: 4,
@@ -153,8 +160,11 @@ export default {
           }
         });
       }
+      var userStart = userEnd + mulriple / 3;
+      userStart =
+        val.haveBeenUsed > val.budget ? val.budget - mulriple / 2 : userStart;
       chart.guide().arc({
-        start: [val.haveBeenUsed + mulriple / 3, 1.05],
+        start: [userStart, 1.05],
         end: [val.budget - 10, 1.05],
         style: {
           strokeStyle: "#1890FF",
