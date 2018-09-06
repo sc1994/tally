@@ -161,17 +161,15 @@ export default {
         });
       }
 
-      if (!val.haveBeenUsed > val.budget) {
-        chart.guide().arc({
-          start: [userEnd + mulriple / 3, 1.05],
-          end: [val.budget - 10, 1.05],
-          style: {
-            strokeStyle: "#1890FF",
-            lineWidth: 4,
-            lineCap: "round"
-          }
-        });
-      }
+      chart.guide().arc({
+        start: [userEnd + mulriple / 3, 1.05],
+        end: [val.budget - 10, 1.05],
+        style: {
+          strokeStyle: "#1890FF",
+          lineWidth: 4,
+          lineCap: "round"
+        }
+      });
 
       // 周边辅助信息
       chart.guide().text({
