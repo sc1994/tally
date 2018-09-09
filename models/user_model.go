@@ -1,18 +1,25 @@
 package models
 
 import (
+	"encoding/json"
+	"strings"
 	"tally/data"
 	"tally/library"
 	"time"
 
+	"github.com/ahmetb/go-linq"
+
 	"github.com/astaxie/beego"
 
+	mgo "gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
 
 // User 用户信息实体
 type User struct {
-	BaseModel
+	ID         bson.ObjectId   `json:"id" bson:"_id"`                // ID
+	CreateTime time.Time       `json:"ctime" bson:"ctime"`           // CreateTime 创建时间
+	UpdateTime time.Time       `json:"utime" bson:"utime"`           // UpdateTime 更新时间
 	Password   string          `json:"pwd" bson:"pwd"`               // Password
 	Name       string          `json:"name" bson:"name"`             // Name
 	NickName   string          `json:"nick" bson:"nick"`             // NickName 昵称
@@ -41,23 +48,24 @@ type UserRequest struct {
 // UserResponse 用户信息的相应模型
 type UserResponse struct {
 	*User
-	Consumes        []Consume `json:"consumes"`
-	Channels        []Channel `json:"channels"`
-	HaveBeenUsed    float32   `json:"haveBeenUsed"`
-	HaveBeenAdvance float32   `json:"haveBeenAdvance"`
-	Partners        []*User   `json:"partners"`
+	Consumes        []*Consume `json:"consumes"`
+	Channels        []*Channel `json:"channels"`
+	HaveBeenUsed    float32    `json:"haveBeenUsed"`
+	HaveBeenAdvance float32    `json:"haveBeenAdvance"`
+	Partners        []*User    `json:"partners"`
 }
 
-var table = "user"
+const userTable string = "user"
 
-// Get 获取用户数据
+// Get Get
 func (u *UserRequest) Get(search map[string]interface{}) (result []*User) {
-	data.Find(table, search, result)
+	data.Find(userTable, search, &result)
 	return
 }
 
 // GetResponse 获取响应数据
-func (u *UserRequest) GetResponse(search map[string]interface{}) (result UserResponse) {
+func (u *UserRequest) GetResponse(search map[string]interface{}) (result UserResponse, b bool) {
+	b = false
 	users := u.Get(search)
 	if library.IsEmpty(users) {
 		beego.Info("不存在的用户数据")
@@ -68,21 +76,57 @@ func (u *UserRequest) GetResponse(search map[string]interface{}) (result UserRes
 	result.User = user
 	searchP := bson.M{"_id": bson.M{"$in": user.Partners}}
 	result.Partners = u.Get(searchP)
+	result.Consumes = new(ConsumeRequest).Get(bson.M{"uid": result.User.ID})
+	result.Channels = new(ChannelRequest).Get(bson.M{"uid": result.User.ID})
+	b = true
 	return
 }
 
-// Set 用户数据设置
-func (u *UserRequest) Set(update map[string]interface{}, selector interface{}) {
+// Set Set
+func (u *UserRequest) Set(update map[string]interface{}, selector map[string]interface{}) *mgo.ChangeInfo {
 	if library.IsEmpty(update["utime"]) {
 		update["utime"] = time.Now()
 	}
-	data.Update(table, update, selector)
+	return data.Update(userTable, update, selector)
 }
 
-// Add 添加用户
-func (u *UserRequest) Add() {
-	u.User.CreateTime = time.Now()
-	u.User.UpdateTime = time.Now()
+// AddUser Add
+func AddUser(docs ...*User) []bson.ObjectId {
+	d := make([]interface{}, len(docs))
+	for i, v := range docs {
+		v.CreateTime = time.Now()
+		v.UpdateTime = time.Now()
+		v.ID = bson.NewObjectId()
+		d[i] = *v
+	}
+	data.Insert(userTable, d)
+	var result []bson.ObjectId
+	linq.From(docs).Select(func(x interface{}) interface{} {
+		return x.(*User).ID
+	}).ToSlice(&result)
+	return result
+}
 
-	data.Insert(table, u.User)
+// Delete Delete
+func (u *UserRequest) Delete(selector map[string]interface{}) {
+	panic("no realize")
+}
+
+// GetUserToken 获取用户token
+func GetUserToken(id bson.ObjectId, name string, pwd string) string {
+	flag := id.Hex() + name + pwd
+	return library.Md5String(flag) + "|" + library.Md5String(library.GetString(time.Now().Unix()))
+}
+
+// RefreshUserRedis 刷新用户缓存
+func RefreshUserRedis(user UserResponse) string {
+	token := GetUserToken(user.ID, user.Name, user.Password)
+	flag := strings.Split(token, "|")[0]
+	keys := library.GetRedisKeys(flag + "|*")
+	for _, k := range keys {
+		library.DelRedis(k)
+	}
+	j, _ := json.Marshal(user)
+	library.SetRedis(token, j, 7*24*60)
+	return token
 }

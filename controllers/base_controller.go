@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
+	"strings"
 	"tally/library"
 	"tally/models"
 	"time"
@@ -9,18 +10,45 @@ import (
 	"github.com/astaxie/beego"
 )
 
-// Token TODO 存储用户信息
-var Token string
+// CurrentUser 登陆的用户信息
+var CurrentUser models.UserResponse
 
 // BaseController 控制器基类
 type BaseController struct {
 	beego.Controller
 }
 
-// Prepare 请求开始
+// Prepare 请求拦截
 func (c *BaseController) Prepare() {
-	Token = c.Ctx.Input.Header("token")
-	beego.Info("TOKEN --:--> " + Token) // todo 权限验证
+	url := c.Ctx.Input.URL()
+	if strings.Contains(url, "/signin") ||
+		strings.Contains(url, "/signupcheck/") ||
+		strings.Contains(url, "/signup") {
+		// 屏蔽掉不需要验证的请求
+		beego.Info("跳过登陆验证")
+	} else {
+		token := c.Ctx.Input.Header("token")
+		if library.IsEmpty(token) {
+			c.ResponseJSON(models.BaseResponse{
+				Code: 1,
+				Msg:  "token为空",
+			})
+		}
+		j, r := library.GetRedis(token)
+		if !r {
+			c.ResponseJSON(models.BaseResponse{
+				Code: 1,
+				Msg:  "登陆信息失效",
+			})
+		}
+		e := json.Unmarshal([]byte(j), &CurrentUser)
+		if e != nil {
+			c.ResponseJSON(models.BaseResponse{
+				Code: 1,
+				Msg:  "数据异常",
+			})
+		}
+	}
 }
 
 // ResponseJSON 响应数据
@@ -41,7 +69,6 @@ func (c *BaseController) ResponseJSON(b models.BaseResponse) {
 // RequestObject POST请求实体
 func (c *BaseController) RequestObject(result interface{}) {
 	err := json.Unmarshal(c.Ctx.Input.RequestBody, &result)
-	beego.Info(string(c.Ctx.Input.RequestBody))
 	if err != nil {
 		c.ResponseJSON(models.BaseResponse{
 			Code:   1,

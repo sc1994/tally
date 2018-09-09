@@ -7,7 +7,7 @@ import (
 )
 
 // DBName 库名称
-var dbName = "tally"
+var dbName = "tally_test"
 
 // MongoConnect 连接字符串
 const mongoConnectString string = "118.24.27.231:27017/"
@@ -77,8 +77,8 @@ func Update(table string, update interface{}, selector interface{}) (change *mgo
 	return
 }
 
-// Delete 删除
-func Delete(table string, selector interface{}) {
+// Remove 删除
+func Remove(table string, selector interface{}) {
 	s, c := connectDB(table)
 	defer s.Clone()
 	e := c.Remove(selector)
@@ -88,10 +88,10 @@ func Delete(table string, selector interface{}) {
 }
 
 // Insert 插入文档支持批量
-func Insert(table string, docs interface{}) {
+func Insert(table string, docs []interface{}) {
 	s, c := connectDB(table)
 	defer s.Clone()
-	e := c.Insert(docs)
+	e := c.Insert(docs...)
 	if e != nil {
 		panic(e)
 	}

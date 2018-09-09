@@ -23,6 +23,13 @@ func GetRedis(key string) (string, bool) {
 	return r, true
 }
 
+// GetRedisKeys 获取Keys
+func GetRedisKeys(pattern string) []string {
+	client := redis.NewClient(options)
+	defer client.Close()
+	return client.Keys(pattern).Val()
+}
+
 // SetRedis 设置缓存(过期最小粒度:分钟)
 func SetRedis(key string, value interface{}, minute int32) bool {
 	client := redis.NewClient(options)

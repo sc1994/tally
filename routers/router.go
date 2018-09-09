@@ -18,5 +18,9 @@ func init() {
 		MaxAge:          2 * time.Minute,
 	}))
 
-	beego.Router("/signin", &controllers.LandController{}, "post:Login")
+	// 部分接口需要简化命名
+	beego.Router("/signin", &controllers.LandController{}, "post:Login")               // 登陆
+	beego.Router("/signupcheck/:name", &controllers.LandController{}, "get:CheckName") // 验证用户名是否存在
+	beego.Router("/removetoken", &controllers.LandController{}, "get:Logout")          // 登出
+	beego.Router("/signup", &controllers.LandController{}, "post:Logup")               // 注册
 }
