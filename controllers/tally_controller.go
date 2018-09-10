@@ -59,10 +59,33 @@ func (c *TallyController) Get() {
 
 // Set Set
 func (c *TallyController) Set() {
-
+	var request models.TallyRequest
+	c.RequestObject(&request)
+	selector := bson.M{"_id": request.ID}
+	update := bson.M{"$set": bson.M{
+		"money":   request.Money,
+		"type":    request.Type,
+		"mode":    request.Mode,
+		"channel": request.Channel,
+		"remark":  request.Remark,
+		"ttime":   request.TallyTime,
+	},
+	}
+	result := request.Set(update, selector)
+	c.ResponseJSON(models.BaseResponse{
+		Code: 0,
+		Data: result,
+		Msg:  "success",
+	})
 }
 
 // Delete Delete
 func (c *TallyController) Delete() {
-
+	id := c.Ctx.Input.Param("id")
+	selector := bson.M{"_id": id}
+	new(models.TallyRequest).Delete(selector)
+	c.ResponseJSON(models.BaseResponse{
+		Code: 0,
+		Msg:  "success",
+	})
 }

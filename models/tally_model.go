@@ -5,6 +5,7 @@ import (
 	"time"
 
 	linq "github.com/ahmetb/go-linq"
+	mgo "gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -89,4 +90,12 @@ func PageTally(search map[string]interface{}, index int, size int) (result []*Ta
 	return
 }
 
-// func
+// Set Set
+func (c *TallyRequest) Set(update map[string]interface{}, selector map[string]interface{}) *mgo.ChangeInfo {
+	return data.Update(tallyTable, update, selector)
+}
+
+// Delete Delete
+func (c *TallyRequest) Delete(selector map[string]interface{}) {
+	data.Remove(tallyTable, selector)
+}
