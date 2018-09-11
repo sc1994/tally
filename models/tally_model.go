@@ -27,7 +27,7 @@ type Tally struct {
 
 // TallyRequest 请求
 type TallyRequest struct {
-	Tally
+	*Tally
 	PageIndex  int             `json:"pageIndex"`
 	PageSize   int             `json:"pageSize"`
 	OnlyMe     bool            `json:"onlyMe"` // only ==> UIDS
@@ -43,8 +43,8 @@ type TallyRequest struct {
 
 // TallyResponse 响应
 type TallyResponse struct {
-	Tally
-	User
+	*Tally
+	*User
 	TID        bson.ObjectId `json:"tid"`
 	CreateTime time.Time     `json:"ctime"`
 	CanEdit    bool          `json:"canEdit"`
@@ -81,8 +81,8 @@ func PageTally(search map[string]interface{}, index int, size int) (result []*Ta
 			return f.(*User).ID == x.(*Tally).UserID
 		})
 		r := new(TallyResponse)
-		r.Tally = *(x.(*Tally))
-		r.User = *(cuser.(*User))
+		r.Tally = (x.(*Tally))
+		r.User = (cuser.(*User))
 		r.TID = x.(*Tally).ID
 		r.CreateTime = x.(*Tally).CreateTime
 		return r

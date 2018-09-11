@@ -2,7 +2,6 @@ package models
 
 import (
 	"encoding/json"
-	"strings"
 	"tally/data"
 	"tally/library"
 	"time"
@@ -60,6 +59,9 @@ const userTable string = "user"
 // Get Get
 func (u *UserRequest) Get(search map[string]interface{}) (result []*User) {
 	data.Find(userTable, search, &result)
+	for _, i := range result {
+		i.Password = "*"
+	}
 	return
 }
 
@@ -72,7 +74,6 @@ func (u *UserRequest) GetResponse(search map[string]interface{}) (result UserRes
 		return
 	}
 	user := users[0]
-	user.Password = "*"
 	result.User = user
 	searchP := bson.M{"_id": bson.M{"$in": user.Partners}}
 	result.Partners = u.Get(searchP)
@@ -115,14 +116,16 @@ func (u *UserRequest) Delete(selector map[string]interface{}) {
 // GetUserToken 获取用户token
 func GetUserToken(id bson.ObjectId, name string, pwd string) string {
 	flag := id.Hex() + name + pwd
-	return library.Md5String(flag) + "|" + library.Md5String(library.GetString(time.Now().Unix()))
+	head := string([]byte(library.Md5String(flag)[:8]))
+	food := string([]byte(library.Md5String(library.GetString(time.Now().Unix()))[:8]))
+	return head + food
 }
 
 // RefreshUserRedis 刷新用户缓存
 func RefreshUserRedis(user UserResponse) string {
 	token := GetUserToken(user.ID, user.Name, user.Password)
-	flag := strings.Split(token, "|")[0]
-	keys := library.GetRedisKeys(flag + "|*")
+	flag := string([]byte(token)[:8])
+	keys := library.GetRedisKeys(flag + "*")
 	for _, k := range keys {
 		library.DelRedis(k)
 	}

@@ -16,7 +16,7 @@ func (c *TallyController) Add() {
 	var request models.TallyRequest
 	c.RequestObject(&request)
 	request.Tally.UserID = CurrentUser.ID
-	ids := models.AddTally(&request.Tally)
+	ids := models.AddTally(request.Tally)
 	code := 0
 	if len(ids) < 1 {
 		code = 1

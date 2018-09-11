@@ -10,7 +10,7 @@ import (
 )
 
 var baseURL = "http://localhost/"
-var token = "21bd5911a84679cd19480a616f19a941|1ee169d11f1e1aa85cd0585d515eef8c"
+var token = "21bd59b757e5"
 
 func httpRequest(router string, jsonStr interface{}) models.BaseResponse {
 	url := baseURL + router
