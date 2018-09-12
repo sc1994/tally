@@ -87,11 +87,21 @@ func Remove(table string, selector interface{}) {
 	}
 }
 
-// Insert 插入文档支持批量
-func Insert(table string, docs []interface{}) {
+// InsertBatch 插入文档支持批量
+func InsertBatch(table string, docs []interface{}) {
 	s, c := connectDB(table)
 	defer s.Clone()
 	e := c.Insert(docs...)
+	if e != nil {
+		panic(e)
+	}
+}
+
+// Insert 插入
+func Insert(table string, doc interface{}) {
+	s, c := connectDB(table)
+	defer s.Clone()
+	e := c.Insert(doc)
 	if e != nil {
 		panic(e)
 	}

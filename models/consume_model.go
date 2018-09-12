@@ -52,7 +52,7 @@ func AddConsume(docs ...*Consume) []bson.ObjectId {
 		v.UpdateTime = time.Now()
 		d[i] = *v
 	}
-	data.Insert(consumeTable, d)
+	data.InsertBatch(consumeTable, d)
 	var result []bson.ObjectId
 	linq.From(docs).Select(func(x interface{}) interface{} {
 		return x.(*Consume).ID

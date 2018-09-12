@@ -53,7 +53,7 @@ func AddChannel(docs ...*Channel) []bson.ObjectId {
 		d[i] = *v
 	}
 
-	data.Insert(channelTable, d)
+	data.InsertBatch(channelTable, d)
 	var result []bson.ObjectId
 	linq.From(docs).Select(func(x interface{}) interface{} {
 		return x.(*Channel).ID

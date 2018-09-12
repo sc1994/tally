@@ -50,27 +50,19 @@ type TallyResponse struct {
 	CanEdit    bool          `json:"canEdit"`
 }
 
-// AddTally AddTally
-func AddTally(docs ...*Tally) []bson.ObjectId {
-	d := make([]interface{}, len(docs))
-	for i, v := range docs {
-		v.ID = bson.NewObjectId()
-		v.CreateTime = time.Now()
-		v.UpdateTime = time.Now()
-		d[i] = *v
-	}
-	data.Insert(tallyTable, d)
-	var result []bson.ObjectId
-	linq.From(docs).Select(func(x interface{}) interface{} {
-		return x.(*Tally).ID
-	}).ToSlice(&result)
-	return result
+// Add AddTally
+func (c *TallyRequest) Add() bson.ObjectId {
+	c.Tally.ID = bson.NewObjectId()
+	c.Tally.CreateTime = time.Now()
+	c.Tally.UpdateTime = time.Now()
+	data.Insert(tallyTable, c.Tally)
+	return c.Tally.ID
 }
 
-// PageTally 分页查询
-func PageTally(search map[string]interface{}, index int, size int) (result []*TallyResponse) {
+// Page 分页查询
+func (c *TallyRequest) Page(search map[string]interface{}) (result []*TallyResponse) {
 	var flag []*Tally
-	data.Page(tallyTable, search, index, size, &flag, "-ttime", "-ctime", "-utime")
+	data.Page(tallyTable, search, c.PageIndex, c.PageSize, &flag, "-ttime", "-ctime", "-utime")
 	var uids []bson.ObjectId
 	linq.From(flag).Select(func(x interface{}) interface{} {
 		return x.(*Tally).UserID

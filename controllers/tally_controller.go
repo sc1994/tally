@@ -14,16 +14,16 @@ type TallyController struct {
 // Add Add
 func (c *TallyController) Add() {
 	var request models.TallyRequest
-	c.RequestObject(&request)
+	c.RequestObject(request)
 	request.Tally.UserID = CurrentUser.ID
-	ids := models.AddTally(request.Tally)
+	id := request.Add()
 	code := 0
-	if len(ids) < 1 {
+	if len(id.Hex()) < 1 {
 		code = 1
 	}
 	c.ResponseJSON(models.BaseResponse{
 		Code: code,
-		Data: ids,
+		Data: id,
 		Msg:  "success",
 	})
 }
@@ -46,7 +46,7 @@ func (c *TallyController) Get() {
 	if len(request.Channels) > 0 {
 		search["channel"] = bson.M{"$in": request.Channels}
 	}
-	result := models.PageTally(search, request.PageIndex, request.PageSize)
+	result := request.Page(search)
 	for _, v := range result {
 		v.CanEdit = CurrentUser.ID == v.Tally.UserID
 	}

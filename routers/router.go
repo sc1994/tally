@@ -31,4 +31,9 @@ func init() {
 	beego.Router("/deletetallybyid/:id", &controllers.TallyController{}, "post:Delete") // 删除账单
 	//消息=====================================================================================================
 
+	// r.POST("/sendmessage", controller.SendMessage)                         // 发送消息
+	// r.GET("/getmessage/:uid/:index/:size", controller.GetMessages)         // 获取全部消息
+	// r.GET("/getmessageunreadcount/:uid", controller.GetMessageUnreadCount) // 获取未读的消息量
+	// r.POST("/agreemessage", controller.AgreeMessage)                       // 同意对方的消息
+	// r.GET("/readmessageall/:uid", controller.ReadMessageAll)               // 无需阅读的消息全部已读
 }

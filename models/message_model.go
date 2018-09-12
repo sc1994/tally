@@ -5,6 +5,7 @@ import (
 	"time"
 
 	linq "github.com/ahmetb/go-linq"
+	mgo "gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -25,14 +26,10 @@ type Message struct {
 
 // MessageRequest 请求
 type MessageRequest struct {
-	ID        bson.ObjectId `json:"id"`             // 主键
-	FromID    bson.ObjectId `json:"fid"`            // 来自谁
-	ToID      bson.ObjectId `json:"tid" bson:"tid"` // 发送给谁
-	Content   string        `json:"content" `       // 消息内容
-	Type      int           `json:"type"`           // 消息类型 1.小伙伴邀请 2.邀请回执 3.账单消息
-	NeedTouch bool          `json:"needTouch"`      // 需要点击阅读
-	PageIndex int           `json:"pageIndex"`
-	PageSize  int           `json:"pageSize"`
+	*Message
+	NeedTouch bool `json:"needTouch"` // 需要点击阅读
+	PageIndex int  `json:"pageIndex"`
+	PageSize  int  `json:"pageSize"`
 }
 
 // MessageResponse 响应
@@ -44,25 +41,17 @@ type MessageResponse struct {
 	ToImg    string `json:"timg" bson:"timg"`   // 头像
 }
 
-// AddMessage AddMessage
-func AddMessage(docs ...*Message) []bson.ObjectId {
-	d := make([]interface{}, len(docs))
-	for i, v := range docs {
-		v.ID = bson.NewObjectId()
-		v.CreateTime = time.Now()
-		v.UpdateTime = time.Now()
-		d[i] = *v
-	}
-	data.Insert(messageTable, d)
-	var result []bson.ObjectId
-	linq.From(docs).Select(func(x interface{}) interface{} {
-		return x.(*Message).ID
-	}).ToSlice(&result)
-	return result
+// Add AddMessage
+func (c *MessageRequest) Add() bson.ObjectId {
+	c.Message.ID = bson.NewObjectId()
+	c.Message.CreateTime = time.Now()
+	c.Message.UpdateTime = time.Now()
+	data.Insert(messageTable, c.Message)
+	return c.Message.ID
 }
 
-// Get Get
-func (c *MessageRequest) Get(search map[string]interface{}) (result []*MessageResponse) {
+// Page 分页
+func (c *MessageRequest) Page(search map[string]interface{}) (result []*MessageResponse) {
 	var flag []*MessageRequest
 	data.Page(messageTable, search, c.PageIndex, c.PageSize, &flag, "-ctime")
 	uids := make([]bson.ObjectId, 0)
@@ -91,4 +80,19 @@ func (c *MessageRequest) Get(search map[string]interface{}) (result []*MessageRe
 		return x != nil
 	}).ToSlice(&result)
 	return
+}
+
+// GetCount 获取消息数量
+func (c *MessageRequest) GetCount(search map[string]interface{}) int {
+	return data.GetCount(messageTable, search)
+}
+
+// Set set
+func (c *MessageRequest) Set(update map[string]interface{}, selector map[string]interface{}) *mgo.ChangeInfo {
+	return data.Update(messageTable, update, selector)
+}
+
+// Delete delete
+func (c *MessageRequest) Delete(selector map[string]interface{}) {
+	data.Remove(messageTable, selector)
 }

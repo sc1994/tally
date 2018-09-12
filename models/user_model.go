@@ -6,8 +6,6 @@ import (
 	"tally/library"
 	"time"
 
-	"github.com/ahmetb/go-linq"
-
 	"github.com/astaxie/beego"
 
 	mgo "gopkg.in/mgo.v2"
@@ -91,21 +89,17 @@ func (u *UserRequest) Set(update map[string]interface{}, selector map[string]int
 	return data.Update(userTable, update, selector)
 }
 
-// AddUser Add
-func AddUser(docs ...*User) []bson.ObjectId {
-	d := make([]interface{}, len(docs))
-	for i, v := range docs {
-		v.CreateTime = time.Now()
-		v.UpdateTime = time.Now()
-		v.ID = bson.NewObjectId()
-		d[i] = *v
-	}
-	data.Insert(userTable, d)
-	var result []bson.ObjectId
-	linq.From(docs).Select(func(x interface{}) interface{} {
-		return x.(*User).ID
-	}).ToSlice(&result)
-	return result
+// Add Add
+func (u *UserRequest) Add() bson.ObjectId {
+	u.User.CreateTime = time.Now()
+	u.User.UpdateTime = time.Now()
+	u.User.ID = bson.NewObjectId()
+	u.User.NickName = u.Name
+	u.User.HeadImg = "/static/images/head-default.png"
+	u.User.Budget = 1000
+	u.User.Intro = "这家伙很懒,啥都没说"
+	data.Insert(userTable, u.User)
+	return u.User.ID
 }
 
 // Delete Delete

@@ -74,22 +74,14 @@ func (c *LandController) Logup() {
 			Data: request.Name,
 		})
 	}
-
-	uids := models.AddUser(&models.User{
-		Name:     request.Name,
-		Password: request.Password,
-		NickName: request.Name,
-		HeadImg:  "/static/images/head-default.png",
-		Budget:   1000,
-		Intro:    "这家伙很懒,啥都没说",
-	})
-	if len(uids[0]) < 1 {
+	uid := request.Add()
+	if len(uid.Hex()) < 1 {
 		c.ResponseJSON(models.BaseResponse{
 			Code: 1,
 			Msg:  "注册失败",
 		})
 	}
-	uid := uids[0]
+
 	models.AddChannel(
 		&models.Channel{
 			UserID:  uid,
