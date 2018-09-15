@@ -74,19 +74,50 @@ export default {
     getList(index) {
       var that = this;
       that.loading = true;
+      var uids = [this.currentUser.id];
+      if (this.currentUser.partners != null && this.currentUser.partners) {
+        this.currentUser.partners.forEach(x => {
+          uids.push(x.id);
+        });
+      }
+      var nowDate = new Date(
+        new Date().getFullYear(),
+        new Date().getMonth() + 1,
+        0
+      );
+      var month = nowDate.getMonth() + 1;
+      if (month < 10) {
+        month = "0" + month;
+      } else {
+        month = "" + month;
+      }
       that.$axios
-        .post("/gettallybyuser", {
-          token: localStorage.getItem("token"),
-          pageIndex: that.pageIndex,
-          pageSize: 10,
-          onlyMe: false
+        .post("/tally/get", {
+          uids: uids,
+          btime: new Date(
+            new Date().getFullYear(),
+            new Date().getMonth() + 1,
+            0
+          ).toISOString(),
+          etime: new Date(
+            new Date().getFullYear(),
+            new Date().getMonth() + 2,
+            0
+          ).toISOString(),
+          bMoney: 0,
+          eMoney: 999999,
+          types: [],
+          modes: [],
+          channels: [],
+          pageIndex: 1,
+          pageSize: 12
         })
         .then(response => {
-          if (response.result) {
-            if (response.body != null) {
+          if (response.code == 0) {
+            if (response.data != null) {
               that.pageIndex++;
               var g = that
-                .$linq(response.body)
+                .$linq(response.data)
                 .groupBy("r=>(r.ctime+'').substring(0,10)")
                 .select("{key:$.key(),value:$.toArray()}")
                 .toArray();
@@ -99,7 +130,7 @@ export default {
               if (g.length > 0) {
                 that.group.push(...g);
               }
-              if (response.body.length < 10) {
+              if (response.data.length < 10) {
                 that.notNextList = true;
               }
             } else {
@@ -132,10 +163,10 @@ export default {
     },
     openSetDrawer(val) {
       if (val) this.openDrawer = !val;
+    },
+    currentUser(val) {
+      this.getList(this.pageIndex);
     }
-  },
-  mounted() {
-    this.getList(this.pageIndex);
   }
 };
 </script>

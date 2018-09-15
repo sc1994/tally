@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"tally/library"
 	"tally/models"
 
 	"gopkg.in/mgo.v2/bson"
@@ -61,6 +62,12 @@ func (c *TallyController) Get() {
 func (c *TallyController) Set() {
 	var request models.TallyRequest
 	c.RequestObject(&request)
+	if library.IsEmpty(request.ID) {
+		c.ResponseJSON(models.BaseResponse{
+			Code: 1,
+			Msg:  "id is null",
+		})
+	}
 	selector := bson.M{"_id": request.ID}
 	update := bson.M{"$set": bson.M{
 		"money":   request.Money,
@@ -81,7 +88,13 @@ func (c *TallyController) Set() {
 
 // Delete Delete
 func (c *TallyController) Delete() {
-	id := c.Ctx.Input.Param("id")
+	id := c.Ctx.Input.Param(":id")
+	if library.IsEmpty(id) {
+		c.ResponseJSON(models.BaseResponse{
+			Code: 1,
+			Msg:  "id is null",
+		})
+	}
 	selector := bson.M{"_id": id}
 	new(models.TallyRequest).Delete(selector)
 	c.ResponseJSON(models.BaseResponse{

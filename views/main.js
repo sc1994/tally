@@ -19,17 +19,35 @@ Vue.use(Loading)
 
 
 // axios 初始化----------------------------------------------------------
-// Axios.defaults.baseURL = 'http://localhost';
-Axios.defaults.baseURL = 'http://118.24.27.231:8888';
+Axios.defaults.baseURL = 'http://localhost';
+// Axios.defaults.baseURL = 'http://118.24.27.231:8888';
+
+// 添加请求拦截器
+Axios.interceptors.request.use(function (config) {
+  config.headers = {
+    "Content-Type": "application/json",
+    "token": localStorage.getItem("token")
+  }
+  return config;
+}, function (error) {
+  // 对请求错误做些什么
+  Toast.error("系统错误");
+  console.log(error)
+  return Promise.reject(error);
+});
+
 // 添加响应拦截器
 Axios.interceptors.response.use(function (response) {
-  // 不需要判断响应状态
+  if (response.data.code != 0) {
+    Toast.warning(response.data.msg)
+  }
   return response.data;
 }, function (error) {
   Toast.error("系统错误");
   console.log(error)
   return Promise.reject(error);
 });
+
 
 // vue 初始化------------------------------------------------------------
 Vue.prototype.$fileUrl = "http://118.24.27.231:81/uploadfile"

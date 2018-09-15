@@ -81,7 +81,7 @@ export default {
         }
         var loading = that.$loading();
         that.pwdErrorText = "";
-        let url = that.active == 0 ? "/signin" : "/signup";
+        let url = that.active == 0 ? "/land/signin" : "/land/signup";
         that.$axios
           .post(url, {
             name: that.loginModel.username,
@@ -89,9 +89,9 @@ export default {
             remember: that.loginModel.remember
           })
           .then(response => {
-            if (response.result) {
+            if (response.code == 0) {
               if (that.active == 0) {
-                localStorage.setItem("token", response.token);
+                localStorage.setItem("token", response.data);
                 that.$toast.success("登陆成功, 请稍后...");
                 setTimeout(() => {
                   that.$router.push({ path: "/" });
@@ -99,12 +99,6 @@ export default {
               } else {
                 that.$toast.success("注册成功, 请登录");
                 that.active = 0;
-              }
-            } else {
-              if (that.active == 0) {
-                that.$toast.warning("用户名或者密码错误");
-              } else {
-                that.$toast.warning("用户名已存在");
               }
             }
             loading.close();

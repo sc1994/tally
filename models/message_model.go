@@ -27,9 +27,10 @@ type Message struct {
 // MessageRequest 请求
 type MessageRequest struct {
 	*Message
-	NeedTouch bool `json:"needTouch"` // 需要点击阅读
-	PageIndex int  `json:"pageIndex"`
-	PageSize  int  `json:"pageSize"`
+	IDs       []bson.ObjectId `json:"ids"`       // IDs
+	NeedTouch bool            `json:"needTouch"` // 需要点击阅读
+	PageIndex int             `json:"pageIndex"`
+	PageSize  int             `json:"pageSize"`
 }
 
 // MessageResponse 响应

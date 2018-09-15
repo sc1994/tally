@@ -47,10 +47,9 @@ func (c *MessageController) Add() {
 // GetCount GetCount
 func (c *MessageController) GetCount() {
 	var request models.MessageRequest
-	c.RequestObject(request)
+	c.RequestObject(&request)
 	search := bson.M{
-		"tid":    request.ToID,
-		"type":   request.Type,
+		"tid":    CurrentUser.ID,
 		"status": request.Status,
 	}
 	result := request.GetCount(search)
@@ -61,4 +60,26 @@ func (c *MessageController) GetCount() {
 	})
 }
 
-// func (c *MessageController)
+// Set Set
+func (c *MessageController) Set() {
+	var request models.MessageRequest
+	c.RequestObject(&request)
+	if len(request.IDs) < 1 {
+		c.ResponseJSON(models.BaseResponse{
+			Code: 1,
+			Msg:  "ids is null",
+		})
+	}
+	selector := bson.M{
+		"id": bson.M{"$in": request.IDs},
+	}
+	update := bson.M{
+		"status": request.Status,
+	}
+	result := request.Set(update, selector)
+	c.ResponseJSON(models.BaseResponse{
+		Code: 0,
+		Data: result,
+		Msg:  "success",
+	})
+}

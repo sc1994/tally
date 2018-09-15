@@ -7,7 +7,7 @@ import (
 )
 
 func Test_Login_1(t *testing.T) {
-	result := httpRequest("signin", `{"name":"test","pwd":"123123"}`)
+	result := httpRequest("land/signin", `{"name":"test","pwd":"123123"}`)
 	if result.Msg != "success" {
 		j, _ := json.Marshal(result)
 		t.Fatal("result.Msg != success", string(j))
@@ -20,7 +20,7 @@ func Test_Login_1(t *testing.T) {
 }
 
 func Test_CheckName_1(t *testing.T) {
-	result := httpRequest("signupcheck\\test", nil)
+	result := httpRequest("signupcheck/test", nil)
 	if result.Msg != "success" {
 		j, _ := json.Marshal(result)
 		t.Fatal("result.Msg != success", string(j))
@@ -36,7 +36,7 @@ func Test_Logout_1(t *testing.T) {
 }
 
 func Test_LogUp_1(t *testing.T) {
-	result := httpRequest("signup", `{"name":"test","pwd":"123123"}`)
+	result := httpRequest("/land/signup", `{"name":"test","pwd":"123123"}`)
 	if result.Msg != "success" {
 		j, _ := json.Marshal(result)
 		t.Fatal("result.Msg != success", string(j))

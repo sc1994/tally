@@ -103,17 +103,16 @@ export default {
       var that = this;
       var loading = that.$loading({});
       that.$axios
-        .post("/inserttally", {
-          token: localStorage.getItem("token"),
+        .post("/tally/add", {
           money: parseFloat(that.money),
           type: that.consume,
           mode: that.tallyForm.mode,
           channel: that.tallyForm.channel,
           remark: that.tallyForm.remark,
-          ctime: that.tallyForm.date
+          ttime: new Date(that.tallyForm.date).toISOString()
         })
         .then(response => {
-          if (response.result) {
+          if (response.code == 0) {
             that.$toast.success("添加成功");
             setTimeout(() => {
               that.$emit("update:openTally", false);
@@ -121,8 +120,6 @@ export default {
               that.$emit("update:consume", "");
               that.$emit("update:money", "");
             }, 1200);
-          } else {
-            that.$toast.error("网络异常,请重试");
           }
           loading.close();
         });

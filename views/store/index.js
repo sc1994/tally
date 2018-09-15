@@ -26,10 +26,10 @@ export default new Vuex.Store({
     }, data) {
       var that = this._vm;
       var vuex = this;
-      that.$axios.get("/getuser/" + localStorage.getItem("token"))
+      that.$axios.get("/user/get")
         .then(response => {
-          if (response.result) {
-            commit("changeUser", response.user)
+          if (response.code == 0) {
+            commit("changeUser", response.data)
             vuex.dispatch("initUnreadNumber");
           } else {
             that.$toast.warning("token失效,稍后将跳转到登陆页面")
@@ -69,8 +69,10 @@ export default new Vuex.Store({
     }) {
       if (!this.state.currentUser.id) return
       var that = this._vm;
-      that.$axios.get("/getmessageunreadcount/" + this.state.currentUser.id).then(response => {
-        commit("changeUnreadNumber", response.result)
+      that.$axios.post("/message/getcount", {
+        status: 1
+      }).then(response => {
+        commit("changeUnreadNumber", response.data)
       });
     }
   }

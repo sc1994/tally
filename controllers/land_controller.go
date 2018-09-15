@@ -12,8 +12,8 @@ type LandController struct {
 	BaseController
 }
 
-// Login 登陆
-func (c *LandController) Login() {
+// Signin 登陆
+func (c *LandController) Signin() {
 	request := models.UserRequest{}
 	c.RequestObject(&request)
 	search := bson.M{"name": request.Name, "pwd": request.Password}
@@ -36,20 +36,29 @@ func (c *LandController) Login() {
 
 // CheckName 用户名验证
 func (c *LandController) CheckName() {
-	name := c.Ctx.Input.Param("name")
+	name := c.Ctx.Input.Param(":name")
 	if library.IsEmpty(name) {
 		c.ResponseJSON(models.BaseResponse{
 			Code: 1,
-			Msg:  "name为空",
+			Msg:  "name is null",
 		})
 	}
 	request := models.UserRequest{}
 	r := request.Get(bson.M{"name": name})
-	c.ResponseJSON(models.BaseResponse{
-		Code: 0,
-		Msg:  "success",
-		Data: len(r) > 0,
-	})
+	if len(r) > 0 {
+		c.ResponseJSON(models.BaseResponse{
+			Code: 1,
+			Msg:  "用户名已存在",
+			Data: true,
+		})
+	} else {
+		c.ResponseJSON(models.BaseResponse{
+			Code: 0,
+			Msg:  "success",
+			Data: false,
+		})
+	}
+
 }
 
 // Logout 登出
@@ -62,8 +71,8 @@ func (c *LandController) Logout() {
 	})
 }
 
-// Logup 注册
-func (c *LandController) Logup() {
+// Signup 注册
+func (c *LandController) Signup() {
 	request := new(models.UserRequest)
 	c.RequestObject(request)
 	// 验证用户名是否存在
@@ -136,6 +145,7 @@ func (c *LandController) Logup() {
 		})
 	c.ResponseJSON(models.BaseResponse{
 		Code: 0,
+		Data: true,
 		Msg:  "success",
 	})
 }

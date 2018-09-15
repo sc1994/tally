@@ -98,7 +98,7 @@ export default {
     initLate() {
       var that = this;
       that.$axios
-        .post("/gettallybyuser", {
+        .post("/tally/get", {
           token: localStorage.getItem("token"),
           pageIndex: 1,
           pageSize: 3,

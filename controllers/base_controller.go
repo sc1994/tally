@@ -21,9 +21,9 @@ type BaseController struct {
 // Prepare 请求拦截
 func (c *BaseController) Prepare() {
 	url := c.Ctx.Input.URL()
-	if strings.Contains(url, "/signin") ||
+	if strings.Contains(url, "/land/signin") ||
 		strings.Contains(url, "/signupcheck/") ||
-		strings.Contains(url, "/signup") {
+		strings.Contains(url, "/land/signup") {
 		// 屏蔽掉不需要验证的请求
 		beego.Info("跳过登陆验证")
 	} else {

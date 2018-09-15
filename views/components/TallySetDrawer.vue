@@ -57,9 +57,11 @@ export default {
     currentUser(val) {
       var that = this;
       that.form.partners = [val.id];
-      val.partners.forEach(x => {
-        that.form.partners.push(x.id);
-      });
+      if (val.partners != null && val.partners) {
+        val.partners.forEach(x => {
+          that.form.partners.push(x.id);
+        });
+      }
       that.currentUser.channels.forEach(x => {
         that.form.channels.push(x.content);
       });
