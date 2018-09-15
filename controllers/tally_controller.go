@@ -4,6 +4,7 @@ import (
 	"tally/library"
 	"tally/models"
 
+	"github.com/leekchan/accounting"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -15,12 +16,42 @@ type TallyController struct {
 // Add Add
 func (c *TallyController) Add() {
 	var request models.TallyRequest
-	c.RequestObject(request)
+	c.RequestObject(&request)
 	request.Tally.UserID = CurrentUser.ID
 	id := request.Add()
 	code := 0
 	if len(id.Hex()) < 1 {
 		code = 1
+	} else {
+		CurrentUser.User.ChangeUserMoney(CurrentUser.ID, request.Mode, request.Channel, request.Money)
+		consumes := new(models.ConsumeRequest).Get(bson.M{"uid": CurrentUser.ID, "content": request.Type})
+		if len(consumes) > 0 {
+			c := consumes[0]
+			new(models.ConsumeRequest).Set(bson.M{"$inc": bson.M{"count": 1}}, bson.M{"_id": c.ID})
+		} else {
+			models.AddConsume(&models.Consume{
+				Content: request.Type,
+				UserID:  CurrentUser.ID,
+				Count:   1,
+				Default: []string{library.TallyMode[0], library.TallyMode[1], library.TallyMode[2]},
+			})
+		}
+		models.RefreshUserRedis(CurrentUser)
+		go func() {
+			ac := accounting.Accounting{Symbol: "", Precision: 2}
+			for _, val := range CurrentUser.Partners {
+				m := &models.MessageRequest{
+					Message: &models.Message{
+						FromID:    CurrentUser.ID,
+						ToID:      val.ID,
+						Content:   "添加了一笔" + ac.FormatMoney(request.Money) + "元的" + request.Mode,
+						Type:      3,
+						NeedTouch: false,
+					},
+				}
+				m.Add()
+			}
+		}()
 	}
 	c.ResponseJSON(models.BaseResponse{
 		Code: code,

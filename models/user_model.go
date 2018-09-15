@@ -127,3 +127,62 @@ func RefreshUserRedis(user UserResponse) string {
 	library.SetRedis(token, j, 7*24*60)
 	return token
 }
+
+// ChangeUserMoney 变更用户金额
+func (u *User) ChangeUserMoney(uid bson.ObjectId, mode string, channel string, money float32) bool {
+	var updateField string
+	var updateValue float32
+	switch channel {
+	case "支付宝":
+		if mode == "收入" {
+			u.Alipay += money
+			updateValue = money
+		} else if mode == "支出" {
+			u.Alipay -= money
+			updateValue = -money
+		}
+		updateField = "aliPay"
+	case "微信":
+		if mode == "收入" {
+			u.WechatPay += money
+			updateValue = money
+		} else if mode == "支出" {
+			u.WechatPay -= money
+			updateValue = -money
+		}
+		updateField = "wechatPay"
+	case "银行卡":
+		if mode == "收入" {
+			u.BackCard += money
+			updateValue = money
+		} else if mode == "支出" {
+			u.BackCard -= money
+			updateValue = -money
+		}
+		updateField = "backCard"
+	case "现金":
+		if mode == "收入" {
+			u.Cash += money
+			updateValue = money
+		} else if mode == "支出" {
+			u.Cash -= money
+			updateValue = -money
+		}
+		updateField = "cash"
+	case "信用卡":
+		u.CreditCard -= money // 信用卡 只有支出,还款在job中进行
+		updateValue = -money
+		updateField = "creditCard"
+	case "花呗":
+		u.AntCheck -= money
+		updateValue = -money
+		updateField = "antCheck"
+	case "白条":
+		u.WhiteBar -= money
+		updateValue = -money
+		updateField = "whiteBar"
+	}
+	update := bson.M{"$inc": bson.M{updateField: updateValue}}
+	selector := bson.M{"_id": uid}
+	return new(UserRequest).Set(update, selector) != nil
+}
