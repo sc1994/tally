@@ -1,9 +1,12 @@
 package library
 
 import (
+	"bytes"
 	"crypto/md5"
 	"encoding/hex"
 	"fmt"
+	"io/ioutil"
+	"net/http"
 	"reflect"
 )
 
@@ -33,4 +36,28 @@ func IsEmpty(value interface{}) bool {
 // GetString 通过interface{}获取字符串
 func GetString(val interface{}) string {
 	return fmt.Sprintf("%v", val)
+}
+
+// HTTPRequest HttpRequest
+func HTTPRequest(url string, jsonStr interface{}, token string) string {
+	var req *http.Request
+	var err error
+	if jsonStr != nil {
+		// var jsonStr = []byte(`{"pwd":"123123","name":"test"}`)
+		str := []byte(fmt.Sprintf("%v", jsonStr))
+		req, err = http.NewRequest("POST", url, bytes.NewBuffer(str))
+		req.Header.Set("Content-Type", "application/json")
+	} else {
+		req, err = http.NewRequest("GET", url, nil)
+	}
+
+	req.Header.Set("token", token)
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		panic(err)
+	}
+	defer resp.Body.Close()
+	body, _ := ioutil.ReadAll(resp.Body)
+	return string(body[:])
 }

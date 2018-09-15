@@ -1,11 +1,8 @@
 package test
 
 import (
-	"bytes"
 	"encoding/json"
-	"fmt"
-	"io/ioutil"
-	"net/http"
+	"tally/library"
 	"tally/models"
 )
 
@@ -14,26 +11,8 @@ var token = "21bd59b757e5"
 
 func httpRequest(router string, jsonStr interface{}) models.BaseResponse {
 	url := baseURL + router
-	var req *http.Request
-	var err error
-	if jsonStr != nil {
-		// var jsonStr = []byte(`{"pwd":"123123","name":"test"}`)
-		str := []byte(fmt.Sprintf("%v", jsonStr))
-		req, err = http.NewRequest("POST", url, bytes.NewBuffer(str))
-	} else {
-		req, err = http.NewRequest("GET", url, nil)
-	}
-
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("token", token)
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		panic(err)
-	}
-	defer resp.Body.Close()
-	body, _ := ioutil.ReadAll(resp.Body)
+	body := library.HTTPRequest(url, jsonStr, token)
 	result := models.BaseResponse{}
-	json.Unmarshal(body, &result)
+	json.Unmarshal([]byte(body), &result)
 	return result
 }
