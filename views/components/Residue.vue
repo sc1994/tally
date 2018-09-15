@@ -145,14 +145,13 @@ export default {
       });
 
       chart.axis("y", false);
-
       var userEnd = val.haveBeenUsed - mulriple / 3;
-      userEnd = userEnd > 5 ? val.haveBeenUsed - mulriple / 3 : 5;
-      userEnd = userEnd > val.budget - 5 ? val.budget - 5 : userEnd;
+      userEnd = userEnd > 10 ? userEnd : 10;
+      userEnd = userEnd > val.budget ? val.budget - 1 : userEnd;
       //绘制仪表盘辅助元素
       if (val.haveBeenUsed > 0) {
         chart.guide().arc({
-          start: [5, 1.05],
+          start: [10, 1.05],
           end: [userEnd, 1.05],
           style: {
             strokeStyle: "#d84315",
@@ -162,17 +161,15 @@ export default {
         });
       }
 
-      if (val.haveBeenUsed + mulriple / 3 < val.budget - 5) {
-        chart.guide().arc({
-          start: [val.haveBeenUsed + mulriple / 3, 1.05],
-          end: [val.budget - 6, 1.05],
-          style: {
-            strokeStyle: "#1890FF",
-            lineWidth: 4,
-            lineCap: "round"
-          }
-        });
-      }
+      chart.guide().arc({
+        start: [userEnd + mulriple / 3, 1.05],
+        end: [val.budget - 10, 1.05],
+        style: {
+          strokeStyle: "#1890FF",
+          lineWidth: 4,
+          lineCap: "round"
+        }
+      });
 
       // 周边辅助信息
       chart.guide().text({
