@@ -20,6 +20,7 @@ func (c *TallyController) Add() {
 	request.Tally.UserID = CurrentUser.ID
 	id := request.Add()
 	code := 0
+	token := ""
 	if len(id.Hex()) < 1 {
 		code = 1
 	} else {
@@ -36,7 +37,7 @@ func (c *TallyController) Add() {
 				Default: []string{library.TallyMode[0], library.TallyMode[1], library.TallyMode[2]},
 			})
 		}
-		models.RefreshUserRedis(CurrentUser)
+		token = models.RefreshUserRedis(CurrentUser)
 		go func() {
 			ac := accounting.Accounting{Symbol: "", Precision: 2}
 			for _, val := range CurrentUser.Partners {
@@ -55,7 +56,7 @@ func (c *TallyController) Add() {
 	}
 	c.ResponseJSON(models.BaseResponse{
 		Code: code,
-		Data: id,
+		Data: token,
 		Msg:  "success",
 	})
 }

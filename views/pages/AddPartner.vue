@@ -66,15 +66,15 @@ export default {
       var that = this;
       that.searching = true;
       that.$axios
-        .get("/findusersbyname/" + that.searchValue)
+        .get("/user/search/" + that.searchValue)
         .then(response => {
-          if (response.result != null) {
+          if (response.code == 0) {
             var ids = that
               .$linq(that.currentUser.partners)
               .select(x => x.id)
               .toArray();
             that.list = that
-              .$linq(response.result)
+              .$linq(response.data)
               .where(x => ids.indexOf(x.id) < 0 && that.currentUser.id != x.id)
               .toArray();
             if (that.list.length < 1) {
@@ -82,7 +82,6 @@ export default {
             }
           } else {
             that.list = [];
-            that.$toast.info("查无结果~~~");
           }
           that.oldSearchValue = [];
           that.searching = false;

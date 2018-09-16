@@ -85,7 +85,7 @@ export default {
         that.$axios
           .post(url, {
             name: that.loginModel.username,
-            password: that.loginModel.password1,
+            pwd: that.loginModel.password1,
             remember: that.loginModel.remember
           })
           .then(response => {

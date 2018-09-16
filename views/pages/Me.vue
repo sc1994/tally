@@ -276,7 +276,7 @@ export default {
     loginOut() {
       var that = this;
       that.$axios
-        .get("/removetoken/" + localStorage.getItem("token"))
+        .get("/land/signout/" + localStorage.getItem("token"))
         .then(() => {
           localStorage.clear();
           alert("已退出登陆");

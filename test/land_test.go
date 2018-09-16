@@ -28,7 +28,7 @@ func Test_CheckName_1(t *testing.T) {
 }
 
 func Test_Logout_1(t *testing.T) {
-	result := httpRequest("removetoken", nil)
+	result := httpRequest("land/signout", nil)
 	if result.Msg != "success" {
 		j, _ := json.Marshal(result)
 		t.Fatal("result.Msg != success", string(j))

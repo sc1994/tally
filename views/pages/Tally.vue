@@ -21,7 +21,7 @@
                 </mu-list-item-sub-title>
               </mu-list-item-content>
               <mu-list-item-action>
-                <mu-list-item-after-text>{{$format(item.ctime, "hh:mm")}}</mu-list-item-after-text>
+                <mu-list-item-after-text>{{$format(item.ttime, "hh:mm")}}</mu-list-item-after-text>
                 <mu-button icon color="#2196f3" @click="currentTally=item;openSetTally=true" v-if="item.userID==currentUser.id">
                   <mu-icon value="edit_location"></mu-icon>
                 </mu-button>
@@ -80,29 +80,18 @@ export default {
           uids.push(x.id);
         });
       }
-      var nowDate = new Date(
-        new Date().getFullYear(),
-        new Date().getMonth() + 1,
-        0
-      );
-      var month = nowDate.getMonth() + 1;
-      if (month < 10) {
-        month = "0" + month;
-      } else {
-        month = "" + month;
-      }
       that.$axios
         .post("/tally/get", {
           uids: uids,
           btime: new Date(
             new Date().getFullYear(),
-            new Date().getMonth() + 1,
-            0
+            new Date().getMonth(),
+            1
           ).toISOString(),
           etime: new Date(
             new Date().getFullYear(),
-            new Date().getMonth() + 2,
-            0
+            new Date().getMonth() + 1,
+            1
           ).toISOString(),
           bMoney: 0,
           eMoney: 999999,
@@ -118,7 +107,7 @@ export default {
               that.pageIndex++;
               var g = that
                 .$linq(response.data)
-                .groupBy("r=>(r.ctime+'').substring(0,10)")
+                .groupBy("r=>(r.ttime+'').substring(0,10)")
                 .select("{key:$.key(),value:$.toArray()}")
                 .toArray();
               if (that.group.length > 0 && g.length > 0) {

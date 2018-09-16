@@ -21,7 +21,7 @@
         </mu-list-item-action>
         <mu-list-item-content>
           <mu-list-item-title>{{item.remark}}</mu-list-item-title>
-          <mu-list-item-sub-title>{{$format(item.ctime, "yyyy-MM-dd hh:mm")}}</mu-list-item-sub-title>
+          <mu-list-item-sub-title>{{$format(item.ttime, "yyyy-MM-dd hh:mm")}}</mu-list-item-sub-title>
         </mu-list-item-content>
       </mu-list-item>
     </mu-list>
@@ -99,14 +99,28 @@ export default {
       var that = this;
       that.$axios
         .post("/tally/get", {
-          token: localStorage.getItem("token"),
+          uids: [this.currentUser.id],
+          btime: new Date(
+            new Date().getFullYear(),
+            new Date().getMonth(),
+            1
+          ).toISOString(),
+          etime: new Date(
+            new Date().getFullYear(),
+            new Date().getMonth() + 1,
+            1
+          ).toISOString(),
+          bMoney: 0,
+          eMoney: 999999,
+          types: [],
+          modes: [],
+          channels: [],
           pageIndex: 1,
-          pageSize: 3,
-          onlyMe: true
+          pageSize: 3
         })
         .then(response => {
-          if (response.result) {
-            if (response.body != null) that.tallyList = response.body;
+          if (response.code == 0) {
+            if (response.data != null) that.tallyList = response.data;
           }
         });
     }
@@ -120,6 +134,7 @@ export default {
       val.consumes.forEach(x => {
         this.consumes.push(x.content);
       });
+      this.initLate();
     },
     openTally(val) {
       // todo 刷新时机待考虑
@@ -132,9 +147,6 @@ export default {
         this.$store.dispatch("initUser", { $router: this.$router });
       }
     }
-  },
-  mounted() {
-    this.initLate();
   }
 };
 </script>

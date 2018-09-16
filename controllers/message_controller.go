@@ -16,9 +16,13 @@ func (c *MessageController) Get() {
 	var request models.MessageRequest
 	c.RequestObject(&request)
 	search := bson.M{
-		"tid":    request.ToID,
-		"type":   request.Type,
-		"status": request.Status,
+		"tid": CurrentUser.ID,
+	}
+	if request.Type != 0 {
+		search["status"] = request.Status
+	}
+	if request.Type != 0 {
+		search["type"] = request.Type
 	}
 	result := request.Page(search)
 	c.ResponseJSON(models.BaseResponse{
@@ -32,6 +36,9 @@ func (c *MessageController) Get() {
 func (c *MessageController) Add() {
 	var request models.MessageRequest
 	c.RequestObject(&request)
+	if request.Type == 1 {
+		request.Message.NeedTouch = true // 不知为何bool值不能传入 todo
+	}
 	id := request.Add()
 	code := 0
 	if len(id.Hex()) < 1 {
@@ -71,10 +78,11 @@ func (c *MessageController) Set() {
 		})
 	}
 	selector := bson.M{
-		"id": bson.M{"$in": request.IDs},
+		"_id": bson.M{"$in": request.IDs},
+		"tid": CurrentUser.ID,
 	}
 	update := bson.M{
-		"status": request.Status,
+		"$set": bson.M{"status": request.Status},
 	}
 	result := request.Set(update, selector)
 	c.ResponseJSON(models.BaseResponse{

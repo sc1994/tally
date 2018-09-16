@@ -6,6 +6,8 @@ import (
 	"tally/library"
 	"time"
 
+	"github.com/ahmetb/go-linq"
+
 	"github.com/astaxie/beego"
 
 	mgo "gopkg.in/mgo.v2"
@@ -47,8 +49,9 @@ type UserResponse struct {
 	*User
 	Consumes        []*Consume `json:"consumes"`
 	Channels        []*Channel `json:"channels"`
-	HaveBeenUsed    float32    `json:"haveBeenUsed"`
-	HaveBeenAdvance float32    `json:"haveBeenAdvance"`
+	HaveBeenIncome  float64    `json:"haveBeenIncome"`
+	HaveBeenUsed    float64    `json:"haveBeenUsed"`
+	HaveBeenAdvance float64    `json:"haveBeenAdvance"`
 	Partners        []*User    `json:"partners"`
 }
 
@@ -77,15 +80,26 @@ func (u *UserRequest) GetResponse(search map[string]interface{}) (result UserRes
 	result.Partners = u.Get(searchP)
 	result.Consumes = new(ConsumeRequest).Get(bson.M{"uid": result.User.ID})
 	result.Channels = new(ChannelRequest).Get(bson.M{"uid": result.User.ID})
+	tallys := new(TallyRequest).Get(bson.M{"uid": user.ID})
+	moneys := make([]float64, 3)
+	for i, v := range library.TallyMode {
+		moneys[i] =
+			linq.From(tallys).Where(func(x interface{}) bool {
+				return x.(*Tally).Mode == v
+			}).Select(func(x interface{}) interface{} {
+				return x.(*Tally).Money
+			}).SumFloats()
+	}
+	result.HaveBeenIncome = moneys[0]
+	result.HaveBeenUsed = moneys[1]
+	result.HaveBeenAdvance = moneys[2]
 	b = true
 	return
 }
 
 // Set Set
 func (u *UserRequest) Set(update map[string]interface{}, selector map[string]interface{}) *mgo.ChangeInfo {
-	if library.IsEmpty(update["utime"]) {
-		update["utime"] = time.Now()
-	}
+	update["$set"] = bson.M{"utime": time.Now()}
 	return data.Update(userTable, update, selector)
 }
 
@@ -123,7 +137,12 @@ func RefreshUserRedis(user UserResponse) string {
 	for _, k := range keys {
 		library.DelRedis(k)
 	}
-	j, _ := json.Marshal(user)
+	var j []byte
+	if u, b := new(UserRequest).GetResponse(bson.M{"_id": user.ID}); b {
+		j, _ = json.Marshal(u)
+	} else {
+		j, _ = json.Marshal(user)
+	}
 	library.SetRedis(token, j, 7*24*60)
 	return token
 }

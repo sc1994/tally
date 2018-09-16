@@ -59,6 +59,12 @@ func (c *TallyRequest) Add() bson.ObjectId {
 	return c.Tally.ID
 }
 
+// Get get
+func (c *TallyRequest) Get(seach map[string]interface{}) (result []*Tally) {
+	data.Find(tallyTable, seach, &result)
+	return
+}
+
 // Page 分页查询
 func (c *TallyRequest) Page(search map[string]interface{}) (result []*TallyResponse) {
 	var flag []*Tally

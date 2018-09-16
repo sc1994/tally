@@ -53,7 +53,7 @@ func (c *MessageRequest) Add() bson.ObjectId {
 
 // Page 分页
 func (c *MessageRequest) Page(search map[string]interface{}) (result []*MessageResponse) {
-	var flag []*MessageRequest
+	var flag []*Message
 	data.Page(messageTable, search, c.PageIndex, c.PageSize, &flag, "-ctime")
 	uids := make([]bson.ObjectId, 0)
 	linq.From(flag).SelectMany(func(x interface{}) linq.Query {

@@ -22,18 +22,19 @@ func init() {
 	//登陆=====================================================================================================
 	beego.Router("/land/signin", &controllers.LandController{}, "post:Signin")         // 登陆
 	beego.Router("/signupcheck/:name", &controllers.LandController{}, "get:CheckName") // 验证用户名是否存在
-	beego.Router("/removetoken", &controllers.LandController{}, "get:Logout")          // 登出
+	beego.Router("/land/signout/:token", &controllers.LandController{}, "get:Logout")  // 登出
 	beego.Router("/land/signup", &controllers.LandController{}, "post:Signup")
 	//用户=====================================================================================================
-	beego.Router("/user/get", &controllers.UserController{}, "get:Get") // 获取用户数据
+	beego.Router("/user/get", &controllers.UserController{}, "get:Get")             // 获取用户数据
+	beego.Router("/user/search/:name", &controllers.UserController{}, "get:Search") // 用户搜索
 	//账单=====================================================================================================
 	beego.Router("/tally/add", &controllers.TallyController{}, "post:Add")              // 添加账单
 	beego.Router("/tally/get", &controllers.TallyController{}, "post:Get")              // 获取基本账单
 	beego.Router("/updatetallybyid", &controllers.TallyController{}, "post:Set")        // 更新账单
 	beego.Router("/deletetallybyid/:id", &controllers.TallyController{}, "post:Delete") // 删除账单
 	//消息=====================================================================================================
-	beego.Router("/sendmessage", &controllers.MessageController{}, "post:Add")           // 发送消息
-	beego.Router("/getmessage", &controllers.MessageController{}, "post:Get")            // 获取消息
+	beego.Router("/message/add", &controllers.MessageController{}, "post:Add")           // 发送消息
+	beego.Router("/message/get", &controllers.MessageController{}, "post:Get")           // 获取消息
 	beego.Router("/message/getcount", &controllers.MessageController{}, "post:GetCount") // 获取消息量
-	beego.Router("/updatemessage", &controllers.MessageController{}, "post:Set")         // 更新消息状态
+	beego.Router("/message/set", &controllers.MessageController{}, "post:Set")           // 更新消息状态
 }

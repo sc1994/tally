@@ -63,7 +63,7 @@ func (c *LandController) CheckName() {
 
 // Logout 登出
 func (c *LandController) Logout() {
-	library.DelRedis(c.Ctx.Input.Header("token"))
+	library.DelRedis(c.Ctx.Input.Header(":token"))
 	c.ResponseJSON(models.BaseResponse{
 		Code: 0,
 		Msg:  "success",

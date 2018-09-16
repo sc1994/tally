@@ -48,18 +48,17 @@ export default new Vuex.Store({
       var that = this._vm;
       var loading = that.$loading({});
       that.$axios
-        .post("/sendmessage", {
+        .post("/message/add", {
           tid: data.tid,
           fid: this.state.currentUser.id,
           content: data.content,
           needTouch: data.needTouch,
-          type: data.type
+          type: data.type,
+          status: 1
         })
         .then(response => {
-          if (response.result) {
+          if (response.code == 0) {
             that.$toast.success("已发送");
-          } else {
-            that.$toast.error("网络异常,请重试");
           }
           loading.close();
         })

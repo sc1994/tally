@@ -19,7 +19,8 @@ export default {
   data() {
     return {
       messageGroup: [],
-      righticon: ""
+      righticon: "",
+      messages: []
     };
   },
   methods: {
@@ -29,10 +30,8 @@ export default {
       this.$axios
         .post("/agreemessage", that.currentItem)
         .then(response => {
-          if (response.result) {
+          if (response.code == 0) {
             that.$toast.success("你们已经是小伙伴啦");
-          } else {
-            that.$toast.error("网络异常,请重试");
           }
           loading.close();
           this.openAlert = false;
@@ -45,31 +44,45 @@ export default {
     search(index) {
       var that = this;
       that.$axios
-        .get(`/getmessage/${that.currentUser.id}/${index}/50`)
+        .post("/message/get", {
+          type: 0,
+          status: 0,
+          pageIndex: 1,
+          pageSize: 100
+        })
         .then(response => {
-          if (response.result != null)
+          if (response.code == 0) {
+            that.messages = response.data;
             that.righticon =
               that
-                .$linq(response.result)
+                .$linq(response.data)
                 .where(x => !x.needTouch && x.status == 1)
                 .toArray().length > 0
                 ? "done_all"
                 : "";
-          that.messageGroup = that
-            .$linq(response.result)
-            .groupBy("r=>(r.ctime+'').substring(0,10)")
-            .select("{key:$.key(),value:$.toArray()}")
-            .toArray();
+            that.messageGroup = that
+              .$linq(response.data)
+              .groupBy("r=>(r.ctime+'').substring(0,10)")
+              .select("{key:$.key(),value:$.toArray()}")
+              .toArray();
+          }
           // todo 按今天昨天更早来分页
         });
     },
     readlyAll() {
       var that = this;
       var loading = that.$loading();
+      var ids = that
+        .$linq(that.messages)
+        .select(x => x.id)
+        .toArray();
       that.$axios
-        .get("/readmessageall/" + that.currentUser.id)
+        .post("message/set", {
+          ids: ids,
+          status: 2
+        })
         .then(response => {
-          if (response.result) {
+          if (response.code == 0) {
             // that.$toast.success("无需确认的消息, 已标记为已读");
             that.$router.back(-1);
           }

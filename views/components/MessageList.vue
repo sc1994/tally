@@ -54,12 +54,13 @@ export default {
       var that = this;
       var loading = that.$loading({});
       this.$axios
-        .post("/agreemessage", that.currentItem)
+        .post("message/set", {
+          ids: [that.currentItem.id],
+          status: 3
+        })
         .then(response => {
-          if (response.result) {
-            that.$toast.success("你们已经是小伙伴啦");
-          } else {
-            that.$toast.error("网络异常,请重试");
+          if (response.code == 0) {
+            that.$toast.success("你们成为小伙伴啦");
           }
           loading.close();
           this.openAlert = false;
