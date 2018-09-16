@@ -98,7 +98,7 @@ export default {
           types: [],
           modes: [],
           channels: [],
-          pageIndex: 1,
+          pageIndex: that.pageIndex,
           pageSize: 12
         })
         .then(response => {
