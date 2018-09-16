@@ -91,7 +91,6 @@ export default {
           .then(response => {
             if (response.code == 0) {
               if (that.active == 0) {
-                localStorage.setItem("token", response.data);
                 that.$toast.success("登陆成功, 请稍后...");
                 setTimeout(() => {
                   that.$router.push({ path: "/" });

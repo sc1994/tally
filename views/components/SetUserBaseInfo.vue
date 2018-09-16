@@ -38,8 +38,7 @@ export default {
       var that = this;
       var loading = that.$loading();
       var request = {
-        token: localStorage.getItem("token"),
-        id: that.user.id,
+        headImg: that.user.headImg,
         nick: that.user.nick,
         budget: parseFloat(that.user.budget),
         fixDate: parseFloat(that.user.fixDate),
@@ -69,14 +68,12 @@ export default {
           break;
       }
       that.$axios
-        .post("/setuserbaseinfo", request)
+        .post("/user/set", request)
         .then(response => {
-          if (response.result) {
+          if (response.code == 0) {
             // that.$toast.success("修改成功");
             that.$store.dispatch("initUser", { $router: this.$router }); // 刷新用户信息
             that.thenAlert = false;
-          } else {
-            that.$toast.warning("修改失败, 请重试");
           }
           loading.close();
         })

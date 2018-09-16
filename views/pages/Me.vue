@@ -296,16 +296,11 @@ export default {
       if (response.result) {
         this.currentUser.headImg = response.path;
         var that = this;
-        this.$axios
-          .post("/setuserheadimage", {
-            id: this.currentUser.id,
-            headImg: this.currentUser.headImg
-          })
-          .then(response => {
-            if (!response.result) {
-              that.$toast.error("出现错误");
-            }
-          });
+        that.$axios.post("/user/set", that.currentUser).then(response => {
+          if (response.code == 0) {
+            that.$toast.success("设置成功");
+          }
+        });
       }
     }
   },

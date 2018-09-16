@@ -114,7 +114,6 @@ export default {
         .then(response => {
           if (response.code == 0) {
             that.$toast.success("添加成功");
-            localStorage.setItem("token", response.data);
             setTimeout(() => {
               that.$emit("update:openTally", false);
               that.thatOpenTally = false;

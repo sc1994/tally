@@ -56,7 +56,7 @@ func (c *TallyController) Add() {
 	}
 	c.ResponseJSON(models.BaseResponse{
 		Code: code,
-		Data: token,
+		Data: map[string]string{"token": token},
 		Msg:  "success",
 	})
 }
@@ -127,7 +127,10 @@ func (c *TallyController) Delete() {
 			Msg:  "id is null",
 		})
 	}
-	selector := bson.M{"_id": id}
+	selector := bson.M{
+		"_id": bson.ObjectIdHex(id),
+		"uid": CurrentUser.ID,
+	}
 	new(models.TallyRequest).Delete(selector)
 	c.ResponseJSON(models.BaseResponse{
 		Code: 0,

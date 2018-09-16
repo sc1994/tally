@@ -42,3 +42,29 @@ func (u *UserController) Search() {
 		Msg:  "success",
 	})
 }
+
+// Set set
+func (u *UserController) Set() {
+	var request models.UserRequest
+	u.RequestObject(&request)
+	updater := bson.M{
+		"$set": bson.M{
+			"himg":      request.HeadImg,
+			"nick":      request.NickName,
+			"budget":    request.Budget,
+			"fixDate":   request.FixDate,
+			"wechatPay": request.WechatPay,
+			"aliPay":    request.Alipay,
+			"backCard":  request.BackCard,
+			"cash":      request.Cash,
+			"utime":     request.UpdateTime,
+		},
+	}
+	request.Set(updater, bson.M{"_id": CurrentUser.ID})
+	token := models.RefreshUserRedis(CurrentUser)
+	u.ResponseJSON(models.BaseResponse{
+		Code: 0,
+		Data: map[string]string{"token": token},
+		Msg:  "success",
+	})
+}

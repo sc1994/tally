@@ -154,6 +154,7 @@ export default {
       if (val) this.openDrawer = !val;
     },
     currentUser(val) {
+      console.log(val)
       this.getList(this.pageIndex);
     }
   }

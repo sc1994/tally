@@ -16,7 +16,7 @@
         <mu-radio v-model="form.channel" :value="item.content" :label="item.content" v-for="item in currentUser.channels" :key="item.content"></mu-radio>
       </mu-form-item>
       <mu-form-item prop="checkbox" label="日期">
-        <mu-date-input v-model="form.ctime" type="dateTime" actions></mu-date-input>
+        <mu-date-input v-model="form.ttime" type="dateTime" actions></mu-date-input>
       </mu-form-item>
       <mu-form-item prop="switch" label="备注">
         <mu-text-field v-model="form.remark"></mu-text-field>
@@ -75,15 +75,14 @@ export default {
       var that = this;
       var loading = that.$loading({});
       that.form.money = parseFloat(that.form.money);
-      that.form.token = localStorage.getItem("token");
-      that.$axios.post("/updatetallybyid", that.form).then(response => {
-        if (response.result) {
+      that.$axios.post("/tally/set", that.form).then(response => {
+        if (response.code == 0) {
           // that.$toast.success("修改完成");
           // 反过来赋值
           that.currentItem.money = that.form.money;
           that.currentItem.type = that.form.type;
           that.currentItem.mode = that.form.mode;
-          that.currentItem.ctime = that.form.ctime;
+          that.currentItem.ttime = that.form.ttime;
           that.currentItem.remark = that.form.remark;
           // 关闭窗口
           setTimeout(() => {
@@ -101,8 +100,6 @@ export default {
             };
             that.thatOpen = false;
           }, 800);
-        } else {
-          that.$toast.info("数据异常,请重试");
         }
         loading.close();
       });
@@ -111,19 +108,15 @@ export default {
       var that = this;
       var loading = that.$loading({});
       that.$axios
-        .get(
-          `/deletetallybyid/${that.form.id}/${localStorage.getItem("token")}`
-        )
+        .get(`/tally/delete/${that.form.id}`)
         .then(response => {
-          if (response.result) {
+          if (response.code == 0) {
             // that.$toast.success("已删除");
             that.openAlert = false;
             that.currentItem.tid = "";
             setTimeout(() => {
               that.thatOpen = false;
             }, 300);
-          } else {
-            that.$toast.warning("发生异常,稍后重试~~~");
           }
           loading.close();
         })
@@ -156,7 +149,7 @@ export default {
         type: val.type,
         mode: val.mode,
         channel: val.channel,
-        ctime: val.ctime,
+        ttime: val.ttime,
         remark: val.remark
       };
     },

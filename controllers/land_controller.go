@@ -22,7 +22,7 @@ func (c *LandController) Signin() {
 		t := models.RefreshUserRedis(r)
 		c.ResponseJSON(models.BaseResponse{
 			Code: 0,
-			Data: t,
+			Data: map[string]string{"token": t},
 			Msg:  "success",
 		})
 	} else {

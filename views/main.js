@@ -40,6 +40,10 @@ Axios.interceptors.request.use(function (config) {
 Axios.interceptors.response.use(function (response) {
   if (response.data.code != 0) {
     Toast.warning(response.data.msg)
+  } else {
+    if (response.data.data.token) {
+      localStorage.setItem("token", response.data.data.token)
+    }
   }
   return response.data;
 }, function (error) {
