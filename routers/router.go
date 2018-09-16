@@ -34,8 +34,8 @@ func init() {
 	beego.Router("/tally/set", &controllers.TallyController{}, "post:Set")          // 更新账单
 	beego.Router("/tally/delete/:id", &controllers.TallyController{}, "get:Delete") // 删除账单
 	//消息=====================================================================================================
-	beego.Router("/message/add", &controllers.MessageController{}, "post:Add")           // 发送消息
-	beego.Router("/message/get", &controllers.MessageController{}, "post:Get")           // 获取消息
-	beego.Router("/message/getcount", &controllers.MessageController{}, "post:GetCount") // 获取消息量
-	beego.Router("/message/set", &controllers.MessageController{}, "post:Set")           // 更新消息状态
+	beego.Router("/message/add", &controllers.MessageController{}, "post:Add")                  // 发送消息
+	beego.Router("/message/get", &controllers.MessageController{}, "post:Get")                  // 获取消息
+	beego.Router("/message/getcount/:status", &controllers.MessageController{}, "get:GetCount") // 获取消息量
+	beego.Router("/message/set", &controllers.MessageController{}, "post:Set")                  // 更新消息状态
 }

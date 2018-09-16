@@ -18,8 +18,6 @@
 @git commit -m "code build dispense to service"
 @git push -u origin master -f
 
-@pause 不能编译后端代码,重构还未结束
-
 @cd ../tally
 
 @git pull

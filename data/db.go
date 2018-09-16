@@ -7,7 +7,7 @@ import (
 )
 
 // DBName 库名称
-var dbName = "tallytest"
+var dbName = "tally"
 
 // MongoConnect 连接字符串
 const mongoConnectString string = "118.24.27.231:27017/"

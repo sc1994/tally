@@ -71,8 +71,12 @@ func (c *BaseController) RequestObject(result interface{}) {
 	err := json.Unmarshal(c.Ctx.Input.RequestBody, &result)
 	if err != nil {
 		c.ResponseJSON(models.BaseResponse{
-			Code:   1,
-			Data:   err,
+			Code: 1,
+			Data: map[string]interface{}{
+				"err":       err,
+				"body":      c.Ctx.Input.RequestBody,
+				"objective": result,
+			},
 			Msg:    "请求参数序列化异常",
 			Status: "500",
 		})

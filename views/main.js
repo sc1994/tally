@@ -41,7 +41,7 @@ Axios.interceptors.response.use(function (response) {
   if (response.data.code != 0) {
     Toast.warning(response.data.msg)
   } else {
-    if (!!response.data.data.token) {
+    if (response.data.data && response.data.data.token) {
       localStorage.setItem("token", response.data.data.token)
     }
   }

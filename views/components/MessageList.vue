@@ -55,7 +55,7 @@ export default {
       var loading = that.$loading({});
       this.$axios
         .post("message/set", {
-          ids: [that.currentItem.id],
+          ids: [that.currentItem.id], //todo 只是设置了状态没有添加小伙伴的动作
           status: 3
         })
         .then(response => {

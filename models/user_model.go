@@ -80,7 +80,7 @@ func (u *UserRequest) GetResponse(search map[string]interface{}) (result UserRes
 	result.Partners = u.Get(searchP)
 	result.Consumes = new(ConsumeRequest).Get(bson.M{"uid": result.User.ID})
 	result.Channels = new(ChannelRequest).Get(bson.M{"uid": result.User.ID})
-	tallys := new(TallyRequest).Get(bson.M{"uid": user.ID})
+	tallys := new(TallyRequest).Get(bson.M{"uid": user.ID}) // todo 当前月的限制
 	moneys := make([]float64, 3)
 	for i, v := range library.TallyMode {
 		moneys[i] =

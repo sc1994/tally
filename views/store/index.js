@@ -68,10 +68,10 @@ export default new Vuex.Store({
     }) {
       if (!this.state.currentUser.id) return
       var that = this._vm;
-      that.$axios.post("/message/getcount", {
-        status: 1
-      }).then(response => {
-        commit("changeUnreadNumber", response.data)
+      that.$axios.get("/message/getcount/1").then(response => {
+        if (response.code == 0) {
+          commit("changeUnreadNumber", response.data)
+        }
       });
     }
   }

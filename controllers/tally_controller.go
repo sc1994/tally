@@ -66,8 +66,8 @@ func (c *TallyController) Get() {
 	var request models.TallyRequest
 	c.RequestObject(&request)
 	search := bson.M{
-		"uid":   bson.M{"$in": request.UserIDs},
-		"ttime": bson.M{"$gte": request.BeginTime, "$lte": request.EndTime},
+		"uid": bson.M{"$in": request.UserIDs},
+		// "ttime": bson.M{"$gte": request.BeginTime, "$lte": request.EndTime}, // todo 需要洗数据
 		"money": bson.M{"$gte": request.BeginMoney, "$lte": request.EndMoney},
 	}
 	if len(request.Types) > 0 {

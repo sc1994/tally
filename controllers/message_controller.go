@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"strconv"
 	"tally/models"
 
 	"gopkg.in/mgo.v2/bson"
@@ -53,13 +54,12 @@ func (c *MessageController) Add() {
 
 // GetCount GetCount
 func (c *MessageController) GetCount() {
-	var request models.MessageRequest
-	c.RequestObject(&request)
+	status, _ := strconv.Atoi(c.Ctx.Input.Param(":status"))
 	search := bson.M{
 		"tid":    CurrentUser.ID,
-		"status": request.Status,
+		"status": status,
 	}
-	result := request.GetCount(search)
+	result := new(models.MessageRequest).GetCount(search)
 	c.ResponseJSON(models.BaseResponse{
 		Code: 0,
 		Data: result,

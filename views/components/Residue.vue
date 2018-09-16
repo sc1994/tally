@@ -32,7 +32,9 @@ export default {
         {
           pointer: `\n剩余预算 ${parseFloat(
             val.budget - val.haveBeenUsed
-          ).toFixed(1)} 元\n\n预支 ${val.haveBeenAdvance} 元`,
+          ).toFixed(1)} 元\n\n预支 ${parseFloat(val.haveBeenAdvance).toFixed(
+            1
+          )} 元`,
           value: parseFloat(val.haveBeenUsed).toFixed(1),
           length: 0,
           y: 1
