@@ -132,8 +132,10 @@ func (c *TallyController) Delete() {
 		"uid": CurrentUser.ID,
 	}
 	new(models.TallyRequest).Delete(selector)
+	token := models.RefreshUserRedis(CurrentUser)
 	c.ResponseJSON(models.BaseResponse{
 		Code: 0,
+		Data: map[string]string{"token": token},
 		Msg:  "success",
 	})
 }
