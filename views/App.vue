@@ -47,8 +47,8 @@ export default {
   margin-top: -1px !important;
 }
 
-.mu-divider {
+/* .mu-divider {
   position: fixed;
   left: 0px;
-}
+} */
 </style>
