@@ -7,7 +7,7 @@ import (
 )
 
 // DBName 库名称
-var dbName = "tally"
+var dbName = "tally1"
 
 // MongoConnect 连接字符串
 const mongoConnectString string = "118.24.27.231:27017/"
@@ -27,6 +27,14 @@ func Find(table string, search interface{}, result interface{}) {
 	s, c := connectDB(table)
 	defer s.Clone()
 	c.Find(search).All(result)
+	return
+}
+
+// Pipe Pipe
+func Pipe(table string, search interface{}, result interface{}) {
+	s, c := connectDB(table)
+	defer s.Clone()
+	c.Pipe(search).All(result)
 	return
 }
 

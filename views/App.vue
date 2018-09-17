@@ -46,4 +46,9 @@ export default {
   height: 56px !important;
   margin-top: -1px !important;
 }
+
+.mu-divider {
+  position: fixed;
+  left: 0px;
+}
 </style>

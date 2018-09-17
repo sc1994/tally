@@ -69,6 +69,7 @@ export default {
       if (!this.notNextList) {
         console.log("下拉刷新");
         this.getList(this.pageIndex);
+        this.getTotal();
       }
     },
     getList(index) {
@@ -129,6 +130,40 @@ export default {
           }
         });
     },
+    getTotal() {
+      var uids = [this.currentUser.id];
+      if (this.currentUser.partners != null && this.currentUser.partners) {
+        this.currentUser.partners.forEach(x => {
+          uids.push(x.id);
+        });
+      }
+      this.$axios
+        .post("/tally/total", {
+          uids: uids,
+          btime: new Date(
+            new Date().getFullYear(),
+            new Date().getMonth(),
+            1
+          ).toISOString(),
+          etime: new Date(
+            new Date().getFullYear(),
+            new Date().getMonth() + 1,
+            1
+          ).toISOString(),
+          bMoney: 0,
+          eMoney: 999999,
+          types: [],
+          modes: [],
+          channels: []
+        })
+        .then(response => {
+          document.getElementsByClassName("mu-appbar-title")[0].innerHTML =
+            "账单" +
+            `<span class="appbar-sub-title" >共计${parseFloat(
+              response.data
+            ).toFixed(1)}元</span>`;
+        });
+    },
     getUserHeadImg(id) {
       if (!this.currentUser) return "";
       if (!this.currentUser.partners) return "";
@@ -155,10 +190,17 @@ export default {
     },
     currentUser(val) {
       this.getList(this.pageIndex);
+      this.getTotal();
     }
   }
 };
 </script>
 
 <style>
+.appbar-sub-title {
+  font-size: 14px;
+  line-height: 48px;
+  padding-left: 16px;
+  font-weight: 200;
+}
 </style>

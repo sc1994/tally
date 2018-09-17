@@ -2,7 +2,10 @@ package test
 
 import (
 	"encoding/json"
+	"tally/data"
 	"testing"
+
+	"gopkg.in/mgo.v2/bson"
 )
 
 func Test_AddTally_1(t *testing.T) {
@@ -22,4 +25,25 @@ func Test_GetTally_2(t *testing.T) {
 		t.Fatal("result.Msg != success", string(j))
 	}
 	t.Log(result)
+}
+
+func Test_Sum_1(t *testing.T) {
+	var result []map[string]interface{}
+	/*
+		bson.M{
+			"$match": bson.M{"money": bson.M{"$gte": 1}}},
+		bson.M{
+			"$group": bson.M{"_id": nil, "totals": bson.M{"$sum": "$money"}}}
+	*/
+	data.Pipe("tally",
+		[]bson.M{
+			{"$match": bson.M{"money": bson.M{"$gte": 1}}},
+			{"$group": bson.M{"_id": nil, "totals": bson.M{"$sum": "$money"}}},
+		}, &result)
+	t.Error(result)
+}
+
+type TestTest struct {
+	id    string  `bson:"_id"`
+	Total float64 `bson:"totals"`
 }

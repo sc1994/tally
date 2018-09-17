@@ -97,3 +97,9 @@ func (c *TallyRequest) Set(update map[string]interface{}, selector map[string]in
 func (c *TallyRequest) Delete(selector map[string]interface{}) {
 	data.Remove(tallyTable, selector)
 }
+
+// Pipe Pipe
+func (c *TallyRequest) Pipe(match map[string]interface{}, group map[string]interface{}) (result []map[string]interface{}) {
+	data.Pipe(tallyTable, []bson.M{match, group}, &result)
+	return
+}
