@@ -134,9 +134,16 @@ func (c *TallyController) Total() {
 	search := bson.M{"$match": getSearch(request)}
 	group := bson.M{"$group": bson.M{"_id": nil, "total": bson.M{"$sum": "$money"}}}
 	result := request.Pipe(search, group)
+	if len(result) > 0 {
+		c.ResponseJSON(models.BaseResponse{
+			Code: 0,
+			Data: result[0]["total"],
+			Msg:  "success",
+		})
+	}
 	c.ResponseJSON(models.BaseResponse{
 		Code: 0,
-		Data: result[0]["total"],
+		Data: 0,
 		Msg:  "success",
 	})
 }

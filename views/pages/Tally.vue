@@ -157,11 +157,13 @@ export default {
           channels: []
         })
         .then(response => {
-          document.getElementsByClassName("mu-appbar-title")[0].innerHTML =
-            "账单" +
-            `<span class="appbar-sub-title" >共计${parseFloat(
-              response.data
-            ).toFixed(1)}元</span>`;
+          if (response.data > 0) {
+            document.getElementsByClassName("mu-appbar-title")[0].innerHTML =
+              "账单" +
+              `<span class="appbar-sub-title" >共计${parseFloat(
+                response.data
+              ).toFixed(1)}元</span>`;
+          }
         });
     },
     getUserHeadImg(id) {
