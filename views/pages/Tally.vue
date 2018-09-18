@@ -33,7 +33,7 @@
       </mu-load-more>
     </mu-container>
     <settally :open.sync="openSetTally" :currentItem="currentTally"></settally>
-    <tallysetdrawer :open.sync="openSetDrawer"></tallysetdrawer>
+    <tallysetdrawer :open.sync="openSetDrawer" :searchForm.sync="searchForm"></tallysetdrawer>
     <tallydrawer :open.sync="openDrawer"></tallydrawer>
   </layoutmain>
 </template>
@@ -61,7 +61,13 @@ export default {
       pageIndex: 1,
       notNextList: false,
       openSetTally: false,
-      currentTally: {}
+      currentTally: {},
+      searchForm: {
+        partners: [],
+        channels: [],
+        modes: ["收入", "支出", "预支"],
+        ttime: new Date()
+      }
     };
   },
   methods: {
@@ -69,36 +75,29 @@ export default {
       if (!this.notNextList) {
         console.log("下拉刷新");
         this.getList(this.pageIndex);
-        this.getTotal();
       }
     },
     getList(index) {
       var that = this;
       that.loading = true;
-      var uids = [this.currentUser.id];
-      if (this.currentUser.partners != null && this.currentUser.partners) {
-        this.currentUser.partners.forEach(x => {
-          uids.push(x.id);
-        });
-      }
       that.$axios
         .post("/tally/get", {
-          uids: uids,
+          uids: this.searchForm.partners,
           btime: new Date(
-            new Date().getFullYear(),
-            new Date().getMonth(),
+            new Date(this.searchForm.ttime).getFullYear(),
+            new Date(this.searchForm.ttime).getMonth(),
             1
           ).toISOString(),
           etime: new Date(
-            new Date().getFullYear(),
-            new Date().getMonth() + 1,
+            new Date(this.searchForm.ttime).getFullYear(),
+            new Date(this.searchForm.ttime).getMonth() + 1,
             1
           ).toISOString(),
           bMoney: 0,
           eMoney: 999999,
           types: [],
-          modes: [],
-          channels: [],
+          modes: this.searchForm.modes,
+          channels: this.searchForm.channels,
           pageIndex: that.pageIndex,
           pageSize: 12
         })
@@ -130,42 +129,6 @@ export default {
           }
         });
     },
-    getTotal() {
-      var uids = [this.currentUser.id];
-      if (this.currentUser.partners != null && this.currentUser.partners) {
-        this.currentUser.partners.forEach(x => {
-          uids.push(x.id);
-        });
-      }
-      this.$axios
-        .post("/tally/total", {
-          uids: uids,
-          btime: new Date(
-            new Date().getFullYear(),
-            new Date().getMonth(),
-            1
-          ).toISOString(),
-          etime: new Date(
-            new Date().getFullYear(),
-            new Date().getMonth() + 1,
-            1
-          ).toISOString(),
-          bMoney: 0,
-          eMoney: 999999,
-          types: [],
-          modes: [],
-          channels: []
-        })
-        .then(response => {
-          if (response.data > 0) {
-            document.getElementsByClassName("mu-appbar-title")[0].innerHTML =
-              "账单" +
-              `<span class="appbar-sub-title" >共计${parseFloat(
-                response.data
-              ).toFixed(1)}元</span>`;
-          }
-        });
-    },
     getUserHeadImg(id) {
       if (!this.currentUser) return "";
       if (!this.currentUser.partners) return "";
@@ -189,10 +152,25 @@ export default {
     },
     openSetDrawer(val) {
       if (val) this.openDrawer = !val;
+      else {
+        this.group = [];
+        this.pageIndex = 1;
+        this.notNextList = false;
+        this.getList(this.pageIndex);
+      }
     },
     currentUser(val) {
       this.getList(this.pageIndex);
-      this.getTotal();
+      var that = this;
+      that.searchForm.partners.push(val.id);
+      if (val.partners != null && val.partners) {
+        val.partners.forEach(x => {
+          that.searchForm.partners.push(x.id);
+        });
+      }
+      val.channels.forEach(x => {
+        that.searchForm.channels.push(x.content);
+      });
     }
   }
 };

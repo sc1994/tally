@@ -48,6 +48,7 @@ func (c *TallyController) Add() {
 						Content:   "添加了一笔" + ac.FormatMoney(request.Money) + "元的" + request.Mode,
 						Type:      3,
 						NeedTouch: false,
+						Status:    1,
 					},
 				}
 				m.Add()
