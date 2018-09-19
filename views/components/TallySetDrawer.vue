@@ -5,7 +5,7 @@
         <mu-list-item-action>
           <mu-icon value="monetization_on"></mu-icon>
         </mu-list-item-action>
-        <mu-list-item-title>共计:{{total}} 元</mu-list-item-title>
+        <mu-list-item-title>共计: {{$numberFormat(total)}} 元</mu-list-item-title>
       </mu-list-item>
     </mu-list>
     <mu-divider style="position: fixed;left: 0px;" />
