@@ -39,4 +39,6 @@ func init() {
 	beego.Router("/message/get", &controllers.MessageController{}, "post:Get")                  // 获取消息
 	beego.Router("/message/getcount/:status", &controllers.MessageController{}, "get:GetCount") // 获取消息量
 	beego.Router("/message/set", &controllers.MessageController{}, "post:Set")                  // 更新消息状态
+	//数据备份=================================================================================================
+	beego.Router("/database/copy/:auth", &controllers.DatabaseController{}, "get:Copy") // 数据备份
 }

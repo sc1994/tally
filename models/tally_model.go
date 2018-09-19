@@ -103,3 +103,8 @@ func (c *TallyRequest) Pipe(match map[string]interface{}, group map[string]inter
 	data.Pipe(tallyTable, []bson.M{match, group}, &result)
 	return
 }
+
+// CopyTally Copy
+func CopyTally() {
+	data.CopyTable(tallyTable)
+}

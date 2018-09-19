@@ -64,3 +64,8 @@ func AddConsume(docs ...*Consume) []bson.ObjectId {
 func (c *ConsumeRequest) Delete(selector map[string]interface{}) {
 	data.Remove(consumeTable, selector)
 }
+
+// CopyConsume Copy
+func CopyConsume() {
+	data.CopyTable(consumeTable)
+}
