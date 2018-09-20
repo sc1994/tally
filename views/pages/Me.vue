@@ -296,11 +296,23 @@ export default {
       if (response.result) {
         this.currentUser.headImg = response.path;
         var that = this;
-        that.$axios.post("/user/set", that.currentUser).then(response => {
-          if (response.code == 0) {
-            that.$toast.success("设置成功");
-          }
-        });
+        that.$axios
+          .post("/user/set", {
+            headImg: this.currentUser.headImg,
+            nick: this.currentUser.nick,
+            budget: parseFloat(this.currentUser.budget),
+            fixDate: parseFloat(this.currentUser.fixDate),
+            wechatPay: parseFloat(this.currentUser.wechatPay),
+            aliPay: parseFloat(this.currentUser.aliPay),
+            backCard: parseFloat(this.currentUser.backCard),
+            cash: parseFloat(this.currentUser.cash),
+            utime: this.currentUser.utime
+          })
+          .then(response => {
+            if (response.code == 0) {
+              that.$toast.success("设置成功");
+            }
+          });
       }
     }
   },
