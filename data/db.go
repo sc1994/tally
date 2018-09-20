@@ -1,7 +1,11 @@
 package data
 
 import (
+	"strconv"
 	"tally/library"
+	"time"
+
+	"gopkg.in/mgo.v2/bson"
 
 	mgo "gopkg.in/mgo.v2"
 )
@@ -113,4 +117,23 @@ func Insert(table string, doc interface{}) {
 	if e != nil {
 		panic(e)
 	}
+}
+
+// CopyTable 数据copy
+func CopyTable(table string) {
+	// 旧文档
+	var docs []interface{}
+	Find(table, bson.M{}, &docs)
+	// 新文档
+	s, err := mgo.Dial(mongoConnectString)
+	defer s.Clone()
+	if err != nil {
+		panic(err)
+	}
+	s.SetMode(mgo.Monotonic, true)
+	// 备份
+	newDB := strconv.Itoa(time.Now().YearDay() % 3)
+	c := s.DB(dbName + "Backup" + newDB).C(table)
+	c.RemoveAll(bson.M{})
+	c.Insert(docs...)
 }

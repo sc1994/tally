@@ -65,3 +65,8 @@ func AddChannel(docs ...*Channel) []bson.ObjectId {
 func (c *ChannelRequest) Delete(selector map[string]interface{}) {
 	data.Remove(channelTable, selector)
 }
+
+// CopyChannel Copy
+func CopyChannel() {
+	data.CopyTable(channelTable)
+}

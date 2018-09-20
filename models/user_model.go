@@ -205,3 +205,8 @@ func (u *User) ChangeUserMoney(uid bson.ObjectId, mode string, channel string, m
 	selector := bson.M{"_id": uid}
 	return new(UserRequest).Set(update, selector) != nil
 }
+
+// CopyUser Copy
+func CopyUser() {
+	data.CopyTable(userTable)
+}

@@ -97,3 +97,8 @@ func (c *MessageRequest) Set(update map[string]interface{}, selector map[string]
 func (c *MessageRequest) Delete(selector map[string]interface{}) {
 	data.Remove(messageTable, selector)
 }
+
+// CopyMessage Copy
+func CopyMessage() {
+	data.CopyTable(messageTable)
+}
