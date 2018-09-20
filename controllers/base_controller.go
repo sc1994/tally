@@ -23,6 +23,7 @@ func (c *BaseController) Prepare() {
 	url := c.Ctx.Input.URL()
 	if strings.Contains(url, "/land/signin") ||
 		strings.Contains(url, "/signupcheck/") ||
+		strings.Contains(url, "/database/copy/") ||
 		strings.Contains(url, "/land/signup") {
 		// 屏蔽掉不需要验证的请求
 		beego.Info("跳过登陆验证")
