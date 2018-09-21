@@ -12,10 +12,12 @@ import Toast from "muse-ui-toast";
 import 'muse-ui-loading/dist/muse-ui-loading.css';
 import Loading from 'muse-ui-loading';
 import Linq from 'linq'
+import Helpers from 'muse-ui/lib/Helpers';
 
 Vue.use(MuseUI)
 Vue.use(Toast)
 Vue.use(Loading)
+Vue.use(Helpers)
 
 
 // axios 初始化----------------------------------------------------------
