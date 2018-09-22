@@ -23,7 +23,7 @@
               <mu-list-item-action>
                 <mu-list-item-after-text>{{$format(item.ttime, "hh:mm")}}</mu-list-item-after-text>
                 <mu-button icon color="#2196f3" @click="currentTally=item;openSetTally=true" v-if="item.userID==currentUser.id">
-                  <mu-icon value="edit_location"></mu-icon>
+                  <mu-icon value="rate_review"></mu-icon>
                 </mu-button>
               </mu-list-item-action>
             </mu-list-item>
@@ -65,6 +65,7 @@ export default {
       searchForm: {
         partners: [],
         channels: [],
+        types: [],
         modes: ["收入", "支出", "预支"],
         ttime: new Date()
       }
@@ -80,6 +81,10 @@ export default {
     getList(index) {
       var that = this;
       that.loading = true;
+      var types = this.$linq(this.searchForm.consumes)
+        .where(x => x.selected)
+        .select(x => x.content)
+        .toArray();
       that.$axios
         .post("/tally/get", {
           uids: this.searchForm.partners,
@@ -95,7 +100,7 @@ export default {
           ).toISOString(),
           bMoney: 0,
           eMoney: 999999,
-          types: [],
+          types: types,
           modes: this.searchForm.modes,
           channels: this.searchForm.channels,
           pageIndex: that.pageIndex,

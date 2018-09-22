@@ -3,9 +3,13 @@
     <mu-list>
       <mu-list-item>
         <mu-list-item-action>
-          <mu-icon value="monetization_on"></mu-icon>
+          <mu-avatar>
+            总
+          </mu-avatar>
         </mu-list-item-action>
-        <mu-list-item-title>共计: {{$numberFormat(total)}} 元</mu-list-item-title>
+        <mu-list-item-title>
+          {{$numberFormat(total)}} 元
+        </mu-list-item-title>
       </mu-list-item>
     </mu-list>
     <mu-divider/>
@@ -21,7 +25,7 @@
         <mu-checkbox v-model="searchForm.modes" value="支出" label="支出"></mu-checkbox>
         <mu-checkbox v-model="searchForm.modes" value="预支" label="预支"></mu-checkbox>
       </mu-form-item>
-      <mu-form-item prop="ttime" label="日期">
+      <mu-form-item prop="ttime" icon="date_range">
         <mu-date-input v-model="searchForm.ttime" type="month"></mu-date-input>
       </mu-form-item>
       <mu-form-item prop="consumes" label="类型">
@@ -30,7 +34,6 @@
             <mu-avatar :color="item.selected?item.color:'#424242'" :size="23">{{item.count}}</mu-avatar>{{item.content}}
           </mu-chip>
         </template>
-
       </mu-form-item>
     </mu-form>
     <div style="text-align: right;">
@@ -62,42 +65,42 @@ export default {
       copyConsumes: [],
       thatOpen: false,
       colors: [
-        "#43a047",
-        "#689f38",
-        "#558b2f",
-        "#827717",
-        "#33691e",
-        "#0097a7",
-        "#00897b",
-        "#009688",
-        "#00695c",
-        "#0288d1",
-        "#0277bd",
-        "#01579b",
-        "#651fff",
-        "#7e57c2",
-        "#5e35b1",
-        "#536dfe",
-        "#304ffe",
-        "#2962ff",
-        "#448aff",
-        "#1976d2",
-        "#e040fb",
-        "#7b1fa2",
-        "#ab47bc",
-        "#ec407a",
-        "#ff4081",
         "#f44336",
-        "#ff1744",
-        "#ec407a",
         "#ef5350",
-        "#ab47bc"
+        "#d32f2f",
+        "#ff5252",
+        "#e91e63",
+        "#f06292",
+        "#ff4081",
+        "#9c27b0",
+        "#ba68c8",
+        "#aa00ff",
+        "#2196f3",
+        "#0d47a1",
+        "#3f51b5",
+        "#304ffe",
+        "#1a237e",
+        "#2962ff",
+        "#673ab7",
+        "#6200ea",
+        "#0277bd",
+        "#0091ea",
+        "#0097a7",
+        "#009688",
+        "#009688",
+        "#ff5722",
+        "#e64a19",
+        "#dd2c00"
       ]
     };
   },
   methods: {
     getTotal() {
       var that = this;
+      var types = this.$linq(this.copyConsumes)
+        .where(x => x.selected)
+        .select(x => x.content)
+        .toArray();
       this.$axios
         .post("/tally/total", {
           uids: this.searchForm.partners,
@@ -113,17 +116,17 @@ export default {
           ).toISOString(),
           bMoney: 0,
           eMoney: 999999,
-          types: [],
+          types: types,
           modes: this.searchForm.modes
         })
         .then(response => {
-          if (response.data > 0) {
+          if (response.code == 0) {
             that.total = parseFloat(response.data).toFixed(1);
           }
         });
     },
     search() {
-      this.$emit("update:open", false);
+      this.thatOpen = false;
     },
     randomColor() {
       var i = Math.floor(Math.random() * this.colors.length);
@@ -134,8 +137,14 @@ export default {
       this.copyConsumes = this.$linq(this.copyConsumes)
         .orderByDescending(x => x.selected)
         .thenByDescending(x => x.count)
-        .thenByDescending(x => new Date(x.utime))
+        .thenByDescending(x => new Date(x.ctime)) //todo utime
         .toArray();
+    },
+    clearSearch() {
+      this.searchForm.partners = [];
+      this.searchForm.modes = [];
+      this.copyConsumes.forEach(x => (x.selected = false));
+      this.total = 0;
     }
   },
   watch: {
@@ -147,17 +156,31 @@ export default {
     },
     thatOpen(val) {
       if (!val) {
+        this.searchForm.consumes = this.copyConsumes;
         this.$emit("update:open", false);
       }
     },
     currentUser(val) {
       if (!val) return;
+
       this.copyConsumes = JSON.parse(JSON.stringify(val.consumes));
       var that = this;
       this.copyConsumes.forEach(x => {
         x.color = that.randomColor();
         x.selected = true;
       });
+    },
+    "searchForm.partners.length"() {
+      this.getTotal();
+    },
+    "searchForm.modes.length"() {
+      this.getTotal();
+    },
+    "searchForm.ttime"() {
+      this.getTotal();
+    },
+    "copyConsumes.length"() {
+      this.getTotal();
     }
   },
   computed: {

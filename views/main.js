@@ -79,7 +79,7 @@ Vue.prototype.$format = (date, fmt) => { // 时间格式化
 Vue.prototype.$numberFormat = (number) => {
   var dec_point = "."
   var thousands_sep = ","
-  var decimals = 2;
+  var decimals = 1;
   number = (number + '').replace(/[^0-9+-Ee.]/g, '');
   var n = !isFinite(+number) ? 0 : +number,
     prec = !isFinite(+decimals) ? 0 : Math.abs(decimals),

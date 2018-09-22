@@ -78,11 +78,7 @@ func (u *UserRequest) GetResponse(search map[string]interface{}) (result UserRes
 	result.User = user
 	searchP := bson.M{"_id": bson.M{"$in": user.Partners}}
 	result.Partners = u.Get(searchP)
-	c := new(ConsumeRequest).Get(bson.M{"uid": result.User.ID})
-	// linq.From(c).OrderByDescending(func(x interface{}) interface{}{
-	// 	return x.(Consume).Count
-	// }). // todo
-	result.Consumes = c
+	result.Consumes = new(ConsumeRequest).Get(bson.M{"uid": result.User.ID})
 	result.Channels = new(ChannelRequest).Get(bson.M{"uid": result.User.ID})
 	tallys := new(TallyRequest).Get(bson.M{"uid": user.ID}) // todo 当前月的限制
 	moneys := make([]float64, 3)

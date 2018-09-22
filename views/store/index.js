@@ -29,6 +29,10 @@ export default new Vuex.Store({
       that.$axios.get("/user/get")
         .then(response => {
           if (response.code == 0) {
+            response.data.consumes = that.$linq(response.data.consumes)
+              .orderByDescending(x => x.count)
+              .thenByDescending(x => new Date(x.ctime)) // todo utime
+              .toArray();
             commit("changeUser", response.data)
             vuex.dispatch("initUnreadNumber");
           } else {
