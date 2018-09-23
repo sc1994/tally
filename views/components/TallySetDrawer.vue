@@ -37,6 +37,10 @@
       </mu-form-item>
     </mu-form>
     <div style="text-align: right;">
+      <mu-button @click="clearSearch()">
+        清空
+        <mu-icon right value="restore"></mu-icon>
+      </mu-button>
       <mu-button color="primary" @click="search()">
         查询
         <mu-icon right value="search"></mu-icon>
@@ -134,15 +138,15 @@ export default {
     },
     selected(item) {
       item.selected = !item.selected;
+      this.getTotal();
       this.copyConsumes = this.$linq(this.copyConsumes)
         .orderByDescending(x => x.selected)
         .thenByDescending(x => x.count)
+        .thenByDescending(x => new Date(x.utime))
         .thenByDescending(x => new Date(x.ctime)) //todo utime
         .toArray();
     },
     clearSearch() {
-      this.searchForm.partners = [];
-      this.searchForm.modes = [];
       this.copyConsumes.forEach(x => (x.selected = false));
       this.total = 0;
     }
@@ -162,7 +166,6 @@ export default {
     },
     currentUser(val) {
       if (!val) return;
-
       this.copyConsumes = JSON.parse(JSON.stringify(val.consumes));
       var that = this;
       this.copyConsumes.forEach(x => {
@@ -177,9 +180,6 @@ export default {
       this.getTotal();
     },
     "searchForm.ttime"() {
-      this.getTotal();
-    },
-    "copyConsumes.length"() {
       this.getTotal();
     }
   },

@@ -97,6 +97,9 @@ export default {
     },
     initLate() {
       var that = this;
+      var types = this.$linq(this.currentUser.consumes)
+        .select(x => x.content)
+        .toArray();
       that.$axios
         .post("/tally/get", {
           uids: [this.currentUser.id],
@@ -112,7 +115,7 @@ export default {
           ).toISOString(),
           bMoney: 0,
           eMoney: 999999,
-          types: [],
+          types: types,
           modes: [],
           channels: [],
           pageIndex: 1,

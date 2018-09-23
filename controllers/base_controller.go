@@ -35,7 +35,7 @@ func (c *BaseController) Prepare() {
 				Msg:  "token为空",
 			})
 		}
-		j, r := library.GetRedis(token)
+		j, r := library.GetRedis("user:" + token)
 		if !r {
 			c.ResponseJSON(models.BaseResponse{
 				Code: 1,

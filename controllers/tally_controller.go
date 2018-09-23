@@ -24,11 +24,11 @@ func (c *TallyController) Add() {
 	if len(id.Hex()) < 1 {
 		code = 1
 	} else {
-		CurrentUser.User.ChangeUserMoney(CurrentUser.ID, request.Mode, request.Channel, request.Money)
+		go CurrentUser.User.ChangeUserMoney(CurrentUser.ID, request.Mode, request.Channel, request.Money)
 		consumes := new(models.ConsumeRequest).Get(bson.M{"uid": CurrentUser.ID, "content": request.Type})
 		if len(consumes) > 0 {
 			c := consumes[0]
-			new(models.ConsumeRequest).Set(bson.M{"$inc": bson.M{"count": 1}}, bson.M{"_id": c.ID})
+			go new(models.ConsumeRequest).Set(bson.M{"$inc": bson.M{"count": 1}}, bson.M{"_id": c.ID})
 		} else {
 			models.AddConsume(&models.Consume{
 				Content: request.Type,

@@ -31,7 +31,8 @@ export default new Vuex.Store({
           if (response.code == 0) {
             response.data.consumes = that.$linq(response.data.consumes)
               .orderByDescending(x => x.count)
-              .thenByDescending(x => new Date(x.ctime)) // todo utime
+              .thenByDescending(x => new Date(x.utime))
+              .thenByDescending(x => new Date(x.ctime))
               .toArray();
             commit("changeUser", response.data)
             vuex.dispatch("initUnreadNumber");

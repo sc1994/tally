@@ -18,7 +18,7 @@ type Consume struct {
 	UpdateTime time.Time     `json:"utime" bson:"utime"`     // UpdateTime 更新时间
 	UserID     bson.ObjectId `json:"uid" bson:"uid"`         // 关联用户id
 	Content    string        `json:"content" bson:"content"` // 内容
-	Count      int64         `json:"count" bson:"count"`     // 使用次数
+	Count      int           `json:"count" bson:"count"`     // 使用次数
 	Default    []string      `json:"default" bson:"default"` // 默认消费的模式
 }
 

@@ -81,10 +81,18 @@ export default {
     getList(index) {
       var that = this;
       that.loading = true;
-      var types = this.$linq(this.searchForm.consumes)
-        .where(x => x.selected)
-        .select(x => x.content)
-        .toArray();
+      var types = [];
+      if (!this.searchForm.consumes) {
+        types = this.$linq(this.currentUser.consumes)
+          .select(x => x.content)
+          .toArray();
+      } else {
+        types = this.$linq(this.searchForm.consumes)
+          .where(x => x.selected)
+          .select(x => x.content)
+          .toArray();
+      }
+
       that.$axios
         .post("/tally/get", {
           uids: this.searchForm.partners,
@@ -176,16 +184,11 @@ export default {
       val.channels.forEach(x => {
         that.searchForm.channels.push(x.content);
       });
+      this.searchForm.consumes = JSON.parse(JSON.stringify(val.consumes));
     }
   }
 };
 </script>
 
 <style>
-.appbar-sub-title {
-  font-size: 14px;
-  line-height: 48px;
-  padding-left: 16px;
-  font-weight: 200;
-}
 </style>

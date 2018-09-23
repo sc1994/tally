@@ -21,8 +21,8 @@ Vue.use(Helpers)
 
 
 // axios 初始化----------------------------------------------------------
-// Axios.defaults.baseURL = 'http://localhost';
-Axios.defaults.baseURL = 'http://118.24.27.231:8888';
+Axios.defaults.baseURL = 'http://localhost';
+// Axios.defaults.baseURL = 'http://118.24.27.231:8888';
 
 // 添加请求拦截器
 Axios.interceptors.request.use(function (config) {
