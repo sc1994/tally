@@ -68,6 +68,7 @@ export default {
       total: "0",
       copyConsumes: [],
       thatOpen: false
+      // maxHeight: document.body.clientHeight - 55 - 56
     };
   },
   methods: {
@@ -111,7 +112,6 @@ export default {
     selected(item) {
       item.selected = !item.selected;
       this.getTotal();
-      this.getTypes();
       this.copyConsumes = this.$linq(this.copyConsumes)
         .orderByDescending(x => x.selected)
         .thenByDescending(x => x.count)
@@ -127,7 +127,7 @@ export default {
       var that = this;
       this.$axios
         .post("/tally/gettypes", {
-          moeds: this.searchForm.modes,
+          modes: this.searchForm.modes,
           uids: this.searchForm.partners,
           btime: new Date(
             new Date(this.searchForm.ttime).getFullYear(),
@@ -141,20 +141,31 @@ export default {
           ).toISOString()
         })
         .then(response => {
-          debugger;
-          // this.copyConsumes = JSON.parse(JSON.stringify(val.consumes));
-          // this.copyConsumes.forEach(x => {
-          //   x.color = that.randomColor();
-          //   x.selected = true;
-          // });
+          if (response.code == 0) {
+            that.copyConsumes = that
+              .$linq(response.data)
+              .select(x => {
+                return {
+                  color: that.randomColor(),
+                  selected: true,
+                  content: x._id,
+                  count: x.count,
+                  ctime: x.ctime,
+                  ttime: x.ttime
+                };
+              })
+              .orderByDescending(x => x.selected)
+              .thenByDescending(x => x.count)
+              .thenByDescending(x => new Date(x.utime))
+              .thenByDescending(x => new Date(x.ctime))
+              .toArray();
+          }
         });
     }
   },
   watch: {
     open(val) {
       if (val) {
-        this.getTotal();
-        this.getTypes();
         this.thatOpen = true;
       }
     },

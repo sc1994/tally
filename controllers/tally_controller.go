@@ -152,6 +152,7 @@ func (c *TallyController) Total() {
 // GetTypes 获取消费类型
 func (c *TallyController) GetTypes() {
 	var request models.TallyRequest
+	c.RequestObject(&request)
 	types := request.Pipe(
 		bson.M{
 			"$match": bson.M{
@@ -163,16 +164,14 @@ func (c *TallyController) GetTypes() {
 		bson.M{
 			"$group": bson.M{
 				"_id":   "$type",
-				"type":  "$type",
 				"count": bson.M{"$sum": 1},
 				"utime": bson.M{"$max": "$utime"},
 				"ctime": bson.M{"$max": "$ctime"},
 			},
 		})
-	result := make([]struct{}, 0, len(types))
 	c.ResponseJSON(models.BaseResponse{
 		Code: 0,
-		Data: result,
+		Data: types,
 		Msg:  "success",
 	})
 }
