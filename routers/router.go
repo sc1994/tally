@@ -29,11 +29,12 @@ func init() {
 	beego.Router("/user/search/:name", &controllers.UserController{}, "get:Search") // 用户搜索
 	beego.Router("/user/set", &controllers.UserController{}, "post:Set")            // 设置
 	//账单=====================================================================================================
-	beego.Router("/tally/add", &controllers.TallyController{}, "post:Add")          // 添加账单
-	beego.Router("/tally/get", &controllers.TallyController{}, "post:Get")          // 获取基本账单
-	beego.Router("/tally/set", &controllers.TallyController{}, "post:Set")          // 更新账单
-	beego.Router("/tally/delete/:id", &controllers.TallyController{}, "get:Delete") // 删除账单
-	beego.Router("/tally/total", &controllers.TallyController{}, "post:Total")
+	beego.Router("/tally/add", &controllers.TallyController{}, "post:Add")           // 添加账单
+	beego.Router("/tally/get", &controllers.TallyController{}, "post:Get")           // 获取基本账单
+	beego.Router("/tally/set", &controllers.TallyController{}, "post:Set")           // 更新账单
+	beego.Router("/tally/delete/:id", &controllers.TallyController{}, "get:Delete")  // 删除账单
+	beego.Router("/tally/total", &controllers.TallyController{}, "post:Total")       // 总金额统计
+	beego.Router("/tally/gettypes", &controllers.TallyController{}, "post:GetTypes") // 账单类型获取
 	//消息=====================================================================================================
 	beego.Router("/message/add", &controllers.MessageController{}, "post:Add")                  // 发送消息
 	beego.Router("/message/get", &controllers.MessageController{}, "post:Get")                  // 获取消息

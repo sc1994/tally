@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"reflect"
+	"time"
 )
 
 // Md5String 获取字符串的MD5
@@ -60,4 +61,21 @@ func HTTPRequest(url string, jsonStr interface{}, token string) string {
 	defer resp.Body.Close()
 	body, _ := ioutil.ReadAll(resp.Body)
 	return string(body[:])
+}
+
+// GetFirstDayForMonth 获取当前月的第一天
+func GetFirstDayForMonth(month time.Month) time.Time {
+	now := time.Now()
+	currentYear, _, _ := now.Date()
+	currentLocation := now.Location()
+	return time.Date(currentYear, month, 1, 0, 0, 0, 0, currentLocation)
+}
+
+// GetLastDayForMonth 获取当前月的最后一天
+func GetLastDayForMonth(month time.Month) time.Time {
+	now := time.Now()
+	currentYear, _, _ := now.Date()
+	currentLocation := now.Location()
+	firstOfMonth := time.Date(currentYear, month, 1, 0, 0, 0, 0, currentLocation)
+	return firstOfMonth.AddDate(0, 1, -1)
 }

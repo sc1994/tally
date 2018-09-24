@@ -149,10 +149,38 @@ func (c *TallyController) Total() {
 	})
 }
 
+// GetTypes 获取消费类型
+func (c *TallyController) GetTypes() {
+	var request models.TallyRequest
+	types := request.Pipe(
+		bson.M{
+			"$match": bson.M{
+				"uid":   bson.M{"$in": request.UserIDs},
+				"mode":  bson.M{"$in": request.Modes},
+				"ttime": bson.M{"$gte": request.BeginTime, "$lte": request.EndTime},
+			},
+		},
+		bson.M{
+			"$group": bson.M{
+				"_id":   "$type",
+				"type":  "$type",
+				"count": bson.M{"$sum": 1},
+				"utime": bson.M{"$max": "$utime"},
+				"ctime": bson.M{"$max": "$ctime"},
+			},
+		})
+	result := make([]struct{}, 0, len(types))
+	c.ResponseJSON(models.BaseResponse{
+		Code: 0,
+		Data: result,
+		Msg:  "success",
+	})
+}
+
 func getSearch(request models.TallyRequest) map[string]interface{} {
 	search := bson.M{
 		"uid":   bson.M{"$in": request.UserIDs},
-		"ttime": bson.M{"$gte": request.BeginTime, "$lte": request.EndTime}, // todo 需要洗数据
+		"ttime": bson.M{"$gte": request.BeginTime, "$lte": request.EndTime},
 		"money": bson.M{"$gte": request.BeginMoney, "$lte": request.EndMoney},
 		"type":  bson.M{"$in": request.Types},
 	}

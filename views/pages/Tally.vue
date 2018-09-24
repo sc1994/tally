@@ -22,7 +22,7 @@
               </mu-list-item-content>
               <mu-list-item-action>
                 <mu-list-item-after-text>{{$format(item.ttime, "hh:mm")}}</mu-list-item-after-text>
-                <mu-button icon color="#2196f3" @click="currentTally=item;openSetTally=true" v-if="item.userID==currentUser.id">
+                <mu-button icon color="#2196f3" @click="currentTally=item;openSetTally=true" v-if="item.uid==currentUser.id">
                   <mu-icon value="rate_review"></mu-icon>
                 </mu-button>
               </mu-list-item-action>
@@ -185,6 +185,7 @@ export default {
         that.searchForm.channels.push(x.content);
       });
       this.searchForm.consumes = JSON.parse(JSON.stringify(val.consumes));
+      this.searchForm.consumes.forEach(x => (x.selected = true)); // 默认选中
     }
   }
 };

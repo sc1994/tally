@@ -17,7 +17,7 @@ type Tally struct {
 	CreateTime time.Time     `json:"ctime" bson:"ctime"`
 	UpdateTime time.Time     `json:"utime" bson:"utime"`
 	TallyTime  time.Time     `json:"ttime" bson:"ttime"` // 消费时间 (新加字段)
-	UserID     bson.ObjectId `json:"userID" bson:"uid"`  //todo userID ==> uid
+	UserID     bson.ObjectId `json:"uid" bson:"uid"`
 	Money      float32       `json:"money" bson:"money"`
 	Type       string        `json:"type" bson:"type"`       //消费类型
 	Mode       string        `json:"mode" bson:"mode"`       // 消费模式(预支,收入等)

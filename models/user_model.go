@@ -77,42 +77,17 @@ func (u *UserRequest) GetResponse(search map[string]interface{}) (result UserRes
 	user := users[0]
 	result.User = user
 	result.Partners = u.Get(bson.M{"_id": bson.M{"$in": user.Partners}})
-	ids := user.Partners[:]
-	ids = append(ids, result.ID)
-	consumes := new(TallyRequest).Pipe(
-		bson.M{
-			"$match": bson.M{
-				"uid": bson.M{"$in": ids},
-			},
-		},
-		bson.M{
-			"$group": bson.M{
-				"_id":   "$type",
-				"count": bson.M{"$sum": 1},
-				"utime": bson.M{"$max": "$utime"},
-				"ctime": bson.M{"$max": "$ctime"},
-			},
-		})
-	cs := make([]*Consume, 0, len(consumes))
-	for _, v := range consumes {
-		utime := time.Time{}
-		if v["utime"] != nil {
-			utime = v["utime"].(time.Time)
-		}
-		ctime := time.Time{}
-		if v["ctime"] != nil {
-			ctime = v["ctime"].(time.Time)
-		}
-		cs = append(cs, &Consume{
-			Content:    v["_id"].(string),
-			Count:      v["count"].(int),
-			UpdateTime: utime,
-			CreateTime: ctime,
-		})
-	}
-	result.Consumes = cs
+	result.Consumes = new(ConsumeRequest).Get(bson.M{"uid": result.User.ID})
 	result.Channels = new(ChannelRequest).Get(bson.M{"uid": result.User.ID})
-	tallys := new(TallyRequest).Get(bson.M{"uid": user.ID}) // todo 当前月的限制
+	month := time.Now().Month()
+	tallys := new(TallyRequest).Get(
+		bson.M{
+			"uid": user.ID,
+			"ttime": bson.M{
+				"$gte": library.GetFirstDayForMonth(month),
+				"$lte": library.GetLastDayForMonth(month),
+			},
+		})
 	moneys := make([]float64, 3)
 	for i, v := range library.TallyMode {
 		moneys[i] =
@@ -165,7 +140,7 @@ func GetUserToken(id bson.ObjectId, name string, pwd string) string {
 func RefreshUserRedis(user UserResponse) string {
 	token := GetUserToken(user.ID, user.Name, user.Password)
 	flag := string([]byte(token)[:8])
-	keys := library.GetRedisKeys(flag + "*")
+	keys := library.GetRedisKeys("user:" + flag + "*")
 	for _, k := range keys {
 		library.DelRedis(k)
 	}

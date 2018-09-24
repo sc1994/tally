@@ -67,35 +67,7 @@ export default {
     return {
       total: "0",
       copyConsumes: [],
-      thatOpen: false,
-      colors: [
-        "#f44336",
-        "#ef5350",
-        "#d32f2f",
-        "#ff5252",
-        "#e91e63",
-        "#f06292",
-        "#ff4081",
-        "#9c27b0",
-        "#ba68c8",
-        "#aa00ff",
-        "#2196f3",
-        "#0d47a1",
-        "#3f51b5",
-        "#304ffe",
-        "#1a237e",
-        "#2962ff",
-        "#673ab7",
-        "#6200ea",
-        "#0277bd",
-        "#0091ea",
-        "#0097a7",
-        "#009688",
-        "#009688",
-        "#ff5722",
-        "#e64a19",
-        "#dd2c00"
-      ]
+      thatOpen: false
     };
   },
   methods: {
@@ -133,12 +105,13 @@ export default {
       this.thatOpen = false;
     },
     randomColor() {
-      var i = Math.floor(Math.random() * this.colors.length);
-      return this.colors[i];
+      // var i = Math.floor(Math.random() * this.colors.length);
+      return "#5c6bc0";
     },
     selected(item) {
       item.selected = !item.selected;
       this.getTotal();
+      this.getTypes();
       this.copyConsumes = this.$linq(this.copyConsumes)
         .orderByDescending(x => x.selected)
         .thenByDescending(x => x.count)
@@ -149,12 +122,39 @@ export default {
     clearSearch() {
       this.copyConsumes.forEach(x => (x.selected = false));
       this.total = 0;
+    },
+    getTypes() {
+      var that = this;
+      this.$axios
+        .post("/tally/gettypes", {
+          moeds: this.searchForm.modes,
+          uids: this.searchForm.partners,
+          btime: new Date(
+            new Date(this.searchForm.ttime).getFullYear(),
+            new Date(this.searchForm.ttime).getMonth(),
+            1
+          ).toISOString(),
+          etime: new Date(
+            new Date(this.searchForm.ttime).getFullYear(),
+            new Date(this.searchForm.ttime).getMonth() + 1,
+            1
+          ).toISOString()
+        })
+        .then(response => {
+          debugger;
+          // this.copyConsumes = JSON.parse(JSON.stringify(val.consumes));
+          // this.copyConsumes.forEach(x => {
+          //   x.color = that.randomColor();
+          //   x.selected = true;
+          // });
+        });
     }
   },
   watch: {
     open(val) {
       if (val) {
         this.getTotal();
+        this.getTypes();
         this.thatOpen = true;
       }
     },
@@ -166,21 +166,19 @@ export default {
     },
     currentUser(val) {
       if (!val) return;
-      this.copyConsumes = JSON.parse(JSON.stringify(val.consumes));
-      var that = this;
-      this.copyConsumes.forEach(x => {
-        x.color = that.randomColor();
-        x.selected = true;
-      });
+      this.getTypes();
     },
     "searchForm.partners.length"() {
       this.getTotal();
+      this.getTypes();
     },
     "searchForm.modes.length"() {
       this.getTotal();
+      this.getTypes();
     },
     "searchForm.ttime"() {
       this.getTotal();
+      this.getTypes();
     }
   },
   computed: {
