@@ -21,4 +21,8 @@ func (c *DatabaseController) Copy() {
 	models.CopyConsume()
 	models.CopyMessage()
 	models.CopyTally()
+	c.ResponseJSON(models.BaseResponse{
+		Code: 0,
+		Msg:  "success",
+	})
 }

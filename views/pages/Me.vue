@@ -97,7 +97,7 @@
     <mu-list toggle-nested>
       <mu-sub-header>钱钱钱</mu-sub-header>
       <mu-divider></mu-divider>
-      <mu-list-item button :ripple="false" nested :open="open === 'money'" @toggle-nested="open = arguments[0] ? 'money' : ''">
+      <!-- <mu-list-item button :ripple="false" nested :open="open === 'money'" @toggle-nested="open = arguments[0] ? 'money' : ''">
         <mu-list-item-title>余额</mu-list-item-title>
         <mu-list-item-action>
           <mu-icon class="toggle-icon" size="24" value="keyboard_arrow_up" v-if="open === 'money'"></mu-icon>
@@ -137,13 +137,13 @@
         </mu-list-item>
         <mu-list-item button :ripple="true" slot="nested" @click="openBaseInfoSet('fixDate')">
           <mu-list-item-title>
-            定期 :
+            定期
           </mu-list-item-title>
           <mu-list-item-action>
             <span class="span-money">{{$numberFormat(currentUser.fixDate)}}</span>
           </mu-list-item-action>
         </mu-list-item>
-      </mu-list-item>
+      </mu-list-item> -->
       <mu-list-item button :ripple="false" nested :open="open === 'advance'" @toggle-nested="open = arguments[0] ? 'advance' : ''">
         <mu-list-item-title>预支</mu-list-item-title>
         <mu-list-item-action>
