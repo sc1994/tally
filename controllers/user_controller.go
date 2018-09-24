@@ -49,15 +49,15 @@ func (u *UserController) Set() {
 	u.RequestObject(&request)
 	updater := bson.M{
 		"$set": bson.M{
-			"himg":      request.HeadImg,
-			"nick":      request.NickName,
-			"budget":    request.Budget,
-			"fixDate":   request.FixDate,
-			"wechatPay": request.WechatPay,
-			"aliPay":    request.Alipay,
-			"backCard":  request.BackCard,
-			"cash":      request.Cash,
-			"utime":     request.UpdateTime,
+			"himg":   request.HeadImg,
+			"nick":   request.NickName,
+			"budget": request.Budget,
+			// "fixDate":   request.FixDate,
+			// "wechatPay": request.WechatPay,
+			// "aliPay":    request.Alipay,
+			// "backCard":  request.BackCard,
+			// "cash":      request.Cash,
+			"utime": request.UpdateTime,
 		},
 	}
 	request.Set(updater, bson.M{"_id": CurrentUser.ID})

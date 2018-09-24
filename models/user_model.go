@@ -16,24 +16,24 @@ import (
 
 // User 用户信息实体
 type User struct {
-	ID         bson.ObjectId   `json:"id" bson:"_id"`                // ID
-	CreateTime time.Time       `json:"ctime" bson:"ctime"`           // CreateTime 创建时间
-	UpdateTime time.Time       `json:"utime" bson:"utime"`           // UpdateTime 更新时间
-	Password   string          `json:"pwd" bson:"pwd"`               // Password
-	Name       string          `json:"name" bson:"name"`             // Name
-	NickName   string          `json:"nick" bson:"nick"`             // NickName 昵称
-	Intro      string          `json:"intro" bson:"intro"`           // 简介
-	HeadImg    string          `json:"headImg" bson:"himg"`          // HeadImg 头像
-	Budget     float32         `json:"budget" bson:"budget"`         // 月预算
-	FixDate    float32         `json:"fixDate" bson:"fixDate"`       // 定期
-	WechatPay  float32         `json:"wechatPay" bson:"wechatPay"`   // 微信
-	Alipay     float32         `json:"aliPay" bson:"aliPay"`         // 支付宝
-	BackCard   float32         `json:"backCard" bson:"backCard"`     // 银行卡
-	CreditCard float32         `json:"creditCard" bson:"creditCard"` // 信用卡
-	Cash       float32         `json:"cash" bson:"cash"`             // 现金
-	AntCheck   float32         `json:"antCheck" bson:"antCheck"`     // 花呗
-	WhiteBar   float32         `json:"whiteBar" bson:"whiteBar"`     // 白条
-	Partners   []bson.ObjectId `json:"partners" bson:"partners"`     // 小伙伴
+	ID         bson.ObjectId `json:"id" bson:"_id"`        // ID
+	CreateTime time.Time     `json:"ctime" bson:"ctime"`   // CreateTime 创建时间
+	UpdateTime time.Time     `json:"utime" bson:"utime"`   // UpdateTime 更新时间
+	Password   string        `json:"pwd" bson:"pwd"`       // Password
+	Name       string        `json:"name" bson:"name"`     // Name
+	NickName   string        `json:"nick" bson:"nick"`     // NickName 昵称
+	Intro      string        `json:"intro" bson:"intro"`   // 简介
+	HeadImg    string        `json:"headImg" bson:"himg"`  // HeadImg 头像
+	Budget     float32       `json:"budget" bson:"budget"` // 月预算
+	// FixDate    float32         `json:"fixDate" bson:"fixDate"`       // 定期
+	// WechatPay  float32         `json:"wechatPay" bson:"wechatPay"`   // 微信
+	// Alipay     float32         `json:"aliPay" bson:"aliPay"`         // 支付宝
+	// BackCard   float32         `json:"backCard" bson:"backCard"`     // 银行卡
+	// CreditCard float32         `json:"creditCard" bson:"creditCard"` // 信用卡
+	// Cash       float32         `json:"cash" bson:"cash"`             // 现金
+	// AntCheck   float32         `json:"antCheck" bson:"antCheck"`     // 花呗
+	// WhiteBar   float32         `json:"whiteBar" bson:"whiteBar"`     // 白条
+	Partners []bson.ObjectId `json:"partners" bson:"partners"` // 小伙伴
 }
 
 // UserRequest 用户信息请求参数
@@ -154,64 +154,64 @@ func RefreshUserRedis(user UserResponse) string {
 	return token
 }
 
-// ChangeUserMoney 变更用户金额
-func (u *User) ChangeUserMoney(uid bson.ObjectId, mode string, channel string, money float32) bool {
-	var updateField string
-	var updateValue float32
-	switch channel {
-	case "支付宝":
-		if mode == "收入" {
-			u.Alipay += money
-			updateValue = money
-		} else if mode == "支出" {
-			u.Alipay -= money
-			updateValue = -money
-		}
-		updateField = "aliPay"
-	case "微信":
-		if mode == "收入" {
-			u.WechatPay += money
-			updateValue = money
-		} else if mode == "支出" {
-			u.WechatPay -= money
-			updateValue = -money
-		}
-		updateField = "wechatPay"
-	case "银行卡":
-		if mode == "收入" {
-			u.BackCard += money
-			updateValue = money
-		} else if mode == "支出" {
-			u.BackCard -= money
-			updateValue = -money
-		}
-		updateField = "backCard"
-	case "现金":
-		if mode == "收入" {
-			u.Cash += money
-			updateValue = money
-		} else if mode == "支出" {
-			u.Cash -= money
-			updateValue = -money
-		}
-		updateField = "cash"
-	case "信用卡":
-		u.CreditCard -= money // 信用卡 只有支出,还款在job中进行
-		updateValue = -money
-		updateField = "creditCard"
-	case "花呗":
-		u.AntCheck -= money
-		updateValue = -money
-		updateField = "antCheck"
-	case "白条":
-		u.WhiteBar -= money
-		updateValue = -money
-		updateField = "whiteBar"
-	}
-	update := bson.M{"$inc": bson.M{updateField: updateValue}}
-	selector := bson.M{"_id": uid}
-	return new(UserRequest).Set(update, selector) != nil
-}
+// // ChangeUserMoney 变更用户金额
+// func (u *User) ChangeUserMoney(uid bson.ObjectId, mode string, channel string, money float32) bool {
+// 	var updateField string
+// 	var updateValue float32
+// 	switch channel {
+// 	case "支付宝":
+// 		if mode == "收入" {
+// 			u.Alipay += money
+// 			updateValue = money
+// 		} else if mode == "支出" {
+// 			u.Alipay -= money
+// 			updateValue = -money
+// 		}
+// 		updateField = "aliPay"
+// 	case "微信":
+// 		if mode == "收入" {
+// 			u.WechatPay += money
+// 			updateValue = money
+// 		} else if mode == "支出" {
+// 			u.WechatPay -= money
+// 			updateValue = -money
+// 		}
+// 		updateField = "wechatPay"
+// 	case "银行卡":
+// 		if mode == "收入" {
+// 			u.BackCard += money
+// 			updateValue = money
+// 		} else if mode == "支出" {
+// 			u.BackCard -= money
+// 			updateValue = -money
+// 		}
+// 		updateField = "backCard"
+// 	case "现金":
+// 		if mode == "收入" {
+// 			u.Cash += money
+// 			updateValue = money
+// 		} else if mode == "支出" {
+// 			u.Cash -= money
+// 			updateValue = -money
+// 		}
+// 		updateField = "cash"
+// 	case "信用卡":
+// 		u.CreditCard -= money // 信用卡 只有支出,还款在job中进行
+// 		updateValue = -money
+// 		updateField = "creditCard"
+// 	case "花呗":
+// 		u.AntCheck -= money
+// 		updateValue = -money
+// 		updateField = "antCheck"
+// 	case "白条":
+// 		u.WhiteBar -= money
+// 		updateValue = -money
+// 		updateField = "whiteBar"
+// 	}
+// 	update := bson.M{"$inc": bson.M{updateField: updateValue}}
+// 	selector := bson.M{"_id": uid}
+// 	return new(UserRequest).Set(update, selector) != nil
+// }
 
 // CopyUser Copy
 func CopyUser() {

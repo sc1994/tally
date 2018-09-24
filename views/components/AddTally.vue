@@ -165,6 +165,10 @@ export default {
           that.tallyForm.mode = hideMode[0].content;
         }
       } else if (val == 1) {
+        if (this.tallyForm.mode != "预支") {
+          this.tallyForm.channel = "余额";
+          this.thatStep += 1;
+        }
         that
           .$linq(that.manyType.channels)
           .select(x => {

@@ -155,7 +155,7 @@
             花呗
           </mu-list-item-title>
           <mu-list-item-action>
-            <span class="span-money loan">{{$numberFormat(currentUser.antCheck)}}</span>
+            <span class="span-money loan">{{$numberFormat(antCheck)}}</span>
           </mu-list-item-action>
         </mu-list-item>
         <mu-list-item button :ripple="true" slot="nested">
@@ -163,7 +163,7 @@
             信用卡
           </mu-list-item-title>
           <mu-list-item-action>
-            <span class="span-money loan">{{$numberFormat(currentUser.creditCard)}}</span>
+            <span class="span-money loan">{{$numberFormat(creditCard)}}</span>
           </mu-list-item-action>
         </mu-list-item>
         <mu-list-item button :ripple="true" slot="nested">
@@ -171,7 +171,7 @@
             白条
           </mu-list-item-title>
           <mu-list-item-action>
-            <span class="span-money loan">{{$numberFormat(currentUser.whiteBar)}}</span>
+            <span class="span-money loan">{{$numberFormat(whiteBar)}}</span>
           </mu-list-item-action>
         </mu-list-item>
       </mu-list-item>
@@ -266,7 +266,10 @@ export default {
       uploadData: {
         id: "",
         fileName: "head-image-" + new Date().getMilliseconds()
-      }
+      },
+      creditCard: 0,
+      antCheck: 0,
+      whiteBar: 0
     };
   },
   computed: {
@@ -314,6 +317,32 @@ export default {
             }
           });
       }
+    },
+    getAdvance() {
+      var that = this;
+      var date = new Date();
+      this.$axios
+        .post("/tally/getadvance", {
+          btime: new Date(date.getFullYear(), date.getMonth(), 1).toISOString(),
+          etime: new Date(
+            date.getFullYear(),
+            date.getMonth() + 1,
+            1
+          ).toISOString()
+        })
+        .then(response => {
+          if (response.code == 0 && response.data) {
+            response.data.forEach(x => {
+              if (x._id == "信用卡") {
+                that.creditCard = x.money;
+              } else if (x._id == "花呗") {
+                that.antCheck = x.money;
+              } else if (x._id == "白条") {
+                that.whiteBar = x.money;
+              }
+            });
+          }
+        });
     }
   },
   watch: {
@@ -321,7 +350,9 @@ export default {
       this.uploadData.id = this.currentUser.id;
     }
   },
-  mounted() {}
+  mounted() {
+    this.getAdvance();
+  }
 };
 </script>
 

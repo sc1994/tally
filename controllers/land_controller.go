@@ -94,28 +94,13 @@ func (c *LandController) Signup() {
 	models.AddChannel(
 		&models.Channel{
 			UserID:  uid,
-			Content: "支付宝",
-			Default: []string{library.TallyMode[0], library.TallyMode[1]},
-		},
-		&models.Channel{
-			UserID:  uid,
-			Content: "微信",
-			Default: []string{library.TallyMode[0], library.TallyMode[1]},
-		},
-		&models.Channel{
-			UserID:  uid,
-			Content: "银行卡",
+			Content: "余额",
 			Default: []string{library.TallyMode[0], library.TallyMode[1]},
 		},
 		&models.Channel{
 			UserID:  uid,
 			Content: "信用卡",
 			Default: []string{library.TallyMode[2]},
-		},
-		&models.Channel{
-			UserID:  uid,
-			Content: "现金",
-			Default: []string{library.TallyMode[0], library.TallyMode[1]},
 		},
 		&models.Channel{
 			UserID:  uid,

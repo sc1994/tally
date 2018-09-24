@@ -92,25 +92,20 @@ export default {
           .select(x => x.content)
           .toArray();
       }
-
+      var date = new Date(this.searchForm.ttime);
       that.$axios
         .post("/tally/get", {
           uids: this.searchForm.partners,
-          btime: new Date(
-            new Date(this.searchForm.ttime).getFullYear(),
-            new Date(this.searchForm.ttime).getMonth(),
-            1
-          ).toISOString(),
+          btime: new Date(date.getFullYear(), date.getMonth(), 1).toISOString(),
           etime: new Date(
-            new Date(this.searchForm.ttime).getFullYear(),
-            new Date(this.searchForm.ttime).getMonth() + 1,
+            date.getFullYear(),
+            date.getMonth() + 1,
             1
           ).toISOString(),
           bMoney: 0,
           eMoney: 999999,
           types: types,
           modes: this.searchForm.modes,
-          channels: this.searchForm.channels,
           pageIndex: that.pageIndex,
           pageSize: 12
         })
@@ -181,9 +176,9 @@ export default {
           that.searchForm.partners.push(x.id);
         });
       }
-      val.channels.forEach(x => {
-        that.searchForm.channels.push(x.content);
-      });
+      // val.channels.forEach(x => {
+      //   that.searchForm.channels.push(x.content);
+      // });
       this.searchForm.consumes = JSON.parse(JSON.stringify(val.consumes));
       this.searchForm.consumes.forEach(x => (x.selected = true)); // 默认选中
     }

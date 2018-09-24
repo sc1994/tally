@@ -24,7 +24,7 @@ func (c *TallyController) Add() {
 	if len(id.Hex()) < 1 {
 		code = 1
 	} else {
-		go CurrentUser.User.ChangeUserMoney(CurrentUser.ID, request.Mode, request.Channel, request.Money)
+		// go CurrentUser.User.ChangeUserMoney(CurrentUser.ID, request.Mode, request.Channel, request.Money)
 		consumes := new(models.ConsumeRequest).Get(bson.M{"uid": CurrentUser.ID, "content": request.Type})
 		if len(consumes) > 0 {
 			c := consumes[0]
@@ -172,6 +172,31 @@ func (c *TallyController) GetTypes() {
 	c.ResponseJSON(models.BaseResponse{
 		Code: 0,
 		Data: types,
+		Msg:  "success",
+	})
+}
+
+// GetAdvance 预支信息
+func (c *TallyController) GetAdvance() {
+	var request models.TallyRequest
+	c.RequestObject(&request)
+	result := request.Pipe(
+		bson.M{
+			"$match": bson.M{
+				"uid":     CurrentUser.ID,
+				"ttime":   bson.M{"$gte": request.BeginTime, "$lte": request.EndTime},
+				"channel": bson.M{"$in": []string{"信用卡", "花呗", "白条"}},
+			},
+		},
+		bson.M{
+			"$group": bson.M{
+				"_id":   "$channel",
+				"money": bson.M{"$sum": "$money"},
+			},
+		})
+	c.ResponseJSON(models.BaseResponse{
+		Code: 0,
+		Data: result,
 		Msg:  "success",
 	})
 }
