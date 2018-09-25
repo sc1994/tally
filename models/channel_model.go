@@ -13,13 +13,11 @@ const channelTable string = "channel"
 
 // Channel 消费渠道
 type Channel struct {
-	ID         bson.ObjectId `json:"id" bson:"_id"`          // ID
-	CreateTime time.Time     `json:"ctime" bson:"ctime"`     // CreateTime 创建时间
-	UpdateTime time.Time     `json:"utime" bson:"utime"`     // UpdateTime 更新时间
-	UserID     bson.ObjectId `json:"uid" bson:"uid"`         // 关联用户id
-	Content    string        `json:"content" bson:"content"` // 内容
-	Count      int64         `json:"count" bson:"count"`     // 使用次数
-	Default    []string      `json:"default" bson:"default"` // 默认渠道
+	BaseModel `bson:",inline"`
+	UserID    bson.ObjectId `json:"uid" bson:"uid"`         // 关联用户id
+	Content   string        `json:"content" bson:"content"` // 内容
+	Count     int64         `json:"count" bson:"count"`     // 使用次数
+	Default   []string      `json:"default" bson:"default"` // 默认渠道
 }
 
 // ChannelRequest 请求

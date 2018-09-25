@@ -13,16 +13,14 @@ const tallyTable = "tally"
 
 // Tally 账单
 type Tally struct {
-	ID         bson.ObjectId `json:"id" bson:"_id"`      // ID
-	CreateTime time.Time     `json:"ctime" bson:"ctime"` // CreateTime 创建时间
-	UpdateTime time.Time     `json:"utime" bson:"utime"` // UpdateTime 更新时间
-	TallyTime  time.Time     `json:"ttime" bson:"ttime"` // 消费时间 (新加字段)
-	UserID     bson.ObjectId `json:"uid" bson:"uid"`
-	Money      float32       `json:"money" bson:"money"`
-	Type       string        `json:"type" bson:"type"`       //消费类型
-	Mode       string        `json:"mode" bson:"mode"`       // 消费模式(预支,收入等)
-	Channel    string        `json:"channel" bson:"channel"` // 消费渠道
-	Remark     string        `json:"remark" bson:"remark"`
+	BaseModel `bson:",inline"`
+	TallyTime time.Time     `json:"ttime" bson:"ttime"` // 消费时间 (新加字段)
+	UserID    bson.ObjectId `json:"uid" bson:"uid"`
+	Money     float32       `json:"money" bson:"money"`
+	Type      string        `json:"type" bson:"type"`       //消费类型
+	Mode      string        `json:"mode" bson:"mode"`       // 消费模式(预支,收入等)
+	Channel   string        `json:"channel" bson:"channel"` // 消费渠道
+	Remark    string        `json:"remark" bson:"remark"`
 }
 
 // TallyRequest 请求

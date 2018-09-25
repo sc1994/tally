@@ -16,15 +16,13 @@ import (
 
 // User 用户信息实体
 type User struct {
-	ID         bson.ObjectId `json:"id" bson:"_id"`        // ID
-	CreateTime time.Time     `json:"ctime" bson:"ctime"`   // CreateTime 创建时间
-	UpdateTime time.Time     `json:"utime" bson:"utime"`   // UpdateTime 更新时间
-	Password   string        `json:"pwd" bson:"pwd"`       // Password
-	Name       string        `json:"name" bson:"name"`     // Name
-	NickName   string        `json:"nick" bson:"nick"`     // NickName 昵称
-	Intro      string        `json:"intro" bson:"intro"`   // 简介
-	HeadImg    string        `json:"headImg" bson:"himg"`  // HeadImg 头像
-	Budget     float32       `json:"budget" bson:"budget"` // 月预算
+	BaseModel `bson:",inline"`
+	Password  string  `json:"pwd" bson:"pwd"`       // Password
+	Name      string  `json:"name" bson:"name"`     // Name
+	NickName  string  `json:"nick" bson:"nick"`     // NickName 昵称
+	Intro     string  `json:"intro" bson:"intro"`   // 简介
+	HeadImg   string  `json:"headImg" bson:"himg"`  // HeadImg 头像
+	Budget    float32 `json:"budget" bson:"budget"` // 月预算
 	// FixDate    float32         `json:"fixDate" bson:"fixDate"`       // 定期
 	// WechatPay  float32         `json:"wechatPay" bson:"wechatPay"`   // 微信
 	// Alipay     float32         `json:"aliPay" bson:"aliPay"`         // 支付宝
