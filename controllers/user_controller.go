@@ -57,7 +57,7 @@ func (u *UserController) Set() {
 			// "aliPay":    request.Alipay,
 			// "backCard":  request.BackCard,
 			// "cash":      request.Cash,
-			"utime": request.UpdateTime,
+			// "utime": request.UpdateTime,
 		},
 	}
 	request.Set(updater, bson.M{"_id": CurrentUser.ID})

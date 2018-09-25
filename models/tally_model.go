@@ -13,9 +13,9 @@ const tallyTable = "tally"
 
 // Tally 账单
 type Tally struct {
-	ID         bson.ObjectId `json:"id" bson:"_id,omitempty"`
-	CreateTime time.Time     `json:"ctime" bson:"ctime"`
-	UpdateTime time.Time     `json:"utime" bson:"utime"`
+	ID         bson.ObjectId `json:"id" bson:"_id"`      // ID
+	CreateTime time.Time     `json:"ctime" bson:"ctime"` // CreateTime 创建时间
+	UpdateTime time.Time     `json:"utime" bson:"utime"` // UpdateTime 更新时间
 	TallyTime  time.Time     `json:"ttime" bson:"ttime"` // 消费时间 (新加字段)
 	UserID     bson.ObjectId `json:"uid" bson:"uid"`
 	Money      float32       `json:"money" bson:"money"`
@@ -90,6 +90,7 @@ func (c *TallyRequest) Page(search map[string]interface{}) (result []*TallyRespo
 
 // Set Set
 func (c *TallyRequest) Set(update map[string]interface{}, selector map[string]interface{}) *mgo.ChangeInfo {
+	baseUpdateField(&update)
 	return data.Update(tallyTable, update, selector)
 }
 

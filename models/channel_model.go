@@ -40,6 +40,7 @@ func (c *ChannelRequest) Get(search map[string]interface{}) (result []*Channel) 
 
 // Set Set
 func (c *ChannelRequest) Set(update map[string]interface{}, selector map[string]interface{}) *mgo.ChangeInfo {
+	baseUpdateField(&update)
 	return data.Update(channelTable, update, selector)
 }
 

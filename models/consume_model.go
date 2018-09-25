@@ -40,6 +40,7 @@ func (c *ConsumeRequest) Get(search map[string]interface{}) (result []*Consume) 
 
 // Set Set
 func (c *ConsumeRequest) Set(update map[string]interface{}, selector map[string]interface{}) *mgo.ChangeInfo {
+	baseUpdateField(&update)
 	return data.Update(consumeTable, update, selector)
 }
 

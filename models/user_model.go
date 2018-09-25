@@ -106,7 +106,7 @@ func (u *UserRequest) GetResponse(search map[string]interface{}) (result UserRes
 
 // Set Set
 func (u *UserRequest) Set(update map[string]interface{}, selector map[string]interface{}) *mgo.ChangeInfo {
-	// update["$set"] = bson.M{"utime": time.Now()}
+	baseUpdateField(&update)
 	return data.Update(userTable, update, selector)
 }
 

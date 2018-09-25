@@ -1,6 +1,7 @@
 package models
 
 import (
+	"reflect"
 	"time"
 
 	"gopkg.in/mgo.v2"
@@ -29,4 +30,17 @@ type Baser interface {
 	Set(update map[string]interface{}, selector map[string]interface{}) *mgo.ChangeInfo
 	Add()
 	Delete(selector map[string]interface{})
+}
+
+func baseUpdateField(update *map[string]interface{}) {
+	if val, ok := (*update)["$set"]; ok {
+		if reflect.Map == reflect.TypeOf(val).Kind() {
+			m := val.(bson.M)
+			if _, o := m["utime"]; !o {
+				m["utime"] = time.Now()
+			}
+		}
+	} else {
+		(*update)["$set"] = bson.M{"utime": time.Now()}
+	}
 }

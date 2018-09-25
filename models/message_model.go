@@ -90,6 +90,7 @@ func (c *MessageRequest) GetCount(search map[string]interface{}) int {
 
 // Set set
 func (c *MessageRequest) Set(update map[string]interface{}, selector map[string]interface{}) *mgo.ChangeInfo {
+	baseUpdateField(&update)
 	return data.Update(messageTable, update, selector)
 }
 

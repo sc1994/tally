@@ -25,10 +25,10 @@ func (c *TallyController) Add() {
 		code = 1
 	} else {
 		// go CurrentUser.User.ChangeUserMoney(CurrentUser.ID, request.Mode, request.Channel, request.Money)
-		consumes := new(models.ConsumeRequest).Get(bson.M{"uid": CurrentUser.ID, "content": request.Type})
+		search := bson.M{"uid": CurrentUser.ID, "content": request.Type}
+		consumes := new(models.ConsumeRequest).Get(search)
 		if len(consumes) > 0 {
-			c := consumes[0]
-			go new(models.ConsumeRequest).Set(bson.M{"$inc": bson.M{"count": 1}}, bson.M{"_id": c.ID})
+			new(models.ConsumeRequest).Set(bson.M{"$inc": bson.M{"count": 1}}, bson.M{"_id": consumes[0].ID})
 		} else {
 			models.AddConsume(&models.Consume{
 				Content: request.Type,
@@ -37,9 +37,15 @@ func (c *TallyController) Add() {
 				Default: []string{library.TallyMode[0], library.TallyMode[1], library.TallyMode[2]},
 			})
 		}
+		channels := new(models.ChannelRequest).Get(search)
+		if len(channels) > 0 {
+			new(models.ChannelRequest).Set(bson.M{"$inc": bson.M{"count": 1}}, bson.M{"_id": channels[0].ID})
+		} else {
+			// todo
+		}
 		token = models.RefreshUserRedis(CurrentUser)
 		go func() {
-			ac := accounting.Accounting{Symbol: "", Precision: 2}
+			ac := accounting.Accounting{Symbol: "", Precision: 1}
 			for _, val := range CurrentUser.Partners {
 				m := &models.MessageRequest{
 					Message: &models.Message{
@@ -207,9 +213,6 @@ func getSearch(request models.TallyRequest) map[string]interface{} {
 		"ttime": bson.M{"$gte": request.BeginTime, "$lte": request.EndTime},
 		"money": bson.M{"$gte": request.BeginMoney, "$lte": request.EndMoney},
 		"type":  bson.M{"$in": request.Types},
-	}
-	if len(request.Types) > 0 {
-		search["type"] = bson.M{"$in": request.Types}
 	}
 	if len(request.Modes) > 0 {
 		search["mode"] = bson.M{"$in": request.Modes}
