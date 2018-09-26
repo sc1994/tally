@@ -97,114 +97,56 @@
     <mu-list toggle-nested>
       <mu-sub-header>钱钱钱</mu-sub-header>
       <mu-divider></mu-divider>
-      <!-- <mu-list-item button :ripple="false" nested :open="open === 'money'" @toggle-nested="open = arguments[0] ? 'money' : ''">
-        <mu-list-item-title>余额</mu-list-item-title>
-        <mu-list-item-action>
-          <mu-icon class="toggle-icon" size="24" value="keyboard_arrow_up" v-if="open === 'money'"></mu-icon>
-          <mu-icon class="toggle-icon" size="24" value="keyboard_arrow_down" v-else></mu-icon>
-        </mu-list-item-action>
-        <mu-list-item button :ripple="true" slot="nested" @click="openBaseInfoSet('backCard')">
-          <mu-list-item-title>
-            银行卡
-          </mu-list-item-title>
-          <mu-list-item-action>
-            <span class="span-money">{{$numberFormat(currentUser.backCard)}}</span>
-          </mu-list-item-action>
-        </mu-list-item>
-        <mu-list-item button :ripple="true" slot="nested" @click="openBaseInfoSet('aliPay')">
-          <mu-list-item-title>
-            支付宝
-          </mu-list-item-title>
-          <mu-list-item-action>
-            <span class="span-money">{{$numberFormat(currentUser.aliPay)}}</span>
-          </mu-list-item-action>
-        </mu-list-item>
-        <mu-list-item button :ripple="true" slot="nested" @click="openBaseInfoSet('wechatPay')">
-          <mu-list-item-title>
-            微信
-          </mu-list-item-title>
-          <mu-list-item-action>
-            <span class="span-money">{{$numberFormat(currentUser.wechatPay)}}</span>
-          </mu-list-item-action>
-        </mu-list-item>
-        <mu-list-item button :ripple="true" slot="nested" @click="openBaseInfoSet('fixDate')">
-          <mu-list-item-title>
-            现金 :
-          </mu-list-item-title>
-          <mu-list-item-action>
-            <span class="span-money">{{$numberFormat(currentUser.cash)}}</span>
-          </mu-list-item-action>
-        </mu-list-item>
-        <mu-list-item button :ripple="true" slot="nested" @click="openBaseInfoSet('fixDate')">
-          <mu-list-item-title>
-            定期
-          </mu-list-item-title>
-          <mu-list-item-action>
-            <span class="span-money">{{$numberFormat(currentUser.fixDate)}}</span>
-          </mu-list-item-action>
-        </mu-list-item>
-      </mu-list-item> -->
       <mu-list-item button :ripple="false" nested :open="open === 'advance'" @toggle-nested="open = arguments[0] ? 'advance' : ''">
         <mu-list-item-title>预支</mu-list-item-title>
         <mu-list-item-action>
           <mu-icon class="toggle-icon" size="24" value="keyboard_arrow_up" v-if="open === 'advance'"></mu-icon>
           <mu-icon class="toggle-icon" size="24" value="keyboard_arrow_down" v-else></mu-icon>
         </mu-list-item-action>
-        <mu-list-item button :ripple="true" slot="nested">
+        <mu-list-item button :ripple="true" slot="nested" v-for="item in advance">
           <mu-list-item-title>
-            花呗
+            {{item._id}}
+            <span class="span-content" v-if="item.rdate">
+              {{item.rmonth}}{{item.rday}}
+            </span>
           </mu-list-item-title>
           <mu-list-item-action>
-            <span class="span-money loan">{{$numberFormat(antCheck)}}</span>
+            <span class="span-money loan">{{$numberFormat(item.money)}}</span>
           </mu-list-item-action>
         </mu-list-item>
         <mu-list-item button :ripple="true" slot="nested">
-          <mu-list-item-title>
-            信用卡
-          </mu-list-item-title>
+          <mu-list-item-title>添加更多</mu-list-item-title>
           <mu-list-item-action>
-            <span class="span-money loan">{{$numberFormat(creditCard)}}</span>
-          </mu-list-item-action>
-        </mu-list-item>
-        <mu-list-item button :ripple="true" slot="nested">
-          <mu-list-item-title>
-            白条
-          </mu-list-item-title>
-          <mu-list-item-action>
-            <span class="span-money loan">{{$numberFormat(whiteBar)}}</span>
+            <mu-icon value="add" color="Red"></mu-icon>
           </mu-list-item-action>
         </mu-list-item>
       </mu-list-item>
       <mu-list-item button :ripple="false" nested :open="open === 'loan'" @toggle-nested="open = arguments[0] ? 'loan' : ''">
-        <mu-list-item-title>贷款/分期</mu-list-item-title>
+        <mu-list-item-title>定时账单</mu-list-item-title>
         <mu-list-item-action>
           <mu-icon class="toggle-icon" size="24" value="keyboard_arrow_up" v-if="open === 'loan'"></mu-icon>
           <mu-icon class="toggle-icon" size="24" value="keyboard_arrow_down" v-else></mu-icon>
         </mu-list-item-action>
         <mu-list-item button :ripple="true" slot="nested">
           <mu-list-item-title>
-            房贷:
+            房贷
             <span class="span-content">
-              每月
-              <span class="span-money loan">2,876</span>
-              元->2019年5月结束
+              每月12日
             </span>
           </mu-list-item-title>
           <mu-list-item-action>
-            <mu-icon value="edit" color="Teal"></mu-icon>
+            <span class="span-money loan">{{$numberFormat(2987)}}</span>
           </mu-list-item-action>
         </mu-list-item>
         <mu-list-item button :ripple="true" slot="nested">
           <mu-list-item-title>
-            信用卡分期 :
+            信用卡分期
             <span class="span-content">
-              每月
-              <span class="span-money loan">2,876</span>
-              元->2019年5月结束
+              每月20日
             </span>
           </mu-list-item-title>
           <mu-list-item-action>
-            <mu-icon value="edit" color="Teal"></mu-icon>
+            <span class="span-money loan">{{$numberFormat(2987)}}</span>
           </mu-list-item-action>
         </mu-list-item>
         <mu-list-item button :ripple="true" slot="nested">
@@ -267,9 +209,7 @@ export default {
         id: "",
         fileName: "head-image-" + new Date().getMilliseconds()
       },
-      creditCard: 0,
-      antCheck: 0,
-      whiteBar: 0
+      advance: []
     };
   },
   computed: {
@@ -332,15 +272,7 @@ export default {
         })
         .then(response => {
           if (response.code == 0 && response.data) {
-            response.data.forEach(x => {
-              if (x._id == "信用卡") {
-                that.creditCard = x.money;
-              } else if (x._id == "花呗") {
-                that.antCheck = x.money;
-              } else if (x._id == "白条") {
-                that.whiteBar = x.money;
-              }
-            });
+            that.advance = response.data;
           }
         });
     }

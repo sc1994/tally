@@ -41,7 +41,12 @@ func (c *TallyController) Add() {
 		if len(channels) > 0 {
 			new(models.ChannelRequest).Set(bson.M{"$inc": bson.M{"count": 1}}, bson.M{"_id": channels[0].ID})
 		} else {
-			// todo
+			models.AddChannel(&models.Channel{
+				Content: request.Channel,
+				UserID:  CurrentUser.ID,
+				Count:   1,
+				Default: []string{library.TallyMode[0], library.TallyMode[1], library.TallyMode[2]},
+			})
 		}
 		token = models.RefreshUserRedis(CurrentUser)
 		go func() {
