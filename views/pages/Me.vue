@@ -114,7 +114,7 @@
             <span class="span-money loan">{{$numberFormat(item.money)}}</span>
           </mu-list-item-action>
         </mu-list-item>
-        <mu-list-item button :ripple="true" slot="nested">
+        <mu-list-item button :ripple="true" @click="openSetAdvance=true;currentAdvance={}" slot="nested">
           <mu-list-item-title>添加更多</mu-list-item-title>
           <mu-list-item-action>
             <mu-icon value="add" color="Red"></mu-icon>

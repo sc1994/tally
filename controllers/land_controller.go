@@ -99,17 +99,7 @@ func (c *LandController) Signup() {
 		},
 		&models.Channel{
 			UserID:  uid,
-			Content: "信用卡",
-			Default: []string{library.TallyMode[2]},
-		},
-		&models.Channel{
-			UserID:  uid,
 			Content: "花呗",
-			Default: []string{library.TallyMode[2]},
-		},
-		&models.Channel{
-			UserID:  uid,
-			Content: "白条",
 			Default: []string{library.TallyMode[2]},
 		})
 	models.AddConsume(

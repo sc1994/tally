@@ -40,10 +40,11 @@ func (c ChannelController) Add() {
 	var request models.ChannelRequest
 	c.RequestObject(&request)
 	request.Channel.UserID = CurrentUser.ID
-	r := models.AddChannel(&request.Channel)
+	models.AddChannel(&request.Channel)
+	token := models.RefreshUserRedis(CurrentUser)
 	c.ResponseJSON(models.BaseResponse{
 		Code: 0,
 		Msg:  "success",
-		Data: r,
+		Data: map[string]string{"token": token},
 	})
 }

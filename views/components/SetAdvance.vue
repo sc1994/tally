@@ -1,7 +1,7 @@
 <template>
   <dialoghead :title="'预支设置'" :open.sync="thatOpen" :buttonclick="submit" buttonicon="done">
     <mu-container>
-      <mu-text-field v-model="item.content" label="名称" full-width placeholder="如:xxx信用卡"></mu-text-field>
+      <mu-text-field v-model="item.content" label="名称" full-width placeholder="如:xxx信用卡" :disabled="!!item.id"></mu-text-field>
     </mu-container>
     <mu-sub-header>还款日期</mu-sub-header>
     <div style="div-slide">
