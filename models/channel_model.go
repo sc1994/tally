@@ -13,11 +13,13 @@ const channelTable string = "channel"
 
 // Channel 消费渠道
 type Channel struct {
-	BaseModel `bson:",inline"`
-	UserID    bson.ObjectId `json:"uid" bson:"uid"`         // 关联用户id
-	Content   string        `json:"content" bson:"content"` // 内容
-	Count     int64         `json:"count" bson:"count"`     // 使用次数
-	Default   []string      `json:"default" bson:"default"` // 默认渠道
+	BaseModel  `bson:",inline"`
+	UserID     bson.ObjectId `json:"uid" bson:"uid"`             // 关联用户id
+	Content    string        `json:"content" bson:"content"`     // 内容
+	Count      int64         `json:"count" bson:"count"`         // 使用次数
+	RefundDate []string      `json:"rdate" bson:"rdate"`         // 还款日期
+	IsAdvance  bool          `json:"isAdvance" bson:"isAdvance"` // 是否预支渠道
+	Default    []string      `json:"default" bson:"default"`     // 默认渠道
 }
 
 // ChannelRequest 请求

@@ -103,11 +103,11 @@
           <mu-icon class="toggle-icon" size="24" value="keyboard_arrow_up" v-if="open === 'advance'"></mu-icon>
           <mu-icon class="toggle-icon" size="24" value="keyboard_arrow_down" v-else></mu-icon>
         </mu-list-item-action>
-        <mu-list-item button :ripple="true" slot="nested" v-for="item in advance">
+        <mu-list-item button :ripple="true" @click="openSetAdvance=true;currentAdvance=item.base" slot="nested" v-for="item in advance" :key="item._id">
           <mu-list-item-title>
             {{item._id}}
-            <span class="span-content" v-if="item.rdate">
-              {{item.rmonth}}{{item.rday}}
+            <span class="span-content" v-if="item.base.rdate">
+              {{item.base.rdate[0]}}{{item.base.rdate[1]}}还款
             </span>
           </mu-list-item-title>
           <mu-list-item-action>
@@ -180,12 +180,15 @@
       <mu-button round color="success" @click="loginOut" full-width>退出登陆</mu-button>
     </mu-flex>
     <setuserbaseinfo :user="currentUser" :type="baseInfo.type" :alert.sync="baseInfo.alert"></setuserbaseinfo>
+    <setadvance :open.sync="openSetAdvance" :item="currentAdvance"></setadvance>
+
   </layoutmain>
 </template>
 
 <script>
 import layoutmain from "@/layout/main";
 import setuserbaseinfo from "@/components/setuserbaseinfo";
+import setadvance from "@/components/setadvance";
 import vuecoreimageupload from "vue-core-image-upload";
 import { mapState } from "vuex";
 
@@ -193,11 +196,14 @@ export default {
   components: {
     setuserbaseinfo,
     layoutmain,
-    vuecoreimageupload
+    vuecoreimageupload,
+    setadvance
   },
   data() {
     return {
       open: "",
+      openSetAdvance: false,
+      currentAdvance: {},
       baseInfo: {
         alert: false,
         type: ""

@@ -30,11 +30,9 @@ export default {
       var Shape = F2.Shape;
       var data = [
         {
-          pointer: `\n剩余预算 ${parseFloat(
-            val.budget - val.haveBeenUsed
-          ).toFixed(1)} 元\n\n预支 ${parseFloat(val.haveBeenAdvance).toFixed(
-            1
-          )} 元`,
+          pointer: `\n收入 ${this.$numberFormat(
+            val.haveBeenIncome
+          )} 元\n\n预支 ${this.$numberFormat(val.haveBeenAdvance)} 元`,
           value: parseFloat(val.haveBeenUsed).toFixed(1),
           length: 0,
           y: 1

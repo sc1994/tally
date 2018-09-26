@@ -4,6 +4,8 @@ import (
 	"tally/library"
 	"tally/models"
 
+	"github.com/ahmetb/go-linq"
+
 	"github.com/leekchan/accounting"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -191,12 +193,23 @@ func (c *TallyController) GetTypes() {
 func (c *TallyController) GetAdvance() {
 	var request models.TallyRequest
 	c.RequestObject(&request)
+	channels := new(models.ChannelRequest).Get(
+		bson.M{
+			"isAdvance": true,
+			"uid":       CurrentUser.ID,
+		})
+
+	var contents []string
+	linq.From(channels).Select(func(x interface{}) interface{} {
+		return x.(*models.Channel).Content
+	}).ToSlice(&contents)
+
 	result := request.Pipe(
 		bson.M{
 			"$match": bson.M{
 				"uid":     CurrentUser.ID,
 				"ttime":   bson.M{"$gte": request.BeginTime, "$lte": request.EndTime},
-				"channel": bson.M{"$in": []string{"信用卡", "花呗", "白条"}},
+				"channel": bson.M{"$in": contents},
 			},
 		},
 		bson.M{
@@ -205,6 +218,13 @@ func (c *TallyController) GetAdvance() {
 				"money": bson.M{"$sum": "$money"},
 			},
 		})
+
+	for _, v := range result {
+		first := linq.From(channels).FirstWith(func(x interface{}) bool {
+			return x.(*models.Channel).Content == v["_id"]
+		})
+		v["base"] = first
+	}
 	c.ResponseJSON(models.BaseResponse{
 		Code: 0,
 		Data: result,

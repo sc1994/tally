@@ -4,8 +4,11 @@ import Linq from 'linq';
 import Toast from "muse-ui-toast";
 
 // axios 初始化----------------------------------------------------------
-// Axios.defaults.baseURL = 'http://localhost';
-Axios.defaults.baseURL = 'http://118.24.27.231:8888';
+if (location.href.endsWith("test")) {
+  Axios.defaults.baseURL = 'http://localhost';
+} else {
+  Axios.defaults.baseURL = 'http://118.24.27.231:8888';
+}
 
 // 添加请求拦截器
 Axios.interceptors.request.use(function (config) {

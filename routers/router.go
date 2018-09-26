@@ -39,6 +39,10 @@ func init() {
 	beego.Router("/tally/total", tally, "post:Total")           // 总金额统计
 	beego.Router("/tally/gettypes", tally, "post:GetTypes")     // 账单类型获取
 	beego.Router("/tally/getadvance", tally, "post:GetAdvance") // 获取预支数据
+	//渠道=====================================================================================================
+	channel := &controllers.ChannelController{}
+	beego.Router("/channel/set", channel, "post:Set") // 设置渠道
+	beego.Router("/channel/add", channel, "post:Add") // 新增渠道
 	//消息=====================================================================================================
 	msg := &controllers.MessageController{}
 	beego.Router("/message/add", msg, "post:Add")                  // 发送消息

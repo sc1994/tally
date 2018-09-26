@@ -6,8 +6,6 @@ import (
 	"tally/library"
 	"time"
 
-	"github.com/ahmetb/go-linq"
-
 	"github.com/astaxie/beego"
 
 	mgo "gopkg.in/mgo.v2"
@@ -78,26 +76,31 @@ func (u *UserRequest) GetResponse(search map[string]interface{}) (result UserRes
 	result.Consumes = new(ConsumeRequest).Get(bson.M{"uid": result.User.ID})
 	result.Channels = new(ChannelRequest).Get(bson.M{"uid": result.User.ID})
 	month := time.Now().Month()
-	tallys := new(TallyRequest).Get(
+	tallys := new(TallyRequest).Pipe(
 		bson.M{
-			"uid": user.ID,
-			"ttime": bson.M{
-				"$gte": library.GetFirstDayForMonth(month),
-				"$lte": library.GetLastDayForMonth(month),
+			"$match": bson.M{
+				"uid": user.ID,
+				"ttime": bson.M{
+					"$gte": library.GetFirstDayForMonth(month),
+					"$lte": library.GetLastDayForMonth(month),
+				},
+			},
+		},
+		bson.M{
+			"$group": bson.M{
+				"_id":   "$mode",
+				"money": bson.M{"$sum": "$money"},
 			},
 		})
-	moneys := make([]float64, 3)
-	for i, v := range library.TallyMode {
-		moneys[i] =
-			linq.From(tallys).Where(func(x interface{}) bool {
-				return x.(*Tally).Mode == v
-			}).Select(func(x interface{}) interface{} {
-				return x.(*Tally).Money
-			}).SumFloats()
+	for _, v := range tallys {
+		if v["_id"].(string) == "收入" {
+			result.HaveBeenIncome = v["money"].(float64)
+		} else if v["_id"].(string) == "支出" {
+			result.HaveBeenUsed = v["money"].(float64)
+		} else if v["_id"].(string) == "预支" {
+			result.HaveBeenAdvance = v["money"].(float64)
+		}
 	}
-	result.HaveBeenIncome = moneys[0]
-	result.HaveBeenUsed = moneys[1]
-	result.HaveBeenAdvance = moneys[2]
 	b = true
 	return
 }
