@@ -237,10 +237,12 @@ func getSearch(request models.TallyRequest) map[string]interface{} {
 		"uid":   bson.M{"$in": request.UserIDs},
 		"ttime": bson.M{"$gte": request.BeginTime, "$lte": request.EndTime},
 		"money": bson.M{"$gte": request.BeginMoney, "$lte": request.EndMoney},
-		"type":  bson.M{"$in": request.Types},
 	}
 	if len(request.Modes) > 0 {
 		search["mode"] = bson.M{"$in": request.Modes}
+	}
+	if len(request.Types) > 0 {
+		search["type"] = bson.M{"$in": request.Types}
 	}
 	if len(request.Channels) > 0 {
 		search["channel"] = bson.M{"$in": request.Channels}

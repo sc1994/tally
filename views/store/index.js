@@ -34,6 +34,7 @@ export default new Vuex.Store({
               .thenByDescending(x => new Date(x.utime))
               .thenByDescending(x => new Date(x.ctime))
               .toArray();
+            response.data.channels = that.$linq(response.data.channels).distinct(x => x.content).toArray()
             commit("changeUser", response.data)
             vuex.dispatch("initUnreadNumber");
           } else {
