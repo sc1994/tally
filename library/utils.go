@@ -52,7 +52,10 @@ func HTTPRequest(url string, jsonStr interface{}, token string) string {
 		req, err = http.NewRequest("GET", url, nil)
 	}
 
-	req.Header.Set("token", token)
+	if len(token) > 0 {
+		req.Header.Set("token", token)
+	}
+
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
