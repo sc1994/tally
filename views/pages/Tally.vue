@@ -104,7 +104,6 @@ export default {
           ).toISOString(),
           bMoney: 0,
           eMoney: 999999,
-          types: types,
           modes: this.searchForm.modes,
           pageIndex: that.pageIndex,
           pageSize: 12
