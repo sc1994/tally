@@ -7,7 +7,7 @@ import Toast from "muse-ui-toast";
 if (location.href.endsWith("test")) {
   Axios.defaults.baseURL = 'http://localhost';
 } else {
-  Axios.defaults.baseURL = 'http://118.24.27.231:8888';
+  Axios.defaults.baseURL = 'http://104.129.180.51:8888';
 }
 
 // 添加请求拦截器
